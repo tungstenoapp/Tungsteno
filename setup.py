@@ -2,6 +2,8 @@
 
 from setuptools import setup
 
+requirements = open("requirements.txt", 'r').read().split("\n")
+
 setup(
     name='tsteno',
     version='0.1',
@@ -9,5 +11,5 @@ setup(
     author='A free, light-weight alternative to Mathematica.',
     author_email='hola@hosecarlos.me',
     packages=['tsteno'],
-    install_requires=['sympy'],
+    install_requires=requirements,
 )
