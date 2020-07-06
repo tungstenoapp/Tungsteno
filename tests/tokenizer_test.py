@@ -1,5 +1,5 @@
 import unittest
-from tsteno.language.tokenizer import Tokenizer, NumberToken, OpToken, StringToken
+from tsteno.language.tokenizer import Tokenizer, NumberToken, BinOpToken, StringToken
 
 
 class TestTokenizer(unittest.TestCase):
@@ -24,7 +24,7 @@ class TestTokenizer(unittest.TestCase):
         self.assertTrue(isinstance(tokens[0], NumberToken))
         self.assertEqual(tokens[0].value, 12345)
 
-        self.assertTrue(isinstance(tokens[1], OpToken))
+        self.assertTrue(isinstance(tokens[1], BinOpToken))
         self.assertEqual(tokens[1].value, '+')
 
         self.assertTrue(isinstance(tokens[2], NumberToken))

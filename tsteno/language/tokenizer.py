@@ -16,6 +16,9 @@ class Token:
 
         self.value = val
 
+    def get_value(self):
+        return self.value
+
     @staticmethod
     def is_match(character):
         """ Check if given character match with token character list 
@@ -58,13 +61,13 @@ class NumberToken(Token):
         return NumberToken(int(num_str))
 
 
-class OpToken(Token):
+class BinOpToken(Token):
 
-    BINARY_OP_CHARACTERS = ['+', '-', '*', '/', '^', '.']
+    BINARY_OP_CHARACTERS = ['+', '-', '*', '/', '^']
 
     @staticmethod
     def is_match(character):
-        return character in OpToken.BINARY_OP_CHARACTERS
+        return character in BinOpToken.BINARY_OP_CHARACTERS
 
     @staticmethod
     def parse(tokenizer):
@@ -74,13 +77,13 @@ class OpToken(Token):
 
         if op == '-' and next_chr == '>':
             tokenizer.next_character()
-            return OpToken("->")
+            return BinOpToken("->")
         if op == '.':
             if next_chr != '/':
                 raise IllegalCharacter(tokenizer)
-            return OpToken("./")
+            return BinOpToken("./")
 
-        return OpToken(op)
+        return BinOpToken(op)
 
 
 class ClosureToken(Token):
@@ -155,9 +158,6 @@ class FunctionIdentifierToken(IdentifierToken):
 
     __slots__ = ['fname']
 
-    def __init__(self, fname):
-        self.fname = fname
-
     @staticmethod
     def is_match(character):
         return character != None and character == '['
@@ -167,7 +167,7 @@ class FunctionIdentifierToken(IdentifierToken):
         return FunctionIdentifierToken(fname)
 
     def __repr__(self):
-        return f'{self.__class__.__name__}: {self.fname}'
+        return f'{self.__class__.__name__}: {self.value}'
 
 
 class TokenizerError(Exception):
@@ -194,7 +194,7 @@ class IllegalCharacter(TokenizerError):
 
 class Tokenizer:
     AVAILABLE_TOKENS = [
-        NumberToken, OpToken,
+        NumberToken, BinOpToken,
         StringToken, IdentifierToken,
         ClosureToken
     ]
@@ -265,7 +265,3 @@ class Tokenizer:
             token = self.next_token()
 
         return tokens
-
-
-test = Tokenizer('Test[123]')
-print(test.next_token())
