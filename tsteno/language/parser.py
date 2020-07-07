@@ -53,6 +53,11 @@ class ExpressionParserOutput(ParserOutput):
 
     @staticmethod
     def parse(parser, min_prec=0):
+        """ After a match, generate a token class from the current buffer.
+
+        Keyword arguments:
+        tokenizer -- current buffer
+        """
         atom_lhs = ExpressionParserOutput.compute_atom(parser)
 
         while (parser.current_pos < len(parser.tokens) and
