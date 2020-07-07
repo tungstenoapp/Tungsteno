@@ -1,4 +1,4 @@
-from tokenizer import *
+from .tokenizer import NumberToken, IdentifierToken, ClosureToken, FunctionIdentifierToken, ListSeparatorToken, BinOpToken
 from collections import namedtuple
 
 OpInfo = namedtuple('OpInfo', 'prec assoc function')
@@ -33,6 +33,8 @@ class ParserOutput:
         raise Exception("Method not defined")
 
 class ExpressionParserOutput(ParserOutput):
+    __slots__ = ['value']
+
     def __init__(self, value):
         self.value = value
 
@@ -100,6 +102,8 @@ class NumberExpressionParserOutput(ExpressionParserOutput):
     pass
 
 class FunctionExpressionParserOutput(ExpressionParserOutput):
+    __slots__ = ['fname', 'arguments']
+
     def __init__(self, fname, arguments):
         self.fname = fname
         self.arguments = arguments

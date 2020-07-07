@@ -1,0 +1,1302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.3" />
+<title>tsteno.language.tokenizer API documentation</title>
+<meta name="description" content="Tokenizer generates tokens from input strings" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tsteno.language.tokenizer</code></h1>
+</header>
+<section id="section-intro">
+<p>Tokenizer generates tokens from input strings</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34; Tokenizer generates tokens from input strings &#34;&#34;&#34;
+import string
+
+
+class Token:
+    &#34;&#34;&#34; Represent the most abstract type of token &#34;&#34;&#34;
+    __slots__ = [&#39;value&#39;]
+
+    def __init__(self, val):
+        &#34;&#34;&#34; 
+        Create a new token from given value
+
+        Keyword arguments:
+        val -- token value
+        &#34;&#34;&#34;
+
+        self.value = val
+
+    def get_value(self):
+        return self.value
+
+    @staticmethod
+    def is_match(character):
+        &#34;&#34;&#34; Check if given character match with token character list 
+
+        Keyword arguments:
+        character -- character to be checked
+        &#34;&#34;&#34;
+        raise Exception(&#34;Method not defined&#34;)
+
+    @staticmethod
+    def parse(tokenizer):
+        &#34;&#34;&#34; After a match, generate a token class from the current buffer. 
+
+        Keyword arguments:
+        tokenizer -- current buffer
+        &#34;&#34;&#34;
+        raise Exception(&#34;Method not defined&#34;)
+
+    def __repr__(self):
+        return f&#39;{self.__class__.__name__}: {self.value}&#39;
+
+
+class NumberToken(Token):
+    @staticmethod
+    def is_match(character):
+        return character != None and (character.isdigit() or character == &#39;.&#39;)
+
+    @staticmethod
+    def parse(tokenizer):
+        characters = [tokenizer.get_current_character()]
+
+        while NumberToken.is_match(tokenizer.next_character()):
+            characters.append(tokenizer.get_current_character())
+
+        num_str = &#34;&#34;.join(characters)
+
+        if &#34;.&#34; in characters:
+            return NumberToken(float(num_str))
+
+        return NumberToken(int(num_str))
+
+
+class BinOpToken(Token):
+
+    BINARY_OP_CHARACTERS = [&#39;+&#39;, &#39;-&#39;, &#39;*&#39;, &#39;/&#39;, &#39;^&#39;, &#39;=&#39;]
+
+    @staticmethod
+    def is_match(character):
+        return character in BinOpToken.BINARY_OP_CHARACTERS
+
+    @staticmethod
+    def parse(tokenizer):
+        op = tokenizer.get_current_character()
+
+        next_chr = tokenizer.next_character()
+
+        if op == &#39;-&#39; and next_chr == &#39;&gt;&#39;:
+            tokenizer.next_character()
+            return BinOpToken(&#34;-&gt;&#34;)
+        if op == &#39;.&#39;:
+            if next_chr != &#39;/&#39;:
+                raise IllegalCharacter(tokenizer)
+            return BinOpToken(&#34;./&#34;)
+
+        return BinOpToken(op)
+
+class ListSeparatorToken(Token):
+    SEPARATORS = [&#39;,&#39;]
+
+    @staticmethod
+    def is_match(character):
+        return character in ListSeparatorToken.SEPARATORS
+
+    @staticmethod
+    def parse(tokenizer):
+        op = tokenizer.get_current_character()
+
+        tokenizer.next_character()
+
+        return ListSeparatorToken(op)
+
+class ClosureToken(Token):
+
+    CLOSURE_CHARACTERS = [&#34;\n&#34;, &#34;;&#34;]
+
+    @staticmethod
+    def is_match(character):
+        return character in ClosureToken.CLOSURE_CHARACTERS
+
+    @staticmethod
+    def parse(tokenizer):
+        op = tokenizer.get_current_character()
+        tokenizer.next_character()
+
+        return ClosureToken(op)
+
+
+class StringToken(Token):
+    @staticmethod
+    def is_match(character):
+        return character == &#34;\&#34;&#34;
+
+    @staticmethod
+    def parse(tokenizer):
+        characters = []
+        finished_string = False
+
+        while tokenizer.next_character() != None:
+            if tokenizer.get_current_character() == &#34;\&#34;&#34; and (len(characters) == 0 or characters[-1] != &#34;\\&#34;):
+                tokenizer.next_character()
+                finished_string = True
+                break
+
+            if tokenizer.get_current_character() == &#34;\&#34;&#34;:
+                characters[-1] = tokenizer.get_current_character()
+            else:
+                characters.append(tokenizer.get_current_character())
+
+        if not finished_string:
+            raise IllegalCharacter(tokenizer)
+
+        return StringToken(&#34;&#34;.join(characters))
+
+
+class IdentifierToken(Token):
+    SPECIAL_CHARACTERS = [&#39;_&#39;]
+
+    @staticmethod
+    def is_match(character):
+        return character != None and character in string.ascii_letters
+
+    @staticmethod
+    def parse(tokenizer):
+        characters = [tokenizer.get_current_character()]
+
+        while IdentifierToken.is_match(tokenizer.next_character()) or (
+                tokenizer.get_current_character() != None and (
+                    tokenizer.get_current_character().isdigit() or
+                    tokenizer.get_current_character() in IdentifierToken.SPECIAL_CHARACTERS
+                )
+        ):
+            characters.append(tokenizer.get_current_character())
+
+        if FunctionIdentifierToken.is_match(tokenizer.get_current_character()):
+            return FunctionIdentifierToken.parse(tokenizer, &#34;&#34;.join(characters))
+
+        return IdentifierToken(&#34;&#34;.join(characters))
+
+
+class FunctionIdentifierToken(IdentifierToken):
+
+    __slots__ = [&#39;fname&#39;, &#39;arguments&#39;]
+
+    def __init__(self, fname, arguments):
+        self.fname = fname
+        self.arguments = arguments
+
+    @staticmethod
+    def is_match(character):
+        return character != None and character == &#39;[&#39;
+
+    @staticmethod
+    def parse(tokenizer, fname):
+        open_status = 1
+        curr_character = tokenizer.next_character()
+
+        function_arg_characters = []
+
+        while open_status != 0 and curr_character != None:
+            if curr_character == &#39;[&#39;:
+                open_status = open_status + 1
+            elif curr_character == &#39;]&#39;:
+                open_status = open_status - 1
+            function_arg_characters.append(curr_character)
+            curr_character = tokenizer.next_character()
+
+        if curr_character == None and open_status != 0:
+            raise IllegalCharacter(tokenizer)
+
+        function_arg_characters = function_arg_characters[:-1]
+        function_arg_code = &#34;&#34;.join(function_arg_characters)
+
+        args_tokenizer = Tokenizer(function_arg_code)
+        try:
+            tokens = args_tokenizer.get_tokens()
+        except:
+            raise IllegalCharacter(tokenizer)
+
+        return FunctionIdentifierToken(fname, tokens)
+
+    def __repr__(self):
+        return f&#39;{self.__class__.__name__}: {self.fname} ({self.arguments})&#39;
+
+
+class TokenizerError(Exception):
+    __slots__ = [&#39;tokenizer&#39;, &#39;msg&#39;]
+
+    def __init__(self, msg, tokenizer):
+        self.msg = msg
+        self.tokenizer = tokenizer
+
+    def __str__(self):
+        debug_info = self.tokenizer.debug_information()
+        lines = debug_info[&#39;buffer&#39;].split(&#34;\n&#34;)
+
+        extra_information = lines[debug_info[&#39;lin&#39;]]
+        extra_information += &#34;\n&#34; + (&#39; &#39;*(debug_info[&#39;col&#39;] - 1)) + &#39;^&#39;
+
+        return f&#34;{self.msg} near line {debug_info[&#39;lin&#39;] + 1} and column {debug_info[&#39;col&#39;] + 1}:\n{extra_information}&#34;
+
+
+class IllegalCharacter(TokenizerError):
+    def __init__(self, tokenizer):
+        super().__init__(&#34;Syntax error, illegal character&#34;, tokenizer)
+
+
+class Tokenizer:
+    AVAILABLE_TOKENS = [
+        NumberToken, BinOpToken,
+        StringToken, IdentifierToken,
+        ClosureToken, ListSeparatorToken
+    ]
+
+    BLANK_SPACES = [&#39; &#39;, &#34;\r&#34;]
+
+    __slots__ = [&#39;buffer&#39;, &#39;current_pos&#39;,
+                 &#39;current_character&#39;, &#39;bufferlen&#39;, &#39;col&#39;, &#39;lin&#39;]
+
+    def __init__(self, buffer):
+        self.buffer = buffer
+        self.bufferlen = len(self.buffer)
+        self.current_pos = -1
+
+        self.lin = 0
+        self.col = 0
+
+        self.next_character()
+
+    def next_character(self):
+        self.current_pos = self.current_pos + 1
+        self.current_character = self.buffer[self.current_pos] if self.bufferlen &gt; self.current_pos else None
+
+        if self.current_character == &#34;\n&#34;:
+            self.lin = self.lin + 1
+            self.col = 0
+        else:
+            self.col = self.col + 1
+
+        return self.current_character
+
+    def get_current_character(self):
+        return self.current_character
+
+    def previous_character(self):
+        self.current_pos = self.current_pos - 1
+        self.current_character = self.buffer[self.current_pos] if 0 &lt;= self.current_pos else None
+        if self.current_character == &#34;\n&#34;:
+            self.lin = self.lin - 1
+            self.col = 0
+        else:
+            self.col = self.col - 1
+        return self.current_character
+
+    def debug_information(self):
+        return {&#39;buffer&#39;: self.buffer, &#39;lin&#39;: self.lin, &#39;col&#39;: self.col}
+
+    def next_token(self):
+        while self.current_character in Tokenizer.BLANK_SPACES:
+            self.next_character()
+
+        if self.current_character == None:
+            return None
+
+        for token in Tokenizer.AVAILABLE_TOKENS:
+            if token.is_match(self.current_character):
+                return token.parse(self)
+
+        raise IllegalCharacter(self)
+
+    def get_tokens(self):
+        tokens = []
+
+        token = self.next_token()
+
+        while token != None:
+            tokens.append(token)
+            token = self.next_token()
+
+        return tokens</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tsteno.language.tokenizer.BinOpToken"><code class="flex name class">
+<span>class <span class="ident">BinOpToken</span></span>
+<span>(</span><span>val)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represent the most abstract type of token </p>
+<p>Create a new token from given value</p>
+<p>Keyword arguments:
+val &ndash; token value</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class BinOpToken(Token):
+
+    BINARY_OP_CHARACTERS = [&#39;+&#39;, &#39;-&#39;, &#39;*&#39;, &#39;/&#39;, &#39;^&#39;, &#39;=&#39;]
+
+    @staticmethod
+    def is_match(character):
+        return character in BinOpToken.BINARY_OP_CHARACTERS
+
+    @staticmethod
+    def parse(tokenizer):
+        op = tokenizer.get_current_character()
+
+        next_chr = tokenizer.next_character()
+
+        if op == &#39;-&#39; and next_chr == &#39;&gt;&#39;:
+            tokenizer.next_character()
+            return BinOpToken(&#34;-&gt;&#34;)
+        if op == &#39;.&#39;:
+            if next_chr != &#39;/&#39;:
+                raise IllegalCharacter(tokenizer)
+            return BinOpToken(&#34;./&#34;)
+
+        return BinOpToken(op)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="tsteno.language.tokenizer.Token" href="#tsteno.language.tokenizer.Token">Token</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="tsteno.language.tokenizer.BinOpToken.BINARY_OP_CHARACTERS"><code class="name">var <span class="ident">BINARY_OP_CHARACTERS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="tsteno.language.tokenizer.Token" href="#tsteno.language.tokenizer.Token">Token</a></b></code>:
+<ul class="hlist">
+<li><code><a title="tsteno.language.tokenizer.Token.is_match" href="#tsteno.language.tokenizer.Token.is_match">is_match</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Token.parse" href="#tsteno.language.tokenizer.Token.parse">parse</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Token.value" href="#tsteno.language.tokenizer.Token.value">value</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="tsteno.language.tokenizer.ClosureToken"><code class="flex name class">
+<span>class <span class="ident">ClosureToken</span></span>
+<span>(</span><span>val)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represent the most abstract type of token </p>
+<p>Create a new token from given value</p>
+<p>Keyword arguments:
+val &ndash; token value</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ClosureToken(Token):
+
+    CLOSURE_CHARACTERS = [&#34;\n&#34;, &#34;;&#34;]
+
+    @staticmethod
+    def is_match(character):
+        return character in ClosureToken.CLOSURE_CHARACTERS
+
+    @staticmethod
+    def parse(tokenizer):
+        op = tokenizer.get_current_character()
+        tokenizer.next_character()
+
+        return ClosureToken(op)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="tsteno.language.tokenizer.Token" href="#tsteno.language.tokenizer.Token">Token</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="tsteno.language.tokenizer.ClosureToken.CLOSURE_CHARACTERS"><code class="name">var <span class="ident">CLOSURE_CHARACTERS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="tsteno.language.tokenizer.Token" href="#tsteno.language.tokenizer.Token">Token</a></b></code>:
+<ul class="hlist">
+<li><code><a title="tsteno.language.tokenizer.Token.is_match" href="#tsteno.language.tokenizer.Token.is_match">is_match</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Token.parse" href="#tsteno.language.tokenizer.Token.parse">parse</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Token.value" href="#tsteno.language.tokenizer.Token.value">value</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="tsteno.language.tokenizer.FunctionIdentifierToken"><code class="flex name class">
+<span>class <span class="ident">FunctionIdentifierToken</span></span>
+<span>(</span><span>fname, arguments)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represent the most abstract type of token </p>
+<p>Create a new token from given value</p>
+<p>Keyword arguments:
+val &ndash; token value</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FunctionIdentifierToken(IdentifierToken):
+
+    __slots__ = [&#39;fname&#39;, &#39;arguments&#39;]
+
+    def __init__(self, fname, arguments):
+        self.fname = fname
+        self.arguments = arguments
+
+    @staticmethod
+    def is_match(character):
+        return character != None and character == &#39;[&#39;
+
+    @staticmethod
+    def parse(tokenizer, fname):
+        open_status = 1
+        curr_character = tokenizer.next_character()
+
+        function_arg_characters = []
+
+        while open_status != 0 and curr_character != None:
+            if curr_character == &#39;[&#39;:
+                open_status = open_status + 1
+            elif curr_character == &#39;]&#39;:
+                open_status = open_status - 1
+            function_arg_characters.append(curr_character)
+            curr_character = tokenizer.next_character()
+
+        if curr_character == None and open_status != 0:
+            raise IllegalCharacter(tokenizer)
+
+        function_arg_characters = function_arg_characters[:-1]
+        function_arg_code = &#34;&#34;.join(function_arg_characters)
+
+        args_tokenizer = Tokenizer(function_arg_code)
+        try:
+            tokens = args_tokenizer.get_tokens()
+        except:
+            raise IllegalCharacter(tokenizer)
+
+        return FunctionIdentifierToken(fname, tokens)
+
+    def __repr__(self):
+        return f&#39;{self.__class__.__name__}: {self.fname} ({self.arguments})&#39;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="tsteno.language.tokenizer.IdentifierToken" href="#tsteno.language.tokenizer.IdentifierToken">IdentifierToken</a></li>
+<li><a title="tsteno.language.tokenizer.Token" href="#tsteno.language.tokenizer.Token">Token</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tsteno.language.tokenizer.FunctionIdentifierToken.arguments"><code class="name">var <span class="ident">arguments</span></code></dt>
+<dd>
+<div class="desc"><p>Return an attribute of instance, which is of type owner.</p></div>
+</dd>
+<dt id="tsteno.language.tokenizer.FunctionIdentifierToken.fname"><code class="name">var <span class="ident">fname</span></code></dt>
+<dd>
+<div class="desc"><p>Return an attribute of instance, which is of type owner.</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="tsteno.language.tokenizer.IdentifierToken" href="#tsteno.language.tokenizer.IdentifierToken">IdentifierToken</a></b></code>:
+<ul class="hlist">
+<li><code><a title="tsteno.language.tokenizer.IdentifierToken.is_match" href="#tsteno.language.tokenizer.Token.is_match">is_match</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.IdentifierToken.parse" href="#tsteno.language.tokenizer.Token.parse">parse</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.IdentifierToken.value" href="#tsteno.language.tokenizer.Token.value">value</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="tsteno.language.tokenizer.IdentifierToken"><code class="flex name class">
+<span>class <span class="ident">IdentifierToken</span></span>
+<span>(</span><span>val)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represent the most abstract type of token </p>
+<p>Create a new token from given value</p>
+<p>Keyword arguments:
+val &ndash; token value</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class IdentifierToken(Token):
+    SPECIAL_CHARACTERS = [&#39;_&#39;]
+
+    @staticmethod
+    def is_match(character):
+        return character != None and character in string.ascii_letters
+
+    @staticmethod
+    def parse(tokenizer):
+        characters = [tokenizer.get_current_character()]
+
+        while IdentifierToken.is_match(tokenizer.next_character()) or (
+                tokenizer.get_current_character() != None and (
+                    tokenizer.get_current_character().isdigit() or
+                    tokenizer.get_current_character() in IdentifierToken.SPECIAL_CHARACTERS
+                )
+        ):
+            characters.append(tokenizer.get_current_character())
+
+        if FunctionIdentifierToken.is_match(tokenizer.get_current_character()):
+            return FunctionIdentifierToken.parse(tokenizer, &#34;&#34;.join(characters))
+
+        return IdentifierToken(&#34;&#34;.join(characters))</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="tsteno.language.tokenizer.Token" href="#tsteno.language.tokenizer.Token">Token</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="tsteno.language.tokenizer.FunctionIdentifierToken" href="#tsteno.language.tokenizer.FunctionIdentifierToken">FunctionIdentifierToken</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="tsteno.language.tokenizer.IdentifierToken.SPECIAL_CHARACTERS"><code class="name">var <span class="ident">SPECIAL_CHARACTERS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="tsteno.language.tokenizer.Token" href="#tsteno.language.tokenizer.Token">Token</a></b></code>:
+<ul class="hlist">
+<li><code><a title="tsteno.language.tokenizer.Token.is_match" href="#tsteno.language.tokenizer.Token.is_match">is_match</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Token.parse" href="#tsteno.language.tokenizer.Token.parse">parse</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Token.value" href="#tsteno.language.tokenizer.Token.value">value</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="tsteno.language.tokenizer.IllegalCharacter"><code class="flex name class">
+<span>class <span class="ident">IllegalCharacter</span></span>
+<span>(</span><span>tokenizer)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class IllegalCharacter(TokenizerError):
+    def __init__(self, tokenizer):
+        super().__init__(&#34;Syntax error, illegal character&#34;, tokenizer)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="tsteno.language.tokenizer.TokenizerError" href="#tsteno.language.tokenizer.TokenizerError">TokenizerError</a></li>
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="tsteno.language.tokenizer.TokenizerError" href="#tsteno.language.tokenizer.TokenizerError">TokenizerError</a></b></code>:
+<ul class="hlist">
+<li><code><a title="tsteno.language.tokenizer.TokenizerError.msg" href="#tsteno.language.tokenizer.TokenizerError.msg">msg</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.TokenizerError.tokenizer" href="#tsteno.language.tokenizer.TokenizerError.tokenizer">tokenizer</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="tsteno.language.tokenizer.ListSeparatorToken"><code class="flex name class">
+<span>class <span class="ident">ListSeparatorToken</span></span>
+<span>(</span><span>val)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represent the most abstract type of token </p>
+<p>Create a new token from given value</p>
+<p>Keyword arguments:
+val &ndash; token value</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ListSeparatorToken(Token):
+    SEPARATORS = [&#39;,&#39;]
+
+    @staticmethod
+    def is_match(character):
+        return character in ListSeparatorToken.SEPARATORS
+
+    @staticmethod
+    def parse(tokenizer):
+        op = tokenizer.get_current_character()
+
+        tokenizer.next_character()
+
+        return ListSeparatorToken(op)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="tsteno.language.tokenizer.Token" href="#tsteno.language.tokenizer.Token">Token</a></li>
+</ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="tsteno.language.tokenizer.ListSeparatorToken.SEPARATORS"><code class="name">var <span class="ident">SEPARATORS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="tsteno.language.tokenizer.Token" href="#tsteno.language.tokenizer.Token">Token</a></b></code>:
+<ul class="hlist">
+<li><code><a title="tsteno.language.tokenizer.Token.is_match" href="#tsteno.language.tokenizer.Token.is_match">is_match</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Token.parse" href="#tsteno.language.tokenizer.Token.parse">parse</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Token.value" href="#tsteno.language.tokenizer.Token.value">value</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="tsteno.language.tokenizer.NumberToken"><code class="flex name class">
+<span>class <span class="ident">NumberToken</span></span>
+<span>(</span><span>val)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represent the most abstract type of token </p>
+<p>Create a new token from given value</p>
+<p>Keyword arguments:
+val &ndash; token value</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class NumberToken(Token):
+    @staticmethod
+    def is_match(character):
+        return character != None and (character.isdigit() or character == &#39;.&#39;)
+
+    @staticmethod
+    def parse(tokenizer):
+        characters = [tokenizer.get_current_character()]
+
+        while NumberToken.is_match(tokenizer.next_character()):
+            characters.append(tokenizer.get_current_character())
+
+        num_str = &#34;&#34;.join(characters)
+
+        if &#34;.&#34; in characters:
+            return NumberToken(float(num_str))
+
+        return NumberToken(int(num_str))</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="tsteno.language.tokenizer.Token" href="#tsteno.language.tokenizer.Token">Token</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="tsteno.language.tokenizer.Token" href="#tsteno.language.tokenizer.Token">Token</a></b></code>:
+<ul class="hlist">
+<li><code><a title="tsteno.language.tokenizer.Token.is_match" href="#tsteno.language.tokenizer.Token.is_match">is_match</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Token.parse" href="#tsteno.language.tokenizer.Token.parse">parse</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Token.value" href="#tsteno.language.tokenizer.Token.value">value</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="tsteno.language.tokenizer.StringToken"><code class="flex name class">
+<span>class <span class="ident">StringToken</span></span>
+<span>(</span><span>val)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represent the most abstract type of token </p>
+<p>Create a new token from given value</p>
+<p>Keyword arguments:
+val &ndash; token value</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class StringToken(Token):
+    @staticmethod
+    def is_match(character):
+        return character == &#34;\&#34;&#34;
+
+    @staticmethod
+    def parse(tokenizer):
+        characters = []
+        finished_string = False
+
+        while tokenizer.next_character() != None:
+            if tokenizer.get_current_character() == &#34;\&#34;&#34; and (len(characters) == 0 or characters[-1] != &#34;\\&#34;):
+                tokenizer.next_character()
+                finished_string = True
+                break
+
+            if tokenizer.get_current_character() == &#34;\&#34;&#34;:
+                characters[-1] = tokenizer.get_current_character()
+            else:
+                characters.append(tokenizer.get_current_character())
+
+        if not finished_string:
+            raise IllegalCharacter(tokenizer)
+
+        return StringToken(&#34;&#34;.join(characters))</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="tsteno.language.tokenizer.Token" href="#tsteno.language.tokenizer.Token">Token</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="tsteno.language.tokenizer.Token" href="#tsteno.language.tokenizer.Token">Token</a></b></code>:
+<ul class="hlist">
+<li><code><a title="tsteno.language.tokenizer.Token.is_match" href="#tsteno.language.tokenizer.Token.is_match">is_match</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Token.parse" href="#tsteno.language.tokenizer.Token.parse">parse</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Token.value" href="#tsteno.language.tokenizer.Token.value">value</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="tsteno.language.tokenizer.Token"><code class="flex name class">
+<span>class <span class="ident">Token</span></span>
+<span>(</span><span>val)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represent the most abstract type of token </p>
+<p>Create a new token from given value</p>
+<p>Keyword arguments:
+val &ndash; token value</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Token:
+    &#34;&#34;&#34; Represent the most abstract type of token &#34;&#34;&#34;
+    __slots__ = [&#39;value&#39;]
+
+    def __init__(self, val):
+        &#34;&#34;&#34; 
+        Create a new token from given value
+
+        Keyword arguments:
+        val -- token value
+        &#34;&#34;&#34;
+
+        self.value = val
+
+    def get_value(self):
+        return self.value
+
+    @staticmethod
+    def is_match(character):
+        &#34;&#34;&#34; Check if given character match with token character list 
+
+        Keyword arguments:
+        character -- character to be checked
+        &#34;&#34;&#34;
+        raise Exception(&#34;Method not defined&#34;)
+
+    @staticmethod
+    def parse(tokenizer):
+        &#34;&#34;&#34; After a match, generate a token class from the current buffer. 
+
+        Keyword arguments:
+        tokenizer -- current buffer
+        &#34;&#34;&#34;
+        raise Exception(&#34;Method not defined&#34;)
+
+    def __repr__(self):
+        return f&#39;{self.__class__.__name__}: {self.value}&#39;</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="tsteno.language.tokenizer.BinOpToken" href="#tsteno.language.tokenizer.BinOpToken">BinOpToken</a></li>
+<li><a title="tsteno.language.tokenizer.ClosureToken" href="#tsteno.language.tokenizer.ClosureToken">ClosureToken</a></li>
+<li><a title="tsteno.language.tokenizer.IdentifierToken" href="#tsteno.language.tokenizer.IdentifierToken">IdentifierToken</a></li>
+<li><a title="tsteno.language.tokenizer.ListSeparatorToken" href="#tsteno.language.tokenizer.ListSeparatorToken">ListSeparatorToken</a></li>
+<li><a title="tsteno.language.tokenizer.NumberToken" href="#tsteno.language.tokenizer.NumberToken">NumberToken</a></li>
+<li><a title="tsteno.language.tokenizer.StringToken" href="#tsteno.language.tokenizer.StringToken">StringToken</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="tsteno.language.tokenizer.Token.is_match"><code class="name flex">
+<span>def <span class="ident">is_match</span></span>(<span>character)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Check if given character match with token character list </p>
+<p>Keyword arguments:
+character &ndash; character to be checked</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def is_match(character):
+    &#34;&#34;&#34; Check if given character match with token character list 
+
+    Keyword arguments:
+    character -- character to be checked
+    &#34;&#34;&#34;
+    raise Exception(&#34;Method not defined&#34;)</code></pre>
+</details>
+</dd>
+<dt id="tsteno.language.tokenizer.Token.parse"><code class="name flex">
+<span>def <span class="ident">parse</span></span>(<span>tokenizer)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>After a match, generate a token class from the current buffer. </p>
+<p>Keyword arguments:
+tokenizer &ndash; current buffer</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def parse(tokenizer):
+    &#34;&#34;&#34; After a match, generate a token class from the current buffer. 
+
+    Keyword arguments:
+    tokenizer -- current buffer
+    &#34;&#34;&#34;
+    raise Exception(&#34;Method not defined&#34;)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tsteno.language.tokenizer.Token.value"><code class="name">var <span class="ident">value</span></code></dt>
+<dd>
+<div class="desc"><p>Return an attribute of instance, which is of type owner.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="tsteno.language.tokenizer.Token.get_value"><code class="name flex">
+<span>def <span class="ident">get_value</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_value(self):
+    return self.value</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="tsteno.language.tokenizer.Tokenizer"><code class="flex name class">
+<span>class <span class="ident">Tokenizer</span></span>
+<span>(</span><span>buffer)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Tokenizer:
+    AVAILABLE_TOKENS = [
+        NumberToken, BinOpToken,
+        StringToken, IdentifierToken,
+        ClosureToken, ListSeparatorToken
+    ]
+
+    BLANK_SPACES = [&#39; &#39;, &#34;\r&#34;]
+
+    __slots__ = [&#39;buffer&#39;, &#39;current_pos&#39;,
+                 &#39;current_character&#39;, &#39;bufferlen&#39;, &#39;col&#39;, &#39;lin&#39;]
+
+    def __init__(self, buffer):
+        self.buffer = buffer
+        self.bufferlen = len(self.buffer)
+        self.current_pos = -1
+
+        self.lin = 0
+        self.col = 0
+
+        self.next_character()
+
+    def next_character(self):
+        self.current_pos = self.current_pos + 1
+        self.current_character = self.buffer[self.current_pos] if self.bufferlen &gt; self.current_pos else None
+
+        if self.current_character == &#34;\n&#34;:
+            self.lin = self.lin + 1
+            self.col = 0
+        else:
+            self.col = self.col + 1
+
+        return self.current_character
+
+    def get_current_character(self):
+        return self.current_character
+
+    def previous_character(self):
+        self.current_pos = self.current_pos - 1
+        self.current_character = self.buffer[self.current_pos] if 0 &lt;= self.current_pos else None
+        if self.current_character == &#34;\n&#34;:
+            self.lin = self.lin - 1
+            self.col = 0
+        else:
+            self.col = self.col - 1
+        return self.current_character
+
+    def debug_information(self):
+        return {&#39;buffer&#39;: self.buffer, &#39;lin&#39;: self.lin, &#39;col&#39;: self.col}
+
+    def next_token(self):
+        while self.current_character in Tokenizer.BLANK_SPACES:
+            self.next_character()
+
+        if self.current_character == None:
+            return None
+
+        for token in Tokenizer.AVAILABLE_TOKENS:
+            if token.is_match(self.current_character):
+                return token.parse(self)
+
+        raise IllegalCharacter(self)
+
+    def get_tokens(self):
+        tokens = []
+
+        token = self.next_token()
+
+        while token != None:
+            tokens.append(token)
+            token = self.next_token()
+
+        return tokens</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="tsteno.language.tokenizer.Tokenizer.AVAILABLE_TOKENS"><code class="name">var <span class="ident">AVAILABLE_TOKENS</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="tsteno.language.tokenizer.Tokenizer.BLANK_SPACES"><code class="name">var <span class="ident">BLANK_SPACES</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tsteno.language.tokenizer.Tokenizer.buffer"><code class="name">var <span class="ident">buffer</span></code></dt>
+<dd>
+<div class="desc"><p>Return an attribute of instance, which is of type owner.</p></div>
+</dd>
+<dt id="tsteno.language.tokenizer.Tokenizer.bufferlen"><code class="name">var <span class="ident">bufferlen</span></code></dt>
+<dd>
+<div class="desc"><p>Return an attribute of instance, which is of type owner.</p></div>
+</dd>
+<dt id="tsteno.language.tokenizer.Tokenizer.col"><code class="name">var <span class="ident">col</span></code></dt>
+<dd>
+<div class="desc"><p>Return an attribute of instance, which is of type owner.</p></div>
+</dd>
+<dt id="tsteno.language.tokenizer.Tokenizer.current_character"><code class="name">var <span class="ident">current_character</span></code></dt>
+<dd>
+<div class="desc"><p>Return an attribute of instance, which is of type owner.</p></div>
+</dd>
+<dt id="tsteno.language.tokenizer.Tokenizer.current_pos"><code class="name">var <span class="ident">current_pos</span></code></dt>
+<dd>
+<div class="desc"><p>Return an attribute of instance, which is of type owner.</p></div>
+</dd>
+<dt id="tsteno.language.tokenizer.Tokenizer.lin"><code class="name">var <span class="ident">lin</span></code></dt>
+<dd>
+<div class="desc"><p>Return an attribute of instance, which is of type owner.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="tsteno.language.tokenizer.Tokenizer.debug_information"><code class="name flex">
+<span>def <span class="ident">debug_information</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def debug_information(self):
+    return {&#39;buffer&#39;: self.buffer, &#39;lin&#39;: self.lin, &#39;col&#39;: self.col}</code></pre>
+</details>
+</dd>
+<dt id="tsteno.language.tokenizer.Tokenizer.get_current_character"><code class="name flex">
+<span>def <span class="ident">get_current_character</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_current_character(self):
+    return self.current_character</code></pre>
+</details>
+</dd>
+<dt id="tsteno.language.tokenizer.Tokenizer.get_tokens"><code class="name flex">
+<span>def <span class="ident">get_tokens</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_tokens(self):
+    tokens = []
+
+    token = self.next_token()
+
+    while token != None:
+        tokens.append(token)
+        token = self.next_token()
+
+    return tokens</code></pre>
+</details>
+</dd>
+<dt id="tsteno.language.tokenizer.Tokenizer.next_character"><code class="name flex">
+<span>def <span class="ident">next_character</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def next_character(self):
+    self.current_pos = self.current_pos + 1
+    self.current_character = self.buffer[self.current_pos] if self.bufferlen &gt; self.current_pos else None
+
+    if self.current_character == &#34;\n&#34;:
+        self.lin = self.lin + 1
+        self.col = 0
+    else:
+        self.col = self.col + 1
+
+    return self.current_character</code></pre>
+</details>
+</dd>
+<dt id="tsteno.language.tokenizer.Tokenizer.next_token"><code class="name flex">
+<span>def <span class="ident">next_token</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def next_token(self):
+    while self.current_character in Tokenizer.BLANK_SPACES:
+        self.next_character()
+
+    if self.current_character == None:
+        return None
+
+    for token in Tokenizer.AVAILABLE_TOKENS:
+        if token.is_match(self.current_character):
+            return token.parse(self)
+
+    raise IllegalCharacter(self)</code></pre>
+</details>
+</dd>
+<dt id="tsteno.language.tokenizer.Tokenizer.previous_character"><code class="name flex">
+<span>def <span class="ident">previous_character</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def previous_character(self):
+    self.current_pos = self.current_pos - 1
+    self.current_character = self.buffer[self.current_pos] if 0 &lt;= self.current_pos else None
+    if self.current_character == &#34;\n&#34;:
+        self.lin = self.lin - 1
+        self.col = 0
+    else:
+        self.col = self.col - 1
+    return self.current_character</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="tsteno.language.tokenizer.TokenizerError"><code class="flex name class">
+<span>class <span class="ident">TokenizerError</span></span>
+<span>(</span><span>msg, tokenizer)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Common base class for all non-exit exceptions.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class TokenizerError(Exception):
+    __slots__ = [&#39;tokenizer&#39;, &#39;msg&#39;]
+
+    def __init__(self, msg, tokenizer):
+        self.msg = msg
+        self.tokenizer = tokenizer
+
+    def __str__(self):
+        debug_info = self.tokenizer.debug_information()
+        lines = debug_info[&#39;buffer&#39;].split(&#34;\n&#34;)
+
+        extra_information = lines[debug_info[&#39;lin&#39;]]
+        extra_information += &#34;\n&#34; + (&#39; &#39;*(debug_info[&#39;col&#39;] - 1)) + &#39;^&#39;
+
+        return f&#34;{self.msg} near line {debug_info[&#39;lin&#39;] + 1} and column {debug_info[&#39;col&#39;] + 1}:\n{extra_information}&#34;</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.Exception</li>
+<li>builtins.BaseException</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="tsteno.language.tokenizer.IllegalCharacter" href="#tsteno.language.tokenizer.IllegalCharacter">IllegalCharacter</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tsteno.language.tokenizer.TokenizerError.msg"><code class="name">var <span class="ident">msg</span></code></dt>
+<dd>
+<div class="desc"><p>Return an attribute of instance, which is of type owner.</p></div>
+</dd>
+<dt id="tsteno.language.tokenizer.TokenizerError.tokenizer"><code class="name">var <span class="ident">tokenizer</span></code></dt>
+<dd>
+<div class="desc"><p>Return an attribute of instance, which is of type owner.</p></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tsteno.language" href="index.html">tsteno.language</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tsteno.language.tokenizer.BinOpToken" href="#tsteno.language.tokenizer.BinOpToken">BinOpToken</a></code></h4>
+<ul class="">
+<li><code><a title="tsteno.language.tokenizer.BinOpToken.BINARY_OP_CHARACTERS" href="#tsteno.language.tokenizer.BinOpToken.BINARY_OP_CHARACTERS">BINARY_OP_CHARACTERS</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tsteno.language.tokenizer.ClosureToken" href="#tsteno.language.tokenizer.ClosureToken">ClosureToken</a></code></h4>
+<ul class="">
+<li><code><a title="tsteno.language.tokenizer.ClosureToken.CLOSURE_CHARACTERS" href="#tsteno.language.tokenizer.ClosureToken.CLOSURE_CHARACTERS">CLOSURE_CHARACTERS</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tsteno.language.tokenizer.FunctionIdentifierToken" href="#tsteno.language.tokenizer.FunctionIdentifierToken">FunctionIdentifierToken</a></code></h4>
+<ul class="">
+<li><code><a title="tsteno.language.tokenizer.FunctionIdentifierToken.arguments" href="#tsteno.language.tokenizer.FunctionIdentifierToken.arguments">arguments</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.FunctionIdentifierToken.fname" href="#tsteno.language.tokenizer.FunctionIdentifierToken.fname">fname</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tsteno.language.tokenizer.IdentifierToken" href="#tsteno.language.tokenizer.IdentifierToken">IdentifierToken</a></code></h4>
+<ul class="">
+<li><code><a title="tsteno.language.tokenizer.IdentifierToken.SPECIAL_CHARACTERS" href="#tsteno.language.tokenizer.IdentifierToken.SPECIAL_CHARACTERS">SPECIAL_CHARACTERS</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tsteno.language.tokenizer.IllegalCharacter" href="#tsteno.language.tokenizer.IllegalCharacter">IllegalCharacter</a></code></h4>
+</li>
+<li>
+<h4><code><a title="tsteno.language.tokenizer.ListSeparatorToken" href="#tsteno.language.tokenizer.ListSeparatorToken">ListSeparatorToken</a></code></h4>
+<ul class="">
+<li><code><a title="tsteno.language.tokenizer.ListSeparatorToken.SEPARATORS" href="#tsteno.language.tokenizer.ListSeparatorToken.SEPARATORS">SEPARATORS</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tsteno.language.tokenizer.NumberToken" href="#tsteno.language.tokenizer.NumberToken">NumberToken</a></code></h4>
+</li>
+<li>
+<h4><code><a title="tsteno.language.tokenizer.StringToken" href="#tsteno.language.tokenizer.StringToken">StringToken</a></code></h4>
+</li>
+<li>
+<h4><code><a title="tsteno.language.tokenizer.Token" href="#tsteno.language.tokenizer.Token">Token</a></code></h4>
+<ul class="">
+<li><code><a title="tsteno.language.tokenizer.Token.get_value" href="#tsteno.language.tokenizer.Token.get_value">get_value</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Token.is_match" href="#tsteno.language.tokenizer.Token.is_match">is_match</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Token.parse" href="#tsteno.language.tokenizer.Token.parse">parse</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Token.value" href="#tsteno.language.tokenizer.Token.value">value</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tsteno.language.tokenizer.Tokenizer" href="#tsteno.language.tokenizer.Tokenizer">Tokenizer</a></code></h4>
+<ul class="">
+<li><code><a title="tsteno.language.tokenizer.Tokenizer.AVAILABLE_TOKENS" href="#tsteno.language.tokenizer.Tokenizer.AVAILABLE_TOKENS">AVAILABLE_TOKENS</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Tokenizer.BLANK_SPACES" href="#tsteno.language.tokenizer.Tokenizer.BLANK_SPACES">BLANK_SPACES</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Tokenizer.buffer" href="#tsteno.language.tokenizer.Tokenizer.buffer">buffer</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Tokenizer.bufferlen" href="#tsteno.language.tokenizer.Tokenizer.bufferlen">bufferlen</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Tokenizer.col" href="#tsteno.language.tokenizer.Tokenizer.col">col</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Tokenizer.current_character" href="#tsteno.language.tokenizer.Tokenizer.current_character">current_character</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Tokenizer.current_pos" href="#tsteno.language.tokenizer.Tokenizer.current_pos">current_pos</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Tokenizer.debug_information" href="#tsteno.language.tokenizer.Tokenizer.debug_information">debug_information</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Tokenizer.get_current_character" href="#tsteno.language.tokenizer.Tokenizer.get_current_character">get_current_character</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Tokenizer.get_tokens" href="#tsteno.language.tokenizer.Tokenizer.get_tokens">get_tokens</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Tokenizer.lin" href="#tsteno.language.tokenizer.Tokenizer.lin">lin</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Tokenizer.next_character" href="#tsteno.language.tokenizer.Tokenizer.next_character">next_character</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Tokenizer.next_token" href="#tsteno.language.tokenizer.Tokenizer.next_token">next_token</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Tokenizer.previous_character" href="#tsteno.language.tokenizer.Tokenizer.previous_character">previous_character</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tsteno.language.tokenizer.TokenizerError" href="#tsteno.language.tokenizer.TokenizerError">TokenizerError</a></code></h4>
+<ul class="">
+<li><code><a title="tsteno.language.tokenizer.TokenizerError.msg" href="#tsteno.language.tokenizer.TokenizerError.msg">msg</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.TokenizerError.tokenizer" href="#tsteno.language.tokenizer.TokenizerError.tokenizer">tokenizer</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.3</a>.</p>
+</footer>
+</body>
+</html>

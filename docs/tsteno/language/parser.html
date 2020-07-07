@@ -1,0 +1,761 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.8.3" />
+<title>tsteno.language.parser API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>tsteno.language.parser</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from .tokenizer import NumberToken, IdentifierToken, ClosureToken, FunctionIdentifierToken, ListSeparatorToken, BinOpToken
+from collections import namedtuple
+
+OpInfo = namedtuple(&#39;OpInfo&#39;, &#39;prec assoc function&#39;)
+
+OPINFO_MAP = {
+    &#39;=&#39;:    OpInfo(0, &#39;LEFT&#39;, &#39;Set&#39;),
+    &#39;+&#39;:    OpInfo(1, &#39;LEFT&#39;, &#39;Plus&#39;),
+    &#39;-&#39;:    OpInfo(1, &#39;LEFT&#39;, &#39;Minus&#39;),
+    &#39;*&#39;:    OpInfo(2, &#39;LEFT&#39;, &#39;Product&#39;),
+    &#39;/&#39;:    OpInfo(2, &#39;LEFT&#39;, &#39;Div&#39;),
+    &#39;^&#39;:    OpInfo(3, &#39;RIGHT&#39;, &#39;Pow&#39;),
+}
+
+class ParserOutput:
+
+    @staticmethod
+    def is_match(token):
+        &#34;&#34;&#34; Check if given character match with token character list 
+
+        Keyword arguments:
+        character -- character to be checked
+        &#34;&#34;&#34;
+        raise Exception(&#34;Method not defined&#34;)
+
+    @staticmethod
+    def parse(parser):
+        &#34;&#34;&#34; After a match, generate a token class from the current buffer. 
+
+        Keyword arguments:
+        tokenizer -- current buffer
+        &#34;&#34;&#34;
+        raise Exception(&#34;Method not defined&#34;)
+
+class ExpressionParserOutput(ParserOutput):
+    __slots__ = [&#39;value&#39;]
+
+    def __init__(self, value):
+        self.value = value
+
+    @staticmethod
+    def is_match(token):
+        return isinstance(token, NumberToken) or isinstance(token, IdentifierToken)
+
+    @staticmethod
+    def parse(parser, min_prec = 0):
+        atom_lhs = ExpressionParserOutput.compute_atom(parser)
+
+        while (parser.current_pos &lt; len(parser.tokens) and 
+            not isinstance(parser.curtok, ClosureToken) and
+            parser.curtok != None):
+
+            cur = parser.curtok
+            op = cur.get_value()
+            prec, assoc, function = OPINFO_MAP[op]
+
+            if (cur is None or 
+                not isinstance(cur, BinOpToken) or 
+                prec &lt; min_prec):
+                break
+
+            next_min_prec = prec + 1 if assoc == &#39;LEFT&#39; else prec
+            parser.get_next_token()
+            atom_rhs = ExpressionParserOutput.parse(parser, next_min_prec)
+
+            atom_lhs = FunctionExpressionParserOutput(function, [atom_lhs, atom_rhs])
+
+        return atom_lhs
+        
+    @staticmethod
+    def compute_atom(parser):
+        token = parser.curtok
+        parser.get_next_token()
+
+        if token == None:
+            return None
+
+        if isinstance(token, NumberToken):
+            return NumberExpressionParserOutput(token.get_value())
+        elif isinstance(token, FunctionIdentifierToken):
+            arguments = []
+
+            for arg_token in token.arguments:
+                if isinstance(arg_token, ListSeparatorToken):
+                    continue
+
+                arg_parser = Parser([arg_token])
+                arg_parser_result = arg_parser.get_next_parser_output()
+
+                arguments.append(arg_parser_result)
+
+            return FunctionExpressionParserOutput(token.fname, arguments)
+        elif isinstance(token, IdentifierToken):
+            return ExpressionParserOutput(token.get_value())
+
+        raise Exception(&#34;Unknown token type&#34;)    
+
+    def __repr__(self):
+        return str(self.value)
+
+class NumberExpressionParserOutput(ExpressionParserOutput):
+    pass
+
+class FunctionExpressionParserOutput(ExpressionParserOutput):
+    __slots__ = [&#39;fname&#39;, &#39;arguments&#39;]
+
+    def __init__(self, fname, arguments):
+        self.fname = fname
+        self.arguments = arguments
+    
+    def __repr__(self):
+        output = self.fname + &#34;[&#34;
+        for arg in self.arguments:
+            output += str(arg) + &#34;, &#34;
+        output = output[:-2]
+        output += &#34;]&#34;
+
+        return output
+
+class Parser:
+    AVAILABLE_PARSER_OUT = [
+        ExpressionParserOutput
+    ]
+
+    __slots__ = [&#39;tokens&#39;, &#39;current_pos&#39;, &#39;curtok&#39;, &#39;toklen&#39;]
+
+    def __init__(self, tokens):
+        self.tokens = tokens
+        self.current_pos = -1
+        self.toklen = len(self.tokens)
+        self.get_next_token()
+
+    def get_next_token(self):
+        self.current_pos = self.current_pos + 1
+        self.curtok = self.tokens[self.current_pos] if self.toklen &gt; self.current_pos else None
+        return self.curtok
+
+    def get_current_token(self):
+        return self.curtok
+
+    def get_next_parser_output(self):
+        if self.curtok == None:
+            return None
+
+        if isinstance(self.curtok, ClosureToken):
+            self.get_next_token()
+            return self.get_next_parser_output()
+
+        for parser_output in Parser.AVAILABLE_PARSER_OUT:
+            if parser_output.is_match(self.curtok):
+                return parser_output.parse(self)
+
+        raise Exception(&#34;Unexpected &#34; + str(self.curtok))
+
+    def get_all_parser_output(self):
+        parser_output = self.get_next_parser_output()
+        parser_output_all = []
+
+        while parser_output != None:
+            parser_output_all.append(parser_output)
+            parser_output = self.get_next_parser_output()
+
+        return parser_output_all</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tsteno.language.parser.ExpressionParserOutput"><code class="flex name class">
+<span>class <span class="ident">ExpressionParserOutput</span></span>
+<span>(</span><span>value)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ExpressionParserOutput(ParserOutput):
+    __slots__ = [&#39;value&#39;]
+
+    def __init__(self, value):
+        self.value = value
+
+    @staticmethod
+    def is_match(token):
+        return isinstance(token, NumberToken) or isinstance(token, IdentifierToken)
+
+    @staticmethod
+    def parse(parser, min_prec = 0):
+        atom_lhs = ExpressionParserOutput.compute_atom(parser)
+
+        while (parser.current_pos &lt; len(parser.tokens) and 
+            not isinstance(parser.curtok, ClosureToken) and
+            parser.curtok != None):
+
+            cur = parser.curtok
+            op = cur.get_value()
+            prec, assoc, function = OPINFO_MAP[op]
+
+            if (cur is None or 
+                not isinstance(cur, BinOpToken) or 
+                prec &lt; min_prec):
+                break
+
+            next_min_prec = prec + 1 if assoc == &#39;LEFT&#39; else prec
+            parser.get_next_token()
+            atom_rhs = ExpressionParserOutput.parse(parser, next_min_prec)
+
+            atom_lhs = FunctionExpressionParserOutput(function, [atom_lhs, atom_rhs])
+
+        return atom_lhs
+        
+    @staticmethod
+    def compute_atom(parser):
+        token = parser.curtok
+        parser.get_next_token()
+
+        if token == None:
+            return None
+
+        if isinstance(token, NumberToken):
+            return NumberExpressionParserOutput(token.get_value())
+        elif isinstance(token, FunctionIdentifierToken):
+            arguments = []
+
+            for arg_token in token.arguments:
+                if isinstance(arg_token, ListSeparatorToken):
+                    continue
+
+                arg_parser = Parser([arg_token])
+                arg_parser_result = arg_parser.get_next_parser_output()
+
+                arguments.append(arg_parser_result)
+
+            return FunctionExpressionParserOutput(token.fname, arguments)
+        elif isinstance(token, IdentifierToken):
+            return ExpressionParserOutput(token.get_value())
+
+        raise Exception(&#34;Unknown token type&#34;)    
+
+    def __repr__(self):
+        return str(self.value)</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="tsteno.language.parser.ParserOutput" href="#tsteno.language.parser.ParserOutput">ParserOutput</a></li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="tsteno.language.parser.FunctionExpressionParserOutput" href="#tsteno.language.parser.FunctionExpressionParserOutput">FunctionExpressionParserOutput</a></li>
+<li><a title="tsteno.language.parser.NumberExpressionParserOutput" href="#tsteno.language.parser.NumberExpressionParserOutput">NumberExpressionParserOutput</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="tsteno.language.parser.ExpressionParserOutput.compute_atom"><code class="name flex">
+<span>def <span class="ident">compute_atom</span></span>(<span>parser)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def compute_atom(parser):
+    token = parser.curtok
+    parser.get_next_token()
+
+    if token == None:
+        return None
+
+    if isinstance(token, NumberToken):
+        return NumberExpressionParserOutput(token.get_value())
+    elif isinstance(token, FunctionIdentifierToken):
+        arguments = []
+
+        for arg_token in token.arguments:
+            if isinstance(arg_token, ListSeparatorToken):
+                continue
+
+            arg_parser = Parser([arg_token])
+            arg_parser_result = arg_parser.get_next_parser_output()
+
+            arguments.append(arg_parser_result)
+
+        return FunctionExpressionParserOutput(token.fname, arguments)
+    elif isinstance(token, IdentifierToken):
+        return ExpressionParserOutput(token.get_value())
+
+    raise Exception(&#34;Unknown token type&#34;)    </code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tsteno.language.parser.ExpressionParserOutput.value"><code class="name">var <span class="ident">value</span></code></dt>
+<dd>
+<div class="desc"><p>Return an attribute of instance, which is of type owner.</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="tsteno.language.parser.ParserOutput" href="#tsteno.language.parser.ParserOutput">ParserOutput</a></b></code>:
+<ul class="hlist">
+<li><code><a title="tsteno.language.parser.ParserOutput.is_match" href="#tsteno.language.parser.ParserOutput.is_match">is_match</a></code></li>
+<li><code><a title="tsteno.language.parser.ParserOutput.parse" href="#tsteno.language.parser.ParserOutput.parse">parse</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="tsteno.language.parser.FunctionExpressionParserOutput"><code class="flex name class">
+<span>class <span class="ident">FunctionExpressionParserOutput</span></span>
+<span>(</span><span>fname, arguments)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class FunctionExpressionParserOutput(ExpressionParserOutput):
+    __slots__ = [&#39;fname&#39;, &#39;arguments&#39;]
+
+    def __init__(self, fname, arguments):
+        self.fname = fname
+        self.arguments = arguments
+    
+    def __repr__(self):
+        output = self.fname + &#34;[&#34;
+        for arg in self.arguments:
+            output += str(arg) + &#34;, &#34;
+        output = output[:-2]
+        output += &#34;]&#34;
+
+        return output</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="tsteno.language.parser.ExpressionParserOutput" href="#tsteno.language.parser.ExpressionParserOutput">ExpressionParserOutput</a></li>
+<li><a title="tsteno.language.parser.ParserOutput" href="#tsteno.language.parser.ParserOutput">ParserOutput</a></li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tsteno.language.parser.FunctionExpressionParserOutput.arguments"><code class="name">var <span class="ident">arguments</span></code></dt>
+<dd>
+<div class="desc"><p>Return an attribute of instance, which is of type owner.</p></div>
+</dd>
+<dt id="tsteno.language.parser.FunctionExpressionParserOutput.fname"><code class="name">var <span class="ident">fname</span></code></dt>
+<dd>
+<div class="desc"><p>Return an attribute of instance, which is of type owner.</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="tsteno.language.parser.ExpressionParserOutput" href="#tsteno.language.parser.ExpressionParserOutput">ExpressionParserOutput</a></b></code>:
+<ul class="hlist">
+<li><code><a title="tsteno.language.parser.ExpressionParserOutput.is_match" href="#tsteno.language.parser.ParserOutput.is_match">is_match</a></code></li>
+<li><code><a title="tsteno.language.parser.ExpressionParserOutput.parse" href="#tsteno.language.parser.ParserOutput.parse">parse</a></code></li>
+<li><code><a title="tsteno.language.parser.ExpressionParserOutput.value" href="#tsteno.language.parser.ExpressionParserOutput.value">value</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="tsteno.language.parser.NumberExpressionParserOutput"><code class="flex name class">
+<span>class <span class="ident">NumberExpressionParserOutput</span></span>
+<span>(</span><span>value)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class NumberExpressionParserOutput(ExpressionParserOutput):
+    pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="tsteno.language.parser.ExpressionParserOutput" href="#tsteno.language.parser.ExpressionParserOutput">ExpressionParserOutput</a></li>
+<li><a title="tsteno.language.parser.ParserOutput" href="#tsteno.language.parser.ParserOutput">ParserOutput</a></li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="tsteno.language.parser.ExpressionParserOutput" href="#tsteno.language.parser.ExpressionParserOutput">ExpressionParserOutput</a></b></code>:
+<ul class="hlist">
+<li><code><a title="tsteno.language.parser.ExpressionParserOutput.is_match" href="#tsteno.language.parser.ParserOutput.is_match">is_match</a></code></li>
+<li><code><a title="tsteno.language.parser.ExpressionParserOutput.parse" href="#tsteno.language.parser.ParserOutput.parse">parse</a></code></li>
+<li><code><a title="tsteno.language.parser.ExpressionParserOutput.value" href="#tsteno.language.parser.ExpressionParserOutput.value">value</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="tsteno.language.parser.OpInfo"><code class="flex name class">
+<span>class <span class="ident">OpInfo</span></span>
+<span>(</span><span>prec, assoc, function)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>OpInfo(prec, assoc, function)</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>builtins.tuple</li>
+</ul>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tsteno.language.parser.OpInfo.assoc"><code class="name">var <span class="ident">assoc</span></code></dt>
+<dd>
+<div class="desc"><p>Alias for field number 1</p></div>
+</dd>
+<dt id="tsteno.language.parser.OpInfo.function"><code class="name">var <span class="ident">function</span></code></dt>
+<dd>
+<div class="desc"><p>Alias for field number 2</p></div>
+</dd>
+<dt id="tsteno.language.parser.OpInfo.prec"><code class="name">var <span class="ident">prec</span></code></dt>
+<dd>
+<div class="desc"><p>Alias for field number 0</p></div>
+</dd>
+</dl>
+</dd>
+<dt id="tsteno.language.parser.Parser"><code class="flex name class">
+<span>class <span class="ident">Parser</span></span>
+<span>(</span><span>tokens)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Parser:
+    AVAILABLE_PARSER_OUT = [
+        ExpressionParserOutput
+    ]
+
+    __slots__ = [&#39;tokens&#39;, &#39;current_pos&#39;, &#39;curtok&#39;, &#39;toklen&#39;]
+
+    def __init__(self, tokens):
+        self.tokens = tokens
+        self.current_pos = -1
+        self.toklen = len(self.tokens)
+        self.get_next_token()
+
+    def get_next_token(self):
+        self.current_pos = self.current_pos + 1
+        self.curtok = self.tokens[self.current_pos] if self.toklen &gt; self.current_pos else None
+        return self.curtok
+
+    def get_current_token(self):
+        return self.curtok
+
+    def get_next_parser_output(self):
+        if self.curtok == None:
+            return None
+
+        if isinstance(self.curtok, ClosureToken):
+            self.get_next_token()
+            return self.get_next_parser_output()
+
+        for parser_output in Parser.AVAILABLE_PARSER_OUT:
+            if parser_output.is_match(self.curtok):
+                return parser_output.parse(self)
+
+        raise Exception(&#34;Unexpected &#34; + str(self.curtok))
+
+    def get_all_parser_output(self):
+        parser_output = self.get_next_parser_output()
+        parser_output_all = []
+
+        while parser_output != None:
+            parser_output_all.append(parser_output)
+            parser_output = self.get_next_parser_output()
+
+        return parser_output_all</code></pre>
+</details>
+<h3>Class variables</h3>
+<dl>
+<dt id="tsteno.language.parser.Parser.AVAILABLE_PARSER_OUT"><code class="name">var <span class="ident">AVAILABLE_PARSER_OUT</span></code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tsteno.language.parser.Parser.current_pos"><code class="name">var <span class="ident">current_pos</span></code></dt>
+<dd>
+<div class="desc"><p>Return an attribute of instance, which is of type owner.</p></div>
+</dd>
+<dt id="tsteno.language.parser.Parser.curtok"><code class="name">var <span class="ident">curtok</span></code></dt>
+<dd>
+<div class="desc"><p>Return an attribute of instance, which is of type owner.</p></div>
+</dd>
+<dt id="tsteno.language.parser.Parser.tokens"><code class="name">var <span class="ident">tokens</span></code></dt>
+<dd>
+<div class="desc"><p>Return an attribute of instance, which is of type owner.</p></div>
+</dd>
+<dt id="tsteno.language.parser.Parser.toklen"><code class="name">var <span class="ident">toklen</span></code></dt>
+<dd>
+<div class="desc"><p>Return an attribute of instance, which is of type owner.</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="tsteno.language.parser.Parser.get_all_parser_output"><code class="name flex">
+<span>def <span class="ident">get_all_parser_output</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_all_parser_output(self):
+    parser_output = self.get_next_parser_output()
+    parser_output_all = []
+
+    while parser_output != None:
+        parser_output_all.append(parser_output)
+        parser_output = self.get_next_parser_output()
+
+    return parser_output_all</code></pre>
+</details>
+</dd>
+<dt id="tsteno.language.parser.Parser.get_current_token"><code class="name flex">
+<span>def <span class="ident">get_current_token</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_current_token(self):
+    return self.curtok</code></pre>
+</details>
+</dd>
+<dt id="tsteno.language.parser.Parser.get_next_parser_output"><code class="name flex">
+<span>def <span class="ident">get_next_parser_output</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_next_parser_output(self):
+    if self.curtok == None:
+        return None
+
+    if isinstance(self.curtok, ClosureToken):
+        self.get_next_token()
+        return self.get_next_parser_output()
+
+    for parser_output in Parser.AVAILABLE_PARSER_OUT:
+        if parser_output.is_match(self.curtok):
+            return parser_output.parse(self)
+
+    raise Exception(&#34;Unexpected &#34; + str(self.curtok))</code></pre>
+</details>
+</dd>
+<dt id="tsteno.language.parser.Parser.get_next_token"><code class="name flex">
+<span>def <span class="ident">get_next_token</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_next_token(self):
+    self.current_pos = self.current_pos + 1
+    self.curtok = self.tokens[self.current_pos] if self.toklen &gt; self.current_pos else None
+    return self.curtok</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+<dt id="tsteno.language.parser.ParserOutput"><code class="flex name class">
+<span>class <span class="ident">ParserOutput</span></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ParserOutput:
+
+    @staticmethod
+    def is_match(token):
+        &#34;&#34;&#34; Check if given character match with token character list 
+
+        Keyword arguments:
+        character -- character to be checked
+        &#34;&#34;&#34;
+        raise Exception(&#34;Method not defined&#34;)
+
+    @staticmethod
+    def parse(parser):
+        &#34;&#34;&#34; After a match, generate a token class from the current buffer. 
+
+        Keyword arguments:
+        tokenizer -- current buffer
+        &#34;&#34;&#34;
+        raise Exception(&#34;Method not defined&#34;)</code></pre>
+</details>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="tsteno.language.parser.ExpressionParserOutput" href="#tsteno.language.parser.ExpressionParserOutput">ExpressionParserOutput</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="tsteno.language.parser.ParserOutput.is_match"><code class="name flex">
+<span>def <span class="ident">is_match</span></span>(<span>token)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Check if given character match with token character list </p>
+<p>Keyword arguments:
+character &ndash; character to be checked</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def is_match(token):
+    &#34;&#34;&#34; Check if given character match with token character list 
+
+    Keyword arguments:
+    character -- character to be checked
+    &#34;&#34;&#34;
+    raise Exception(&#34;Method not defined&#34;)</code></pre>
+</details>
+</dd>
+<dt id="tsteno.language.parser.ParserOutput.parse"><code class="name flex">
+<span>def <span class="ident">parse</span></span>(<span>parser)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>After a match, generate a token class from the current buffer. </p>
+<p>Keyword arguments:
+tokenizer &ndash; current buffer</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def parse(parser):
+    &#34;&#34;&#34; After a match, generate a token class from the current buffer. 
+
+    Keyword arguments:
+    tokenizer -- current buffer
+    &#34;&#34;&#34;
+    raise Exception(&#34;Method not defined&#34;)</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="tsteno.language" href="index.html">tsteno.language</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tsteno.language.parser.ExpressionParserOutput" href="#tsteno.language.parser.ExpressionParserOutput">ExpressionParserOutput</a></code></h4>
+<ul class="">
+<li><code><a title="tsteno.language.parser.ExpressionParserOutput.compute_atom" href="#tsteno.language.parser.ExpressionParserOutput.compute_atom">compute_atom</a></code></li>
+<li><code><a title="tsteno.language.parser.ExpressionParserOutput.value" href="#tsteno.language.parser.ExpressionParserOutput.value">value</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tsteno.language.parser.FunctionExpressionParserOutput" href="#tsteno.language.parser.FunctionExpressionParserOutput">FunctionExpressionParserOutput</a></code></h4>
+<ul class="">
+<li><code><a title="tsteno.language.parser.FunctionExpressionParserOutput.arguments" href="#tsteno.language.parser.FunctionExpressionParserOutput.arguments">arguments</a></code></li>
+<li><code><a title="tsteno.language.parser.FunctionExpressionParserOutput.fname" href="#tsteno.language.parser.FunctionExpressionParserOutput.fname">fname</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tsteno.language.parser.NumberExpressionParserOutput" href="#tsteno.language.parser.NumberExpressionParserOutput">NumberExpressionParserOutput</a></code></h4>
+</li>
+<li>
+<h4><code><a title="tsteno.language.parser.OpInfo" href="#tsteno.language.parser.OpInfo">OpInfo</a></code></h4>
+<ul class="">
+<li><code><a title="tsteno.language.parser.OpInfo.assoc" href="#tsteno.language.parser.OpInfo.assoc">assoc</a></code></li>
+<li><code><a title="tsteno.language.parser.OpInfo.function" href="#tsteno.language.parser.OpInfo.function">function</a></code></li>
+<li><code><a title="tsteno.language.parser.OpInfo.prec" href="#tsteno.language.parser.OpInfo.prec">prec</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tsteno.language.parser.Parser" href="#tsteno.language.parser.Parser">Parser</a></code></h4>
+<ul class="">
+<li><code><a title="tsteno.language.parser.Parser.AVAILABLE_PARSER_OUT" href="#tsteno.language.parser.Parser.AVAILABLE_PARSER_OUT">AVAILABLE_PARSER_OUT</a></code></li>
+<li><code><a title="tsteno.language.parser.Parser.current_pos" href="#tsteno.language.parser.Parser.current_pos">current_pos</a></code></li>
+<li><code><a title="tsteno.language.parser.Parser.curtok" href="#tsteno.language.parser.Parser.curtok">curtok</a></code></li>
+<li><code><a title="tsteno.language.parser.Parser.get_all_parser_output" href="#tsteno.language.parser.Parser.get_all_parser_output">get_all_parser_output</a></code></li>
+<li><code><a title="tsteno.language.parser.Parser.get_current_token" href="#tsteno.language.parser.Parser.get_current_token">get_current_token</a></code></li>
+<li><code><a title="tsteno.language.parser.Parser.get_next_parser_output" href="#tsteno.language.parser.Parser.get_next_parser_output">get_next_parser_output</a></code></li>
+<li><code><a title="tsteno.language.parser.Parser.get_next_token" href="#tsteno.language.parser.Parser.get_next_token">get_next_token</a></code></li>
+<li><code><a title="tsteno.language.parser.Parser.tokens" href="#tsteno.language.parser.Parser.tokens">tokens</a></code></li>
+<li><code><a title="tsteno.language.parser.Parser.toklen" href="#tsteno.language.parser.Parser.toklen">toklen</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tsteno.language.parser.ParserOutput" href="#tsteno.language.parser.ParserOutput">ParserOutput</a></code></h4>
+<ul class="">
+<li><code><a title="tsteno.language.parser.ParserOutput.is_match" href="#tsteno.language.parser.ParserOutput.is_match">is_match</a></code></li>
+<li><code><a title="tsteno.language.parser.ParserOutput.parse" href="#tsteno.language.parser.ParserOutput.parse">parse</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.3</a>.</p>
+</footer>
+</body>
+</html>
