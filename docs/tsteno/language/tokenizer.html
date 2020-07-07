@@ -36,7 +36,7 @@ class Token:
     __slots__ = [&#39;value&#39;]
 
     def __init__(self, val):
-        &#34;&#34;&#34; 
+        &#34;&#34;&#34;
         Create a new token from given value
 
         Keyword arguments:
@@ -50,7 +50,7 @@ class Token:
 
     @staticmethod
     def is_match(character):
-        &#34;&#34;&#34; Check if given character match with token character list 
+        &#34;&#34;&#34; Check if given character match with token character list
 
         Keyword arguments:
         character -- character to be checked
@@ -59,7 +59,7 @@ class Token:
 
     @staticmethod
     def parse(tokenizer):
-        &#34;&#34;&#34; After a match, generate a token class from the current buffer. 
+        &#34;&#34;&#34; After a match, generate a token class from the current buffer.
 
         Keyword arguments:
         tokenizer -- current buffer
@@ -73,7 +73,8 @@ class Token:
 class NumberToken(Token):
     @staticmethod
     def is_match(character):
-        return character != None and (character.isdigit() or character == &#39;.&#39;)
+        return character is not None and \
+               (character.isdigit() or character == &#39;.&#39;)
 
     @staticmethod
     def parse(tokenizer):
@@ -114,6 +115,7 @@ class BinOpToken(Token):
 
         return BinOpToken(op)
 
+
 class ListSeparatorToken(Token):
     SEPARATORS = [&#39;,&#39;]
 
@@ -128,6 +130,7 @@ class ListSeparatorToken(Token):
         tokenizer.next_character()
 
         return ListSeparatorToken(op)
+
 
 class ClosureToken(Token):
 
@@ -155,8 +158,10 @@ class StringToken(Token):
         characters = []
         finished_string = False
 
-        while tokenizer.next_character() != None:
-            if tokenizer.get_current_character() == &#34;\&#34;&#34; and (len(characters) == 0 or characters[-1] != &#34;\\&#34;):
+        while tokenizer.next_character() is not None:
+            if tokenizer.get_current_character() == &#34;\&#34;&#34; and \
+                    (len(characters) == 0 or characters[-1] != &#34;\\&#34;):
+
                 tokenizer.next_character()
                 finished_string = True
                 break
@@ -173,28 +178,26 @@ class StringToken(Token):
 
 
 class IdentifierToken(Token):
-    SPECIAL_CHARACTERS = [&#39;_&#39;]
-
     @staticmethod
     def is_match(character):
-        return character != None and character in string.ascii_letters
+        return character is not None and character in string.ascii_letters
 
     @staticmethod
     def parse(tokenizer):
-        characters = [tokenizer.get_current_character()]
+        chars = [tokenizer.get_current_character()]
 
         while IdentifierToken.is_match(tokenizer.next_character()) or (
-                tokenizer.get_current_character() != None and (
+                tokenizer.get_current_character() is not None and (
                     tokenizer.get_current_character().isdigit() or
-                    tokenizer.get_current_character() in IdentifierToken.SPECIAL_CHARACTERS
+                    tokenizer.get_current_character() in [&#39;_&#39;]
                 )
         ):
-            characters.append(tokenizer.get_current_character())
+            chars.append(tokenizer.get_current_character())
 
         if FunctionIdentifierToken.is_match(tokenizer.get_current_character()):
-            return FunctionIdentifierToken.parse(tokenizer, &#34;&#34;.join(characters))
+            return FunctionIdentifierToken.parse(tokenizer, &#34;&#34;.join(chars))
 
-        return IdentifierToken(&#34;&#34;.join(characters))
+        return IdentifierToken(&#34;&#34;.join(chars))
 
 
 class FunctionIdentifierToken(IdentifierToken):
@@ -207,7 +210,7 @@ class FunctionIdentifierToken(IdentifierToken):
 
     @staticmethod
     def is_match(character):
-        return character != None and character == &#39;[&#39;
+        return character is not None and character == &#39;[&#39;
 
     @staticmethod
     def parse(tokenizer, fname):
@@ -216,7 +219,7 @@ class FunctionIdentifierToken(IdentifierToken):
 
         function_arg_characters = []
 
-        while open_status != 0 and curr_character != None:
+        while open_status != 0 and curr_character is not None:
             if curr_character == &#39;[&#39;:
                 open_status = open_status + 1
             elif curr_character == &#39;]&#39;:
@@ -224,7 +227,7 @@ class FunctionIdentifierToken(IdentifierToken):
             function_arg_characters.append(curr_character)
             curr_character = tokenizer.next_character()
 
-        if curr_character == None and open_status != 0:
+        if curr_character is None and open_status != 0:
             raise IllegalCharacter(tokenizer)
 
         function_arg_characters = function_arg_characters[:-1]
@@ -256,7 +259,12 @@ class TokenizerError(Exception):
         extra_information = lines[debug_info[&#39;lin&#39;]]
         extra_information += &#34;\n&#34; + (&#39; &#39;*(debug_info[&#39;col&#39;] - 1)) + &#39;^&#39;
 
-        return f&#34;{self.msg} near line {debug_info[&#39;lin&#39;] + 1} and column {debug_info[&#39;col&#39;] + 1}:\n{extra_information}&#34;
+        return &#34;{} near line {} and column {}:\n{}&#34;.format(
+            self.msg,
+            debug_info[&#39;lin&#39;],
+            debug_info[&#39;col&#39;],
+            extra_information
+        )
 
 
 class IllegalCharacter(TokenizerError):
@@ -288,7 +296,11 @@ class Tokenizer:
 
     def next_character(self):
         self.current_pos = self.current_pos + 1
-        self.current_character = self.buffer[self.current_pos] if self.bufferlen &gt; self.current_pos else None
+
+        if self.bufferlen &gt; self.current_pos:
+            self.current_character = self.buffer[self.current_pos]
+        else:
+            self.current_character = None
 
         if self.current_character == &#34;\n&#34;:
             self.lin = self.lin + 1
@@ -303,7 +315,11 @@ class Tokenizer:
 
     def previous_character(self):
         self.current_pos = self.current_pos - 1
-        self.current_character = self.buffer[self.current_pos] if 0 &lt;= self.current_pos else None
+        if self.current_pos &gt;= 0:
+            self.current_character = self.buffer[self.current_pos]
+        else:
+            self.current_character = None
+
         if self.current_character == &#34;\n&#34;:
             self.lin = self.lin - 1
             self.col = 0
@@ -318,7 +334,7 @@ class Tokenizer:
         while self.current_character in Tokenizer.BLANK_SPACES:
             self.next_character()
 
-        if self.current_character == None:
+        if self.current_character is None:
             return None
 
         for token in Tokenizer.AVAILABLE_TOKENS:
@@ -332,7 +348,7 @@ class Tokenizer:
 
         token = self.next_token()
 
-        while token != None:
+        while token is not None:
             tokens.append(token)
             token = self.next_token()
 
@@ -480,7 +496,7 @@ val &ndash; token value</p></div>
 
     @staticmethod
     def is_match(character):
-        return character != None and character == &#39;[&#39;
+        return character is not None and character == &#39;[&#39;
 
     @staticmethod
     def parse(tokenizer, fname):
@@ -489,7 +505,7 @@ val &ndash; token value</p></div>
 
         function_arg_characters = []
 
-        while open_status != 0 and curr_character != None:
+        while open_status != 0 and curr_character is not None:
             if curr_character == &#39;[&#39;:
                 open_status = open_status + 1
             elif curr_character == &#39;]&#39;:
@@ -497,7 +513,7 @@ val &ndash; token value</p></div>
             function_arg_characters.append(curr_character)
             curr_character = tokenizer.next_character()
 
-        if curr_character == None and open_status != 0:
+        if curr_character is None and open_status != 0:
             raise IllegalCharacter(tokenizer)
 
         function_arg_characters = function_arg_characters[:-1]
@@ -555,28 +571,26 @@ val &ndash; token value</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class IdentifierToken(Token):
-    SPECIAL_CHARACTERS = [&#39;_&#39;]
-
     @staticmethod
     def is_match(character):
-        return character != None and character in string.ascii_letters
+        return character is not None and character in string.ascii_letters
 
     @staticmethod
     def parse(tokenizer):
-        characters = [tokenizer.get_current_character()]
+        chars = [tokenizer.get_current_character()]
 
         while IdentifierToken.is_match(tokenizer.next_character()) or (
-                tokenizer.get_current_character() != None and (
+                tokenizer.get_current_character() is not None and (
                     tokenizer.get_current_character().isdigit() or
-                    tokenizer.get_current_character() in IdentifierToken.SPECIAL_CHARACTERS
+                    tokenizer.get_current_character() in [&#39;_&#39;]
                 )
         ):
-            characters.append(tokenizer.get_current_character())
+            chars.append(tokenizer.get_current_character())
 
         if FunctionIdentifierToken.is_match(tokenizer.get_current_character()):
-            return FunctionIdentifierToken.parse(tokenizer, &#34;&#34;.join(characters))
+            return FunctionIdentifierToken.parse(tokenizer, &#34;&#34;.join(chars))
 
-        return IdentifierToken(&#34;&#34;.join(characters))</code></pre>
+        return IdentifierToken(&#34;&#34;.join(chars))</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -586,13 +600,6 @@ val &ndash; token value</p></div>
 <ul class="hlist">
 <li><a title="tsteno.language.tokenizer.FunctionIdentifierToken" href="#tsteno.language.tokenizer.FunctionIdentifierToken">FunctionIdentifierToken</a></li>
 </ul>
-<h3>Class variables</h3>
-<dl>
-<dt id="tsteno.language.tokenizer.IdentifierToken.SPECIAL_CHARACTERS"><code class="name">var <span class="ident">SPECIAL_CHARACTERS</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="tsteno.language.tokenizer.Token" href="#tsteno.language.tokenizer.Token">Token</a></b></code>:
@@ -700,7 +707,8 @@ val &ndash; token value</p></div>
 <pre><code class="python">class NumberToken(Token):
     @staticmethod
     def is_match(character):
-        return character != None and (character.isdigit() or character == &#39;.&#39;)
+        return character is not None and \
+               (character.isdigit() or character == &#39;.&#39;)
 
     @staticmethod
     def parse(tokenizer):
@@ -754,8 +762,10 @@ val &ndash; token value</p></div>
         characters = []
         finished_string = False
 
-        while tokenizer.next_character() != None:
-            if tokenizer.get_current_character() == &#34;\&#34;&#34; and (len(characters) == 0 or characters[-1] != &#34;\\&#34;):
+        while tokenizer.next_character() is not None:
+            if tokenizer.get_current_character() == &#34;\&#34;&#34; and \
+                    (len(characters) == 0 or characters[-1] != &#34;\\&#34;):
+
                 tokenizer.next_character()
                 finished_string = True
                 break
@@ -803,7 +813,7 @@ val &ndash; token value</p></div>
     __slots__ = [&#39;value&#39;]
 
     def __init__(self, val):
-        &#34;&#34;&#34; 
+        &#34;&#34;&#34;
         Create a new token from given value
 
         Keyword arguments:
@@ -817,7 +827,7 @@ val &ndash; token value</p></div>
 
     @staticmethod
     def is_match(character):
-        &#34;&#34;&#34; Check if given character match with token character list 
+        &#34;&#34;&#34; Check if given character match with token character list
 
         Keyword arguments:
         character -- character to be checked
@@ -826,7 +836,7 @@ val &ndash; token value</p></div>
 
     @staticmethod
     def parse(tokenizer):
-        &#34;&#34;&#34; After a match, generate a token class from the current buffer. 
+        &#34;&#34;&#34; After a match, generate a token class from the current buffer.
 
         Keyword arguments:
         tokenizer -- current buffer
@@ -851,7 +861,7 @@ val &ndash; token value</p></div>
 <span>def <span class="ident">is_match</span></span>(<span>character)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Check if given character match with token character list </p>
+<div class="desc"><p>Check if given character match with token character list</p>
 <p>Keyword arguments:
 character &ndash; character to be checked</p></div>
 <details class="source">
@@ -860,7 +870,7 @@ character &ndash; character to be checked</p></div>
 </summary>
 <pre><code class="python">@staticmethod
 def is_match(character):
-    &#34;&#34;&#34; Check if given character match with token character list 
+    &#34;&#34;&#34; Check if given character match with token character list
 
     Keyword arguments:
     character -- character to be checked
@@ -872,7 +882,7 @@ def is_match(character):
 <span>def <span class="ident">parse</span></span>(<span>tokenizer)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>After a match, generate a token class from the current buffer. </p>
+<div class="desc"><p>After a match, generate a token class from the current buffer.</p>
 <p>Keyword arguments:
 tokenizer &ndash; current buffer</p></div>
 <details class="source">
@@ -881,7 +891,7 @@ tokenizer &ndash; current buffer</p></div>
 </summary>
 <pre><code class="python">@staticmethod
 def parse(tokenizer):
-    &#34;&#34;&#34; After a match, generate a token class from the current buffer. 
+    &#34;&#34;&#34; After a match, generate a token class from the current buffer.
 
     Keyword arguments:
     tokenizer -- current buffer
@@ -948,7 +958,11 @@ def parse(tokenizer):
 
     def next_character(self):
         self.current_pos = self.current_pos + 1
-        self.current_character = self.buffer[self.current_pos] if self.bufferlen &gt; self.current_pos else None
+
+        if self.bufferlen &gt; self.current_pos:
+            self.current_character = self.buffer[self.current_pos]
+        else:
+            self.current_character = None
 
         if self.current_character == &#34;\n&#34;:
             self.lin = self.lin + 1
@@ -963,7 +977,11 @@ def parse(tokenizer):
 
     def previous_character(self):
         self.current_pos = self.current_pos - 1
-        self.current_character = self.buffer[self.current_pos] if 0 &lt;= self.current_pos else None
+        if self.current_pos &gt;= 0:
+            self.current_character = self.buffer[self.current_pos]
+        else:
+            self.current_character = None
+
         if self.current_character == &#34;\n&#34;:
             self.lin = self.lin - 1
             self.col = 0
@@ -978,7 +996,7 @@ def parse(tokenizer):
         while self.current_character in Tokenizer.BLANK_SPACES:
             self.next_character()
 
-        if self.current_character == None:
+        if self.current_character is None:
             return None
 
         for token in Tokenizer.AVAILABLE_TOKENS:
@@ -992,7 +1010,7 @@ def parse(tokenizer):
 
         token = self.next_token()
 
-        while token != None:
+        while token is not None:
             tokens.append(token)
             token = self.next_token()
 
@@ -1078,7 +1096,7 @@ def parse(tokenizer):
 
     token = self.next_token()
 
-    while token != None:
+    while token is not None:
         tokens.append(token)
         token = self.next_token()
 
@@ -1096,7 +1114,11 @@ def parse(tokenizer):
 </summary>
 <pre><code class="python">def next_character(self):
     self.current_pos = self.current_pos + 1
-    self.current_character = self.buffer[self.current_pos] if self.bufferlen &gt; self.current_pos else None
+
+    if self.bufferlen &gt; self.current_pos:
+        self.current_character = self.buffer[self.current_pos]
+    else:
+        self.current_character = None
 
     if self.current_character == &#34;\n&#34;:
         self.lin = self.lin + 1
@@ -1120,7 +1142,7 @@ def parse(tokenizer):
     while self.current_character in Tokenizer.BLANK_SPACES:
         self.next_character()
 
-    if self.current_character == None:
+    if self.current_character is None:
         return None
 
     for token in Tokenizer.AVAILABLE_TOKENS:
@@ -1141,7 +1163,11 @@ def parse(tokenizer):
 </summary>
 <pre><code class="python">def previous_character(self):
     self.current_pos = self.current_pos - 1
-    self.current_character = self.buffer[self.current_pos] if 0 &lt;= self.current_pos else None
+    if self.current_pos &gt;= 0:
+        self.current_character = self.buffer[self.current_pos]
+    else:
+        self.current_character = None
+
     if self.current_character == &#34;\n&#34;:
         self.lin = self.lin - 1
         self.col = 0
@@ -1176,7 +1202,12 @@ def parse(tokenizer):
         extra_information = lines[debug_info[&#39;lin&#39;]]
         extra_information += &#34;\n&#34; + (&#39; &#39;*(debug_info[&#39;col&#39;] - 1)) + &#39;^&#39;
 
-        return f&#34;{self.msg} near line {debug_info[&#39;lin&#39;] + 1} and column {debug_info[&#39;col&#39;] + 1}:\n{extra_information}&#34;</code></pre>
+        return &#34;{} near line {} and column {}:\n{}&#34;.format(
+            self.msg,
+            debug_info[&#39;lin&#39;],
+            debug_info[&#39;col&#39;],
+            extra_information
+        )</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -1236,9 +1267,6 @@ def parse(tokenizer):
 </li>
 <li>
 <h4><code><a title="tsteno.language.tokenizer.IdentifierToken" href="#tsteno.language.tokenizer.IdentifierToken">IdentifierToken</a></code></h4>
-<ul class="">
-<li><code><a title="tsteno.language.tokenizer.IdentifierToken.SPECIAL_CHARACTERS" href="#tsteno.language.tokenizer.IdentifierToken.SPECIAL_CHARACTERS">SPECIAL_CHARACTERS</a></code></li>
-</ul>
 </li>
 <li>
 <h4><code><a title="tsteno.language.tokenizer.IllegalCharacter" href="#tsteno.language.tokenizer.IllegalCharacter">IllegalCharacter</a></code></h4>
