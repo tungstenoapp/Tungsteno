@@ -81,6 +81,11 @@ class ExpressionParserOutput(ParserOutput):
 
     @staticmethod
     def parse(parser, min_prec=0):
+        &#34;&#34;&#34; After a match, generate a token class from the current buffer.
+
+        Keyword arguments:
+        tokenizer -- current buffer
+        &#34;&#34;&#34;
         atom_lhs = ExpressionParserOutput.compute_atom(parser)
 
         while (parser.current_pos &lt; len(parser.tokens) and
@@ -244,6 +249,11 @@ class Parser:
 
     @staticmethod
     def parse(parser, min_prec=0):
+        &#34;&#34;&#34; After a match, generate a token class from the current buffer.
+
+        Keyword arguments:
+        tokenizer -- current buffer
+        &#34;&#34;&#34;
         atom_lhs = ExpressionParserOutput.compute_atom(parser)
 
         while (parser.current_pos &lt; len(parser.tokens) and
