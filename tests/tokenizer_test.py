@@ -1,5 +1,5 @@
 import unittest
-from tsteno.language.tokenizer import Tokenizer, NumberToken, BinOpToken, StringToken
+from tsteno.language.tokenizer import *
 
 
 class TestTokenizer(unittest.TestCase):
@@ -41,6 +41,21 @@ class TestTokenizer(unittest.TestCase):
         self.assertTrue(isinstance(token, StringToken))
         self.assertEqual(token.value, 'Hola mundo, "Como estais"')
 
+    def test_parseFunction(self):
+        tokenizer = Tokenizer('Test[1, 1]')
+
+        tokens = tokenizer.get_tokens()
+
+        self.assertEqual(len(tokens), 1)
+
+        token = tokens[0]
+
+        self.assertEqual(token.fname, 'Test')
+        self.assertEqual(len(token.arguments), 3)
+        self.assertTrue(isinstance(token.arguments[0], NumberToken))
+        self.assertTrue(isinstance(token.arguments[1], ListSeparatorToken))
+
+        self.assertTrue(isinstance(token.arguments[2], NumberToken))
 
 if __name__ == '__main__':
     unittest.main()

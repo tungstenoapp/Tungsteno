@@ -63,7 +63,7 @@ class NumberToken(Token):
 
 class BinOpToken(Token):
 
-    BINARY_OP_CHARACTERS = ['+', '-', '*', '/', '^']
+    BINARY_OP_CHARACTERS = ['+', '-', '*', '/', '^', '=']
 
     @staticmethod
     def is_match(character):
@@ -85,6 +85,20 @@ class BinOpToken(Token):
 
         return BinOpToken(op)
 
+class ListSeparatorToken(Token):
+    SEPARATORS = [',']
+
+    @staticmethod
+    def is_match(character):
+        return character in ListSeparatorToken.SEPARATORS
+
+    @staticmethod
+    def parse(tokenizer):
+        op = tokenizer.get_current_character()
+
+        tokenizer.next_character()
+
+        return ListSeparatorToken(op)
 
 class ClosureToken(Token):
 
@@ -156,7 +170,11 @@ class IdentifierToken(Token):
 
 class FunctionIdentifierToken(IdentifierToken):
 
-    __slots__ = ['fname']
+    __slots__ = ['fname', 'arguments']
+
+    def __init__(self, fname, arguments):
+        self.fname = fname
+        self.arguments = arguments
 
     @staticmethod
     def is_match(character):
@@ -164,10 +182,35 @@ class FunctionIdentifierToken(IdentifierToken):
 
     @staticmethod
     def parse(tokenizer, fname):
-        return FunctionIdentifierToken(fname)
+        open_status = 1
+        curr_character = tokenizer.next_character()
+
+        function_arg_characters = []
+
+        while open_status != 0 and curr_character != None:
+            if curr_character == '[':
+                open_status = open_status + 1
+            elif curr_character == ']':
+                open_status = open_status - 1
+            function_arg_characters.append(curr_character)
+            curr_character = tokenizer.next_character()
+
+        if curr_character == None and open_status != 0:
+            raise IllegalCharacter(tokenizer)
+
+        function_arg_characters = function_arg_characters[:-1]
+        function_arg_code = "".join(function_arg_characters)
+
+        args_tokenizer = Tokenizer(function_arg_code)
+        try:
+            tokens = args_tokenizer.get_tokens()
+        except:
+            raise IllegalCharacter(tokenizer)
+
+        return FunctionIdentifierToken(fname, tokens)
 
     def __repr__(self):
-        return f'{self.__class__.__name__}: {self.value}'
+        return f'{self.__class__.__name__}: {self.fname} ({self.arguments})'
 
 
 class TokenizerError(Exception):
@@ -196,7 +239,7 @@ class Tokenizer:
     AVAILABLE_TOKENS = [
         NumberToken, BinOpToken,
         StringToken, IdentifierToken,
-        ClosureToken
+        ClosureToken, ListSeparatorToken
     ]
 
     BLANK_SPACES = [' ', "\r"]
