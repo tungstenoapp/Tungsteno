@@ -36,7 +36,7 @@ jobs:
     - name: Test with makefile
       run: |
         make check
-     - name: Generate docs
+    - name: Generate docs
       run: |
         make docs
     - name: Commit files
