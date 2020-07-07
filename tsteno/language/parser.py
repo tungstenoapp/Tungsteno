@@ -43,6 +43,11 @@ class ExpressionParserOutput(ParserOutput):
 
     @staticmethod
     def is_match(token):
+        """ Check if given character match with token character list
+
+        Keyword arguments:
+        character -- character to be checked
+        """
         return isinstance(token, NumberToken) or \
                isinstance(token, IdentifierToken)
 
