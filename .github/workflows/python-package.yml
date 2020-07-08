@@ -36,16 +36,3 @@ jobs:
     - name: Test with makefile
       run: |
         make check
-    - name: Generate docs
-      run: |
-        pdoc3 --html tsteno --output-dir docs -f
-    - name: Commit files
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git commit -m "Generate docs" -a || exit 0
-    - name: Push changes
-      uses: ad-m/github-push-action@master
-      continue-on-error: true
-      with:
-        github_token: ${{ secrets.githubtoken }}

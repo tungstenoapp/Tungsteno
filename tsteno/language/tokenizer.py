@@ -10,21 +10,30 @@ class Token:
         """
         Create a new token from given value
 
-        Keyword arguments:
-        val -- token value
+        Arguments:
+            **val**: Set token value
+
         """
 
         self.value = val
 
     def get_value(self):
+        """ Check if given character match with token character list
+
+        Return:
+            Token value
+        """
         return self.value
 
     @staticmethod
     def is_match(character):
         """ Check if given character match with token character list
 
-        Keyword arguments:
-        character -- character to be checked
+        Arguments:
+            **character**: Character to be checked.
+
+        Return:
+            True if match, false if not.
         """
         raise Exception("Method not defined")
 
@@ -32,8 +41,11 @@ class Token:
     def parse(tokenizer):
         """ After a match, generate a token class from the current buffer.
 
-        Keyword arguments:
-        tokenizer -- current buffer
+        Arguments:
+            **tokenizer**: current buffer
+
+        Return:
+            *(Token)* Token related to current tokenizer buffer.
         """
         raise Exception("Method not defined")
 
@@ -42,13 +54,22 @@ class Token:
 
 
 class NumberToken(Token):
+    """ Represent numeric tokens """
     @staticmethod
     def is_match(character):
         return character is not None and \
-               (character.isdigit() or character == '.')
+            (character.isdigit() or character == '.')
 
     @staticmethod
     def parse(tokenizer):
+        """ After a match, generate a token class from the current buffer.
+
+        Arguments:
+            **tokenizer**: current buffer
+
+        Return:
+            *(NumberToken)* Token related to current tokenizer buffer.
+        """
         characters = [tokenizer.get_current_character()]
 
         while NumberToken.is_match(tokenizer.next_character()):
@@ -63,8 +84,12 @@ class NumberToken(Token):
 
 
 class BinOpToken(Token):
+    """ Represent binary operation tokens """
 
     BINARY_OP_CHARACTERS = ['+', '-', '*', '/', '^', '=']
+    """
+    Set of different binary operation characters.
+    """
 
     @staticmethod
     def is_match(character):
@@ -72,6 +97,14 @@ class BinOpToken(Token):
 
     @staticmethod
     def parse(tokenizer):
+        """ After a match, generate a token class from the current buffer.
+
+        Arguments:
+            **tokenizer**: current buffer
+
+        Return:
+            *(BinOpToken)* Token related to current tokenizer buffer.
+        """
         op = tokenizer.get_current_character()
 
         next_chr = tokenizer.next_character()
@@ -88,6 +121,7 @@ class BinOpToken(Token):
 
 
 class ListSeparatorToken(Token):
+    """ Represent list separator token """
     SEPARATORS = [',']
 
     @staticmethod
@@ -96,6 +130,14 @@ class ListSeparatorToken(Token):
 
     @staticmethod
     def parse(tokenizer):
+        """ After a match, generate a token class from the current buffer.
+
+        Arguments:
+            **tokenizer**: current buffer
+
+        Return:
+            *(ListSeparatorToken)* Token related to current tokenizer buffer.
+        """
         op = tokenizer.get_current_character()
 
         tokenizer.next_character()
@@ -104,6 +146,7 @@ class ListSeparatorToken(Token):
 
 
 class ClosureToken(Token):
+    """ Represent end of line or expression """
 
     CLOSURE_CHARACTERS = ["\n", ";"]
 
@@ -113,6 +156,14 @@ class ClosureToken(Token):
 
     @staticmethod
     def parse(tokenizer):
+        """ After a match, generate a token class from the current buffer.
+
+        Arguments:
+            **tokenizer**: current buffer
+
+        Return:
+            *(ClosureToken)* Token related to current tokenizer buffer.
+        """
         op = tokenizer.get_current_character()
         tokenizer.next_character()
 
@@ -120,12 +171,21 @@ class ClosureToken(Token):
 
 
 class StringToken(Token):
+    """ Represent strings """
     @staticmethod
     def is_match(character):
         return character == "\""
 
     @staticmethod
     def parse(tokenizer):
+        """ After a match, generate a token class from the current buffer.
+
+        Arguments:
+            **tokenizer**: current buffer
+
+        Return:
+            *(StringToken)* Token related to current tokenizer buffer.
+        """
         characters = []
         finished_string = False
 
@@ -149,12 +209,22 @@ class StringToken(Token):
 
 
 class IdentifierToken(Token):
+    """ Represent variables or functions """
     @staticmethod
     def is_match(character):
         return character is not None and character in string.ascii_letters
 
     @staticmethod
     def parse(tokenizer):
+        """ After a match, generate a token class from the current buffer.
+
+        Arguments:
+            **tokenizer**: current buffer
+
+        Return:
+            *(IdentifierToken|FunctionIdentifierToken)* Token related to
+            current tokenizer buffer.
+        """
         chars = [tokenizer.get_current_character()]
 
         while IdentifierToken.is_match(tokenizer.next_character()) or (
@@ -172,12 +242,20 @@ class IdentifierToken(Token):
 
 
 class FunctionIdentifierToken(IdentifierToken):
+    """ Represent functions """
 
     __slots__ = ['fname', 'arguments']
 
     def __init__(self, fname, arguments):
+        """
+        Arguments:
+            **fname**: Function name\n
+            **arguments**: Arguments of function
+        """
         self.fname = fname
+        """ Function name """
         self.arguments = arguments
+        """ Function arguments """
 
     @staticmethod
     def is_match(character):
@@ -185,6 +263,15 @@ class FunctionIdentifierToken(IdentifierToken):
 
     @staticmethod
     def parse(tokenizer, fname):
+        """ After a match, generate a token class from the current buffer.
+
+        Arguments:
+            **tokenizer**: current buffer
+
+        Return:
+            *(FunctionIdentifierToken)* Token related to
+            current tokenizer buffer.
+        """
         open_status = 1
         curr_character = tokenizer.next_character()
 
@@ -217,13 +304,19 @@ class FunctionIdentifierToken(IdentifierToken):
 
 
 class TokenizerError(Exception):
+    """ Represent tokenizer exceptions """
     __slots__ = ['tokenizer', 'msg']
 
     def __init__(self, msg, tokenizer):
         self.msg = msg
+        """ Message of error """
         self.tokenizer = tokenizer
+        """ Context of error """
 
     def __str__(self):
+        """ Return information of error with information of where
+            error are located
+        """
         debug_info = self.tokenizer.debug_information()
         lines = debug_info['buffer'].split("\n")
 
@@ -239,6 +332,8 @@ class TokenizerError(Exception):
 
 
 class IllegalCharacter(TokenizerError):
+    """ Unexpected character tokenizer error """
+
     def __init__(self, tokenizer):
         super().__init__("Syntax error, illegal character", tokenizer)
 
@@ -249,23 +344,35 @@ class Tokenizer:
         StringToken, IdentifierToken,
         ClosureToken, ListSeparatorToken
     ]
+    """ Represent all tokens class available """
 
     BLANK_SPACES = [' ', "\r"]
+    """ Blank spaces to be ignored """
 
     __slots__ = ['buffer', 'current_pos',
                  'current_character', 'bufferlen', 'col', 'lin']
 
     def __init__(self, buffer):
         self.buffer = buffer
+        """ Buffer that has to be processed """
         self.bufferlen = len(self.buffer)
+        """ Buffer length """
         self.current_pos = -1
-
+        """ Current buffer position """
         self.lin = 0
+        """ Current line """
         self.col = 0
+        """ Current column """
 
         self.next_character()
 
     def next_character(self):
+        """
+        Increment current buffer poisition.
+
+        Return:
+            Current character or None
+        """
         self.current_pos = self.current_pos + 1
 
         if self.bufferlen > self.current_pos:
@@ -282,9 +389,18 @@ class Tokenizer:
         return self.current_character
 
     def get_current_character(self):
+        """
+        Get the current character.
+        """
         return self.current_character
 
     def previous_character(self):
+        """
+        Decrement current buffer poisition.
+
+        Return:
+            Current character or None
+        """
         self.current_pos = self.current_pos - 1
         if self.current_pos >= 0:
             self.current_character = self.buffer[self.current_pos]
@@ -299,9 +415,21 @@ class Tokenizer:
         return self.current_character
 
     def debug_information(self):
+        """
+        Retrieve debug information.
+
+        Return:
+            buffer, current line, current column.
+        """
         return {'buffer': self.buffer, 'lin': self.lin, 'col': self.col}
 
     def next_token(self):
+        """
+        Get next token.
+
+        Return:
+            Return next token.
+        """
         while self.current_character in Tokenizer.BLANK_SPACES:
             self.next_character()
 
@@ -315,6 +443,16 @@ class Tokenizer:
         raise IllegalCharacter(self)
 
     def get_tokens(self):
+        """
+        Get all tokens from buffer.
+
+        Return:
+            List of tokens.
+        """
+
+        self.current_pos = -1
+        self.next_character()
+
         tokens = []
 
         token = self.next_token()
