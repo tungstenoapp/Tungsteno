@@ -332,6 +332,72 @@ class FunctionIdentifierToken(IdentifierToken):
         return f&#39;{self.__class__.__name__}: {self.fname} ({self.arguments})&#39;
 
 
+class ListToken(Token):
+    &#34;&#34;&#34; Represent lists &#34;&#34;&#34;
+
+    __slots__ = [&#39;items&#39;]
+
+    def __init__(self, items):
+        &#34;&#34;&#34;
+        Arguments:
+            **items**: Elements\n
+        &#34;&#34;&#34;
+        self.items = items
+        &#34;&#34;&#34; Represent list items  &#34;&#34;&#34;
+
+    @staticmethod
+    def is_match(character):
+        return character is not None and character == &#39;{&#39;
+
+    @staticmethod
+    def parse(tokenizer):
+        &#34;&#34;&#34; After a match, generate a token class from the current buffer.
+
+        Arguments:
+            **tokenizer**: current buffer
+
+        Return:
+            *(ListToken)* Token related to
+            current tokenizer buffer.
+        &#34;&#34;&#34;
+        open_status = 1
+        curr_character = tokenizer.next_character()
+
+        function_arg_characters = []
+
+        while open_status != 0 and curr_character is not None:
+            if curr_character == &#39;{&#39;:
+                open_status = open_status + 1
+            elif curr_character == &#39;}&#39;:
+                open_status = open_status - 1
+            function_arg_characters.append(curr_character)
+            curr_character = tokenizer.next_character()
+
+        if curr_character is None and open_status != 0:
+            raise IllegalCharacter(tokenizer)
+
+        function_arg_characters = function_arg_characters[:-1]
+        function_arg_code = &#34;&#34;.join(function_arg_characters)
+
+        args_tokenizer = Tokenizer(function_arg_code)
+        try:
+            tokens = args_tokenizer.get_tokens()
+        except:
+            raise IllegalCharacter(tokenizer)
+
+        return ListToken(tokens)
+
+    def __repr__(self):
+        out = &#39;{&#39;
+
+        for item in self.items:
+            out += str(item)
+            out += &#34;,&#34;
+
+        out = out[:-1] + &#34;}&#34;
+        return out
+
+
 class TokenizerError(Exception):
     &#34;&#34;&#34; Represent tokenizer exceptions &#34;&#34;&#34;
     __slots__ = [&#39;tokenizer&#39;, &#39;msg&#39;]
@@ -371,7 +437,8 @@ class Tokenizer:
     AVAILABLE_TOKENS = [
         NumberToken, BinOpToken,
         StringToken, IdentifierToken,
-        ClosureToken, ListSeparatorToken
+        ClosureToken, ListSeparatorToken,
+        ListToken
     ]
     &#34;&#34;&#34; Represent all tokens class available &#34;&#34;&#34;
 
@@ -1094,6 +1161,161 @@ def parse(tokenizer):
 </li>
 </ul>
 </dd>
+<dt id="tsteno.language.tokenizer.ListToken"><code class="flex name class">
+<span>class <span class="ident">ListToken</span></span>
+<span>(</span><span>items)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represent lists </p>
+<h2 id="arguments">Arguments</h2>
+<p><strong>items</strong>: Elements</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class ListToken(Token):
+    &#34;&#34;&#34; Represent lists &#34;&#34;&#34;
+
+    __slots__ = [&#39;items&#39;]
+
+    def __init__(self, items):
+        &#34;&#34;&#34;
+        Arguments:
+            **items**: Elements\n
+        &#34;&#34;&#34;
+        self.items = items
+        &#34;&#34;&#34; Represent list items  &#34;&#34;&#34;
+
+    @staticmethod
+    def is_match(character):
+        return character is not None and character == &#39;{&#39;
+
+    @staticmethod
+    def parse(tokenizer):
+        &#34;&#34;&#34; After a match, generate a token class from the current buffer.
+
+        Arguments:
+            **tokenizer**: current buffer
+
+        Return:
+            *(ListToken)* Token related to
+            current tokenizer buffer.
+        &#34;&#34;&#34;
+        open_status = 1
+        curr_character = tokenizer.next_character()
+
+        function_arg_characters = []
+
+        while open_status != 0 and curr_character is not None:
+            if curr_character == &#39;{&#39;:
+                open_status = open_status + 1
+            elif curr_character == &#39;}&#39;:
+                open_status = open_status - 1
+            function_arg_characters.append(curr_character)
+            curr_character = tokenizer.next_character()
+
+        if curr_character is None and open_status != 0:
+            raise IllegalCharacter(tokenizer)
+
+        function_arg_characters = function_arg_characters[:-1]
+        function_arg_code = &#34;&#34;.join(function_arg_characters)
+
+        args_tokenizer = Tokenizer(function_arg_code)
+        try:
+            tokens = args_tokenizer.get_tokens()
+        except:
+            raise IllegalCharacter(tokenizer)
+
+        return ListToken(tokens)
+
+    def __repr__(self):
+        out = &#39;{&#39;
+
+        for item in self.items:
+            out += str(item)
+            out += &#34;,&#34;
+
+        out = out[:-1] + &#34;}&#34;
+        return out</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="tsteno.language.tokenizer.Token" href="#tsteno.language.tokenizer.Token">Token</a></li>
+</ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="tsteno.language.tokenizer.ListToken.parse"><code class="name flex">
+<span>def <span class="ident">parse</span></span>(<span>tokenizer)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>After a match, generate a token class from the current buffer.</p>
+<h2 id="arguments">Arguments</h2>
+<p><strong>tokenizer</strong>: current buffer</p>
+<h2 id="return">Return</h2>
+<p><em>(ListToken)</em> Token related to
+current tokenizer buffer.</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@staticmethod
+def parse(tokenizer):
+    &#34;&#34;&#34; After a match, generate a token class from the current buffer.
+
+    Arguments:
+        **tokenizer**: current buffer
+
+    Return:
+        *(ListToken)* Token related to
+        current tokenizer buffer.
+    &#34;&#34;&#34;
+    open_status = 1
+    curr_character = tokenizer.next_character()
+
+    function_arg_characters = []
+
+    while open_status != 0 and curr_character is not None:
+        if curr_character == &#39;{&#39;:
+            open_status = open_status + 1
+        elif curr_character == &#39;}&#39;:
+            open_status = open_status - 1
+        function_arg_characters.append(curr_character)
+        curr_character = tokenizer.next_character()
+
+    if curr_character is None and open_status != 0:
+        raise IllegalCharacter(tokenizer)
+
+    function_arg_characters = function_arg_characters[:-1]
+    function_arg_code = &#34;&#34;.join(function_arg_characters)
+
+    args_tokenizer = Tokenizer(function_arg_code)
+    try:
+        tokens = args_tokenizer.get_tokens()
+    except:
+        raise IllegalCharacter(tokenizer)
+
+    return ListToken(tokens)</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tsteno.language.tokenizer.ListToken.items"><code class="name">var <span class="ident">items</span></code></dt>
+<dd>
+<div class="desc"><p>Represent list items</p></div>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="tsteno.language.tokenizer.Token" href="#tsteno.language.tokenizer.Token">Token</a></b></code>:
+<ul class="hlist">
+<li><code><a title="tsteno.language.tokenizer.Token.get_value" href="#tsteno.language.tokenizer.Token.get_value">get_value</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Token.is_match" href="#tsteno.language.tokenizer.Token.is_match">is_match</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.Token.value" href="#tsteno.language.tokenizer.Token.value">value</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
 <dt id="tsteno.language.tokenizer.NumberToken"><code class="flex name class">
 <span>class <span class="ident">NumberToken</span></span>
 <span>(</span><span>val)</span>
@@ -1372,6 +1594,7 @@ def parse(tokenizer):
 <li><a title="tsteno.language.tokenizer.ClosureToken" href="#tsteno.language.tokenizer.ClosureToken">ClosureToken</a></li>
 <li><a title="tsteno.language.tokenizer.IdentifierToken" href="#tsteno.language.tokenizer.IdentifierToken">IdentifierToken</a></li>
 <li><a title="tsteno.language.tokenizer.ListSeparatorToken" href="#tsteno.language.tokenizer.ListSeparatorToken">ListSeparatorToken</a></li>
+<li><a title="tsteno.language.tokenizer.ListToken" href="#tsteno.language.tokenizer.ListToken">ListToken</a></li>
 <li><a title="tsteno.language.tokenizer.NumberToken" href="#tsteno.language.tokenizer.NumberToken">NumberToken</a></li>
 <li><a title="tsteno.language.tokenizer.StringToken" href="#tsteno.language.tokenizer.StringToken">StringToken</a></li>
 </ul>
@@ -1475,7 +1698,8 @@ def parse(tokenizer):
     AVAILABLE_TOKENS = [
         NumberToken, BinOpToken,
         StringToken, IdentifierToken,
-        ClosureToken, ListSeparatorToken
+        ClosureToken, ListSeparatorToken,
+        ListToken
     ]
     &#34;&#34;&#34; Represent all tokens class available &#34;&#34;&#34;
 
@@ -1915,6 +2139,13 @@ def parse(tokenizer):
 <ul class="">
 <li><code><a title="tsteno.language.tokenizer.ListSeparatorToken.SEPARATORS" href="#tsteno.language.tokenizer.ListSeparatorToken.SEPARATORS">SEPARATORS</a></code></li>
 <li><code><a title="tsteno.language.tokenizer.ListSeparatorToken.parse" href="#tsteno.language.tokenizer.ListSeparatorToken.parse">parse</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="tsteno.language.tokenizer.ListToken" href="#tsteno.language.tokenizer.ListToken">ListToken</a></code></h4>
+<ul class="">
+<li><code><a title="tsteno.language.tokenizer.ListToken.items" href="#tsteno.language.tokenizer.ListToken.items">items</a></code></li>
+<li><code><a title="tsteno.language.tokenizer.ListToken.parse" href="#tsteno.language.tokenizer.ListToken.parse">parse</a></code></li>
 </ul>
 </li>
 <li>

@@ -4,7 +4,7 @@ from tsteno.language.tokenizer import *
 
 class TestTokenizer(unittest.TestCase):
 
-    def test_number2str(self):
+    def test_parseNumber(self):
         tokenizer = Tokenizer("12345")
         tokens = tokenizer.get_tokens()
 
@@ -57,5 +57,37 @@ class TestTokenizer(unittest.TestCase):
 
         self.assertTrue(isinstance(token.arguments[2], NumberToken))
 
+    def test_list(self):
+        tokenizer = Tokenizer('{1, 2, 3, x}')
+        tokens = tokenizer.get_tokens()
+
+        self.assertTrue(len(tokens), 1)
+
+        list_token = tokens[0]
+
+        tokens_without_separator = []
+
+        for token in list_token.items:
+            if isinstance(token, ListSeparatorToken):
+                continue
+            tokens_without_separator.append(token)
+
+        self.assertEqual(len(tokens_without_separator), 4)
+
+        item_1 = tokens_without_separator[0]
+        self.assertTrue(isinstance(item_1, NumberToken))
+        self.assertEqual(item_1.get_value(), 1)
+
+        item_2 = tokens_without_separator[1]
+        self.assertTrue(isinstance(item_2, NumberToken))
+        self.assertEqual(item_2.get_value(), 2)
+
+        item_3 = tokens_without_separator[2]
+        self.assertTrue(isinstance(item_3, NumberToken))
+        self.assertEqual(item_3.get_value(), 3)
+
+        item_4 = tokens_without_separator[3]
+        self.assertTrue(isinstance(item_4, IdentifierToken))
+        self.assertEqual(item_4.get_value(), 'x')
 if __name__ == '__main__':
     unittest.main()

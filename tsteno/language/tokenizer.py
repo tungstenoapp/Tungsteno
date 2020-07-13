@@ -303,6 +303,72 @@ class FunctionIdentifierToken(IdentifierToken):
         return f'{self.__class__.__name__}: {self.fname} ({self.arguments})'
 
 
+class ListToken(Token):
+    """ Represent lists """
+
+    __slots__ = ['items']
+
+    def __init__(self, items):
+        """
+        Arguments:
+            **items**: Elements\n
+        """
+        self.items = items
+        """ Represent list items  """
+
+    @staticmethod
+    def is_match(character):
+        return character is not None and character == '{'
+
+    @staticmethod
+    def parse(tokenizer):
+        """ After a match, generate a token class from the current buffer.
+
+        Arguments:
+            **tokenizer**: current buffer
+
+        Return:
+            *(ListToken)* Token related to
+            current tokenizer buffer.
+        """
+        open_status = 1
+        curr_character = tokenizer.next_character()
+
+        function_arg_characters = []
+
+        while open_status != 0 and curr_character is not None:
+            if curr_character == '{':
+                open_status = open_status + 1
+            elif curr_character == '}':
+                open_status = open_status - 1
+            function_arg_characters.append(curr_character)
+            curr_character = tokenizer.next_character()
+
+        if curr_character is None and open_status != 0:
+            raise IllegalCharacter(tokenizer)
+
+        function_arg_characters = function_arg_characters[:-1]
+        function_arg_code = "".join(function_arg_characters)
+
+        args_tokenizer = Tokenizer(function_arg_code)
+        try:
+            tokens = args_tokenizer.get_tokens()
+        except:
+            raise IllegalCharacter(tokenizer)
+
+        return ListToken(tokens)
+
+    def __repr__(self):
+        out = '{'
+
+        for item in self.items:
+            out += str(item)
+            out += ","
+
+        out = out[:-1] + "}"
+        return out
+
+
 class TokenizerError(Exception):
     """ Represent tokenizer exceptions """
     __slots__ = ['tokenizer', 'msg']
@@ -342,7 +408,8 @@ class Tokenizer:
     AVAILABLE_TOKENS = [
         NumberToken, BinOpToken,
         StringToken, IdentifierToken,
-        ClosureToken, ListSeparatorToken
+        ClosureToken, ListSeparatorToken,
+        ListToken
     ]
     """ Represent all tokens class available """
 
