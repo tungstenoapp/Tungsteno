@@ -26,6 +26,9 @@ class Kernel:
         self.options = options
 
         self.kid = uuid.uuid4()
+        if parent is None:
+            self.kid = f'r00t-{self.kid}'
+
         """ Represent kernel ID """
 
         self.start_dt = datetime.datetime.now()
@@ -43,12 +46,18 @@ class Kernel:
 
     def __bootstrap(self):
         log_kext = Log(self)
-        log_kext.write(f'Initializing new tungsteno kernel ({self.kid})', LogLevel.DEBUG)
+        log_kext.write(
+            f'Initializing new tungsteno kernel ({self.kid})',
+            LogLevel.DEBUG
+        )
 
         self.register_kext('log', Log, log_kext=log_kext)
         self.register_kext('eval', Evaluation)
 
-        log_kext.write(f'Kernel ({self.kid}) loaded succesfully!', LogLevel.DEBUG)
+        log_kext.write(
+            f'Kernel ({self.kid}) loaded succesfully!',
+            LogLevel.DEBUG
+        )
 
     def create_subkernel(self):
         return Kernel(self)
@@ -67,7 +76,10 @@ class Kernel:
 
         log_kext.write(f'Kext `{kext_name}` loading...', LogLevel.DEBUG)
         self.kext_definitions[kext_name] = kext_definition(self)
-        log_kext.write(f'Kext `{kext_name}` loaded succesfully!', LogLevel.DEBUG)
+        log_kext.write(
+            f'Kext `{kext_name}` loaded succesfully!',
+            LogLevel.DEBUG
+        )
 
     def get_option_value(self, *args):
         value = self.options

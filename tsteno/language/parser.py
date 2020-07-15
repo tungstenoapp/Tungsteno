@@ -16,6 +16,7 @@ OPINFO_MAP = {
 }
 """ Contains information of how to parse operation symbols """
 
+
 class ParserOutput:
 
     @staticmethod

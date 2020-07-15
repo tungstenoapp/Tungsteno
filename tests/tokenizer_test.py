@@ -89,5 +89,7 @@ class TestTokenizer(unittest.TestCase):
         item_4 = tokens_without_separator[3]
         self.assertTrue(isinstance(item_4, IdentifierToken))
         self.assertEqual(item_4.get_value(), 'x')
+
+
 if __name__ == '__main__':
     unittest.main()

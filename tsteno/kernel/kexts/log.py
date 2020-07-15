@@ -1,7 +1,8 @@
 import datetime
 from enum import Enum
-from colorama import Fore, Back, Style
+from colorama import Fore
 from .kext_base import KextBase
+
 
 class LogLevel(Enum):
     CRITICAL = 0

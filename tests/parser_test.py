@@ -15,7 +15,8 @@ class TestTokenizer(unittest.TestCase):
         self.assertEqual(len(parser_output), 1)
         one_parser_output = parser_output[0]
 
-        self.assertEqual(one_parser_output.__class__, NumberExpressionParserOutput)
+        self.assertEqual(one_parser_output.__class__,
+                         NumberExpressionParserOutput)
         self.assertEqual(one_parser_output.value, 12345)
 
     def test_opOrder(self):
@@ -30,7 +31,8 @@ class TestTokenizer(unittest.TestCase):
 
         one_parser_output = parser_output[0]
 
-        self.assertTrue(isinstance(one_parser_output, FunctionExpressionParserOutput))
+        self.assertTrue(isinstance(one_parser_output,
+                                   FunctionExpressionParserOutput))
         self.assertEqual(one_parser_output.fname, "Plus")
 
         arguments = one_parser_output.arguments
@@ -46,10 +48,12 @@ class TestTokenizer(unittest.TestCase):
         product_args = product_fn.arguments
 
         self.assertEqual(len(product_args), 2)
-        self.assertTrue(isinstance(product_args[0], NumberExpressionParserOutput))
+        self.assertTrue(isinstance(
+            product_args[0], NumberExpressionParserOutput))
         self.assertEqual(product_args[0].value, 2)
 
-        self.assertTrue(isinstance(product_args[1], NumberExpressionParserOutput))
+        self.assertTrue(isinstance(
+            product_args[1], NumberExpressionParserOutput))
         self.assertEqual(product_args[1].value, 3)
 
 
