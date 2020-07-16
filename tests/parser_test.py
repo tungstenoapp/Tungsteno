@@ -56,6 +56,15 @@ class TestTokenizer(unittest.TestCase):
             product_args[1], NumberExpressionParserOutput))
         self.assertEqual(product_args[1].value, 3)
 
+    def test_parseFunction2(self):
+        tokenizer = Tokenizer('Print[1 + 1]')
+
+        tokens = tokenizer.get_tokens()
+
+        parser = Parser(tokens)
+
+        parser_output = parser.get_all_parser_output()
+
 
 if __name__ == '__main__':
     unittest.main()

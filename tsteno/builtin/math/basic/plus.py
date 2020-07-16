@@ -1,10 +1,10 @@
 from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_ALL_NEXT
 
 
-class Print(Module):
+class Plus(Module):
 
     def run(self, *arguments):
-        print("".join(list(map(lambda x: str(x), arguments))))
+        return sum(arguments)
 
     def get_arguments(self):
         return [

@@ -1,10 +1,12 @@
+import operator
+from functools import reduce
 from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_ALL_NEXT
 
 
-class Print(Module):
+class Product(Module):
 
     def run(self, *arguments):
-        print("".join(list(map(lambda x: str(x), arguments))))
+        return reduce(operator.mul, arguments)
 
     def get_arguments(self):
         return [

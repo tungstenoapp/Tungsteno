@@ -4,6 +4,12 @@ from .log import LogLevel
 from .kext_base import KextBase
 from tsteno.atoms.module import Module
 from importlib.machinery import SourceFileLoader
+from tsteno.language.tokenizer import Tokenizer
+from tsteno.language.parser import Parser, FunctionExpressionParserOutput
+from tsteno.language.parser import StringParserOutput
+from tsteno.language.parser import NumberExpressionParserOutput
+from tsteno.language.parser import ExpressionParserOutput
+from sympy import Symbol
 
 PROTECTED_NAMES_BUILTIN = ['builtin_base.py', '__init__.py']
 
@@ -11,8 +17,9 @@ PROTECTED_NAMES_BUILTIN = ['builtin_base.py', '__init__.py']
 class Evaluation(KextBase):
 
     __slots__ = [
-        'builtin_functions', 'builtin_variables', 'builtin_modules',
-        'user_functions', 'user_variables', 'user_modules'
+        'builtin_variables', 'builtin_modules',
+        'user_functions', 'user_variables', 'user_modules',
+        'tokenizer'
     ]
 
     def __init__(self, kernel):
@@ -20,7 +27,6 @@ class Evaluation(KextBase):
         log_kext = self.get_kernel().get_kext('log')
         log_kext.write('Starting definitions for eval kext...', LogLevel.DEBUG)
 
-        self.builtin_functions = {}
         self.builtin_variables = {}
         self.builtin_modules = {}
 
@@ -54,6 +60,27 @@ class Evaluation(KextBase):
 
         return modules
 
+    def evaluate_code(self, code):
+        tokenizer = Tokenizer(code)
+        tokens = tokenizer.get_tokens()
+
+        parser = Parser(tokens)
+        parser_outputs = parser.get_all_parser_output()
+
+        for parser_output in parser_outputs:
+            self.evaluate_parser_output(parser_output)
+
+    def evaluate_parser_output(self, parser_output):
+        if isinstance(parser_output, FunctionExpressionParserOutput):
+            module_definition = self.get_module_definition(parser_output.fname)
+            return module_definition.eval(parser_output.arguments)
+        elif isinstance(parser_output, StringParserOutput):
+            return parser_output.value
+        elif isinstance(parser_output, NumberExpressionParserOutput):
+            return parser_output.value
+        elif isinstance(parser_output, ExpressionParserOutput):
+            return Symbol(parser_output.value)
+
     def __load_builtin_module(self, path, module_def, log_kext=None):
         if log_kext is None:
             log_kext = self.get_kernel().get_kext('log')
@@ -68,19 +95,23 @@ class Evaluation(KextBase):
         )
         module = module.load_module()
 
-        definition = getattr(module, module_def)()
+        definition = getattr(module, module_def)(self.get_kernel())
 
-        module_type = None
         if isinstance(definition, Module):
-            module_type = 'module'
             self.builtin_modules[module_def] = definition
         else:
             raise Exception("Unknown builtin definition, aborted")
 
         log_kext.write(
-            f"Loaded `{module_def}` as {module_type} succesfully!",
+            f"Loaded `{module_def}` succesfully!",
             LogLevel.DEBUG
         )
+
+    def get_module_definition(self, module):
+        if module not in self.builtin_modules:
+            return self.builtin_modules['Unknown'].proxy(module)
+
+        return self.builtin_modules[module]
 
     def __bootstrap(self, log_kext):
         builtin_modules = self.__search_builtin()

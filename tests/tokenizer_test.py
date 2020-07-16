@@ -57,6 +57,21 @@ class TestTokenizer(unittest.TestCase):
 
         self.assertTrue(isinstance(token.arguments[2], NumberToken))
 
+    def test_parseFunction2(self):
+        tokenizer = Tokenizer('Print[1 + 1]')
+
+        tokens = tokenizer.get_tokens()
+
+        self.assertEqual(len(tokens), 1)
+
+        token = tokens[0]
+
+        self.assertEqual(token.fname, 'Print')
+        self.assertEqual(len(token.arguments), 3)
+        self.assertTrue(isinstance(token.arguments[0], NumberToken))
+        self.assertTrue(isinstance(token.arguments[1], BinOpToken))
+        self.assertTrue(isinstance(token.arguments[2], NumberToken))
+
     def test_list(self):
         tokenizer = Tokenizer('{1, 2, 3, x}')
         tokens = tokenizer.get_tokens()
