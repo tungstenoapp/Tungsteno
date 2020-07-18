@@ -1,15 +1,12 @@
 import os
 
+from sympy import Symbol
 from .log import LogLevel
 from .kext_base import KextBase
+from tsteno.language.parser import *
 from tsteno.atoms.module import Module
 from importlib.machinery import SourceFileLoader
 from tsteno.language.tokenizer import Tokenizer
-from tsteno.language.parser import Parser, FunctionExpressionParserOutput
-from tsteno.language.parser import StringParserOutput
-from tsteno.language.parser import NumberExpressionParserOutput
-from tsteno.language.parser import ExpressionParserOutput
-from sympy import Symbol
 
 PROTECTED_NAMES_BUILTIN = ['builtin_base.py', '__init__.py']
 
@@ -18,7 +15,7 @@ class Evaluation(KextBase):
 
     __slots__ = [
         'builtin_variables', 'builtin_modules',
-        'user_functions', 'user_variables', 'user_modules',
+        'user_modules', 'user_variables', 'user_modules',
         'tokenizer'
     ]
 
@@ -29,6 +26,9 @@ class Evaluation(KextBase):
 
         self.builtin_variables = {}
         self.builtin_modules = {}
+
+        self.user_modules = {}
+        self.user_variables = {}
 
         if self.get_kernel().parent is None:
             self.__bootstrap(log_kext)
@@ -79,7 +79,7 @@ class Evaluation(KextBase):
         elif isinstance(parser_output, NumberExpressionParserOutput):
             return parser_output.value
         elif isinstance(parser_output, ExpressionParserOutput):
-            return Symbol(parser_output.value)
+            return self.get_variable_definition(parser_output.value)
 
     def __load_builtin_module(self, path, module_def, log_kext=None):
         if log_kext is None:
@@ -108,10 +108,21 @@ class Evaluation(KextBase):
         )
 
     def get_module_definition(self, module):
+        if module in self.user_modules:
+            return self.user_modules[module]
+
         if module not in self.builtin_modules:
             return self.builtin_modules['Unknown'].proxy(module)
 
         return self.builtin_modules[module]
+
+    def get_variable_definition(self, variable):
+        if variable in self.user_variables:
+            return self.user_variables[variable]
+
+        if variable not in self.builtin_variables:
+            return Symbol(variable)
+        return self.builtin_variables[variable]
 
     def __bootstrap(self, log_kext):
         builtin_modules = self.__search_builtin()

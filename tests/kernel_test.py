@@ -7,7 +7,7 @@ class TestTokenizer(unittest.TestCase):
         kernel = Kernel()
         evaluation = kernel.get_kext('eval')
 
-        evaluation.evaluate_code('Print[x + 1.453 + 1 + 2 + x + x^3 + 5^2]')
+        evaluation.evaluate_code('Print[Integrate[1/2, x]]')
 
 
 if __name__ == '__main__':
