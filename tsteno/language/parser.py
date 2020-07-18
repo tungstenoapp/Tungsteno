@@ -2,6 +2,8 @@
 kernel """
 from .tokenizer import NumberToken, IdentifierToken, ClosureToken, StringToken
 from .tokenizer import FunctionIdentifierToken, ListSeparatorToken, BinOpToken
+from .tokenizer import ListToken
+
 from collections import namedtuple
 
 OpInfo = namedtuple('OpInfo', 'prec assoc function')
@@ -18,27 +20,38 @@ OPINFO_MAP = {
 
 
 class ParserOutput:
+    """ Class result after parsing token """
 
     @staticmethod
     def is_match(token):
         """ Check if given character match with token character list
 
-        Keyword arguments:
-        character -- character to be checked
+        Arguments:
+            **token**: Token to be checked.
+
+        Return:
+            True if match, false if not.
         """
         raise Exception("Method not defined")
 
     @staticmethod
     def parse(parser):
-        """ After a match, generate a token class from the current buffer.
+        """ After a match, generate a token class from the tokenizer.
 
-        Keyword arguments:
-        tokenizer -- current buffer
+        Arguments:
+            **parser**: parse given items
+
+        Return:
+            *(ParserOutput)* Pre-evaluate parser-output
         """
         raise Exception("Method not defined")
 
 
 class ExpressionParserOutput(ParserOutput):
+    """
+    Represent Tungsten Language expression.
+    """
+
     __slots__ = ['value']
 
     def __init__(self, value):
@@ -46,22 +59,12 @@ class ExpressionParserOutput(ParserOutput):
 
     @staticmethod
     def is_match(token):
-        """ Check if given character match with token character list
-
-        Keyword arguments:
-        character -- character to be checked
-        """
         return isinstance(token, NumberToken) or \
             isinstance(token, IdentifierToken) or \
             isinstance(token, StringToken)
 
     @staticmethod
     def parse(parser, min_prec=0):
-        """ After a match, generate a token class from the current buffer.
-
-        Keyword arguments:
-        tokenizer -- current buffer
-        """
         atom_lhs = ExpressionParserOutput.compute_atom(parser)
 
         while (parser.current_pos < len(parser.tokens) and
@@ -88,7 +91,15 @@ class ExpressionParserOutput(ParserOutput):
 
     @staticmethod
     def compute_atom(parser):
-        """ Search parser-output class for given token """
+        """
+        Return parser-output from the next token.
+
+        Arguments:
+            **parser**: Current parser class.
+
+        Return:
+            *(ExpressionParserOutput)*: Pre-compiled eval.
+        """
         token = parser.curtok
         parser.get_next_token()
 
@@ -111,6 +122,12 @@ class ExpressionParserOutput(ParserOutput):
 
     @staticmethod
     def calculate_arguments(arguments):
+        """
+        Calculate parser-output arguments for functions.
+
+        Arguments:
+            **arguments**: Token list as arguments.
+        """
         token_group = []
         parser_output_args = []
 
@@ -163,10 +180,54 @@ class FunctionExpressionParserOutput(ExpressionParserOutput):
         return output
 
 
+class ListExpressionParserOutput(ParserOutput):
+    @staticmethod
+    def is_match(token):
+        return isinstance(token, ListToken)
+
+    @staticmethod
+    def parse(parser):
+        token = parser.curtok
+        parser.get_next_token()
+
+        items = ListExpressionParserOutput.calculate_items(token.items)
+
+        return FunctionExpressionParserOutput('List', items)
+
+    @staticmethod
+    def calculate_items(arguments):
+        """
+        Calculate parser-output arguments for functions.
+
+        Arguments:
+            **arguments**: Token list as arguments.
+        """
+        token_group = []
+        parser_output_args = []
+
+        for arg in arguments:
+            if isinstance(arg, ListSeparatorToken):
+                arg_parser = Parser(token_group)
+                arg_parser_result = arg_parser.get_next_parser_output()
+                parser_output_args.append(arg_parser_result)
+
+                token_group = []
+            else:
+                token_group.append(arg)
+
+        if len(token_group) > 0:
+            arg_parser = Parser(token_group)
+            arg_parser_result = arg_parser.get_next_parser_output()
+            parser_output_args.append(arg_parser_result)
+
+        return parser_output_args
+
+
 class Parser:
     """ Read tokens and generate parser-output """
     AVAILABLE_PARSER_OUT = [
-        ExpressionParserOutput
+        ExpressionParserOutput,
+        ListExpressionParserOutput
     ]
 
     __slots__ = ['tokens', 'current_pos', 'curtok', 'toklen']
@@ -178,6 +239,12 @@ class Parser:
         self.get_next_token()
 
     def get_next_token(self):
+        """
+        Read next token from tokenizer list.
+
+        Return:
+            **Token**: Next token from token list.
+        """
         self.current_pos = self.current_pos + 1
         if self.toklen > self.current_pos:
             self.curtok = self.tokens[self.current_pos]
@@ -186,9 +253,21 @@ class Parser:
         return self.curtok
 
     def get_current_token(self):
+        """
+        Current token from list.
+
+        Return:
+            **Token**: Current token.
+        """
         return self.curtok
 
     def get_next_parser_output(self):
+        """
+        Calculate next parser output.
+
+        Return:
+            *(ParserOutput)*: Next parser output.
+        """
         if self.curtok is None:
             return None
 
@@ -203,6 +282,11 @@ class Parser:
         raise Exception("Unexpected " + str(self.curtok))
 
     def get_all_parser_output(self):
+        """
+        A list with all parser-output
+        Return:
+            *(List[ParserOutput])*: A list of parser output.
+        """
         parser_output = self.get_next_parser_output()
         parser_output_all = []
 

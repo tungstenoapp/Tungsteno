@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.8.3" />
 <title>tsteno.kernel.kernel API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="Kernel represent basic evaluation environment" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin>
@@ -22,6 +22,109 @@
 <h1 class="title">Module <code>tsteno.kernel.kernel</code></h1>
 </header>
 <section id="section-intro">
+<p>Kernel represent basic evaluation environment</p>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">&#34;&#34;&#34; Kernel represent basic evaluation environment &#34;&#34;&#34;
+import uuid
+import datetime
+from .kexts.log import Log, LogLevel
+from .kexts.evaluation import Evaluation
+
+KERNEL_DEFAULT_OPTIONS = {
+    &#39;kext_extensions&#39;: {
+        &#39;numerical&#39;: {
+            &#39;precission&#39;: 10,
+        },
+        &#39;log&#39;: {
+            &#39;log_level&#39;: LogLevel.DEBUG
+        }
+    }
+}
+
+
+class Kernel:
+    __slots__ = [
+        &#39;start_dt&#39;, &#39;kid&#39;, &#39;parent&#39;, &#39;options&#39;,
+        &#39;kext_definitions&#39;, &#39;__kext_initialized&#39;
+    ]
+
+    def __init__(self, parent=None, options=KERNEL_DEFAULT_OPTIONS):
+        self.options = options
+
+        self.kid = uuid.uuid4()
+        if parent is None:
+            self.kid = f&#39;r00t-{self.kid}&#39;
+
+        &#34;&#34;&#34; Represent kernel ID &#34;&#34;&#34;
+
+        self.start_dt = datetime.datetime.now()
+        &#34;&#34;&#34; Represent kernel start date &#34;&#34;&#34;
+
+        self.parent = parent
+        &#34;&#34;&#34; Represent kernel parent &#34;&#34;&#34;
+
+        self.kext_definitions = {}
+        &#34;&#34;&#34; Represent kernel extensions &#34;&#34;&#34;
+
+        self.__kext_initialized = False
+        self.__bootstrap()
+        self.__kext_initialized = True
+
+    def __bootstrap(self):
+        log_kext = Log(self)
+        log_kext.write(
+            f&#39;Initializing new tungsteno kernel ({self.kid})&#39;,
+            LogLevel.DEBUG
+        )
+
+        self.register_kext(&#39;log&#39;, Log, log_kext=log_kext)
+        self.register_kext(&#39;eval&#39;, Evaluation)
+
+        log_kext.write(
+            f&#39;Kernel ({self.kid}) loaded succesfully!&#39;,
+            LogLevel.DEBUG
+        )
+
+    def create_subkernel(self):
+        return Kernel(self)
+
+    def get_kext(self, kext_name):
+        if kext_name in self.kext_definitions:
+            return self.kext_definitions[kext_name]
+        raise Exception(f&#34;Kext extension `{kext_name}` doesn&#39;t exists&#34;)
+
+    def register_kext(self, kext_name, kext_definition, log_kext=None):
+        if self.__kext_initialized:
+            raise Exception(&#34;Kext extensions are loaded only during bootstrap&#34;)
+
+        if log_kext is None:
+            log_kext = self.get_kext(&#39;log&#39;)
+
+        log_kext.write(f&#39;Kext `{kext_name}` loading...&#39;, LogLevel.DEBUG)
+        self.kext_definitions[kext_name] = kext_definition(self)
+        log_kext.write(
+            f&#39;Kext `{kext_name}` loaded succesfully!&#39;,
+            LogLevel.DEBUG
+        )
+
+    def get_option_value(self, *args):
+        value = self.options
+        for arg in args:
+            if arg not in value:
+                raise Exception(&#34;Option doesn&#39;t exists&#34;)
+            value = value[arg]
+        return value
+
+    def get_kid(self):
+        return self.kid
+
+    def __repr__(self):
+        return f&#39;KID: {self.kid}, started at {self.start_dt} kext defs: &#39; +\
+            &#39;, &#39;.join(self.kext_definitions)</code></pre>
+</details>
 </section>
 <section>
 </section>
@@ -30,6 +133,209 @@
 <section>
 </section>
 <section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="tsteno.kernel.kernel.Kernel"><code class="flex name class">
+<span>class <span class="ident">Kernel</span></span>
+<span>(</span><span>parent=None, options={&#x27;kext_extensions&#x27;: {&#x27;numerical&#x27;: {&#x27;precission&#x27;: 10}, &#x27;log&#x27;: {&#x27;log_level&#x27;: &lt;LogLevel.DEBUG: 5&gt;}}})</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Kernel:
+    __slots__ = [
+        &#39;start_dt&#39;, &#39;kid&#39;, &#39;parent&#39;, &#39;options&#39;,
+        &#39;kext_definitions&#39;, &#39;__kext_initialized&#39;
+    ]
+
+    def __init__(self, parent=None, options=KERNEL_DEFAULT_OPTIONS):
+        self.options = options
+
+        self.kid = uuid.uuid4()
+        if parent is None:
+            self.kid = f&#39;r00t-{self.kid}&#39;
+
+        &#34;&#34;&#34; Represent kernel ID &#34;&#34;&#34;
+
+        self.start_dt = datetime.datetime.now()
+        &#34;&#34;&#34; Represent kernel start date &#34;&#34;&#34;
+
+        self.parent = parent
+        &#34;&#34;&#34; Represent kernel parent &#34;&#34;&#34;
+
+        self.kext_definitions = {}
+        &#34;&#34;&#34; Represent kernel extensions &#34;&#34;&#34;
+
+        self.__kext_initialized = False
+        self.__bootstrap()
+        self.__kext_initialized = True
+
+    def __bootstrap(self):
+        log_kext = Log(self)
+        log_kext.write(
+            f&#39;Initializing new tungsteno kernel ({self.kid})&#39;,
+            LogLevel.DEBUG
+        )
+
+        self.register_kext(&#39;log&#39;, Log, log_kext=log_kext)
+        self.register_kext(&#39;eval&#39;, Evaluation)
+
+        log_kext.write(
+            f&#39;Kernel ({self.kid}) loaded succesfully!&#39;,
+            LogLevel.DEBUG
+        )
+
+    def create_subkernel(self):
+        return Kernel(self)
+
+    def get_kext(self, kext_name):
+        if kext_name in self.kext_definitions:
+            return self.kext_definitions[kext_name]
+        raise Exception(f&#34;Kext extension `{kext_name}` doesn&#39;t exists&#34;)
+
+    def register_kext(self, kext_name, kext_definition, log_kext=None):
+        if self.__kext_initialized:
+            raise Exception(&#34;Kext extensions are loaded only during bootstrap&#34;)
+
+        if log_kext is None:
+            log_kext = self.get_kext(&#39;log&#39;)
+
+        log_kext.write(f&#39;Kext `{kext_name}` loading...&#39;, LogLevel.DEBUG)
+        self.kext_definitions[kext_name] = kext_definition(self)
+        log_kext.write(
+            f&#39;Kext `{kext_name}` loaded succesfully!&#39;,
+            LogLevel.DEBUG
+        )
+
+    def get_option_value(self, *args):
+        value = self.options
+        for arg in args:
+            if arg not in value:
+                raise Exception(&#34;Option doesn&#39;t exists&#34;)
+            value = value[arg]
+        return value
+
+    def get_kid(self):
+        return self.kid
+
+    def __repr__(self):
+        return f&#39;KID: {self.kid}, started at {self.start_dt} kext defs: &#39; +\
+            &#39;, &#39;.join(self.kext_definitions)</code></pre>
+</details>
+<h3>Instance variables</h3>
+<dl>
+<dt id="tsteno.kernel.kernel.Kernel.kext_definitions"><code class="name">var <span class="ident">kext_definitions</span></code></dt>
+<dd>
+<div class="desc"><p>Represent kernel extensions</p></div>
+</dd>
+<dt id="tsteno.kernel.kernel.Kernel.kid"><code class="name">var <span class="ident">kid</span></code></dt>
+<dd>
+<div class="desc"><p>Return an attribute of instance, which is of type owner.</p></div>
+</dd>
+<dt id="tsteno.kernel.kernel.Kernel.options"><code class="name">var <span class="ident">options</span></code></dt>
+<dd>
+<div class="desc"><p>Return an attribute of instance, which is of type owner.</p></div>
+</dd>
+<dt id="tsteno.kernel.kernel.Kernel.parent"><code class="name">var <span class="ident">parent</span></code></dt>
+<dd>
+<div class="desc"><p>Represent kernel parent</p></div>
+</dd>
+<dt id="tsteno.kernel.kernel.Kernel.start_dt"><code class="name">var <span class="ident">start_dt</span></code></dt>
+<dd>
+<div class="desc"><p>Represent kernel start date</p></div>
+</dd>
+</dl>
+<h3>Methods</h3>
+<dl>
+<dt id="tsteno.kernel.kernel.Kernel.create_subkernel"><code class="name flex">
+<span>def <span class="ident">create_subkernel</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def create_subkernel(self):
+    return Kernel(self)</code></pre>
+</details>
+</dd>
+<dt id="tsteno.kernel.kernel.Kernel.get_kext"><code class="name flex">
+<span>def <span class="ident">get_kext</span></span>(<span>self, kext_name)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_kext(self, kext_name):
+    if kext_name in self.kext_definitions:
+        return self.kext_definitions[kext_name]
+    raise Exception(f&#34;Kext extension `{kext_name}` doesn&#39;t exists&#34;)</code></pre>
+</details>
+</dd>
+<dt id="tsteno.kernel.kernel.Kernel.get_kid"><code class="name flex">
+<span>def <span class="ident">get_kid</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_kid(self):
+    return self.kid</code></pre>
+</details>
+</dd>
+<dt id="tsteno.kernel.kernel.Kernel.get_option_value"><code class="name flex">
+<span>def <span class="ident">get_option_value</span></span>(<span>self, *args)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_option_value(self, *args):
+    value = self.options
+    for arg in args:
+        if arg not in value:
+            raise Exception(&#34;Option doesn&#39;t exists&#34;)
+        value = value[arg]
+    return value</code></pre>
+</details>
+</dd>
+<dt id="tsteno.kernel.kernel.Kernel.register_kext"><code class="name flex">
+<span>def <span class="ident">register_kext</span></span>(<span>self, kext_name, kext_definition, log_kext=None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def register_kext(self, kext_name, kext_definition, log_kext=None):
+    if self.__kext_initialized:
+        raise Exception(&#34;Kext extensions are loaded only during bootstrap&#34;)
+
+    if log_kext is None:
+        log_kext = self.get_kext(&#39;log&#39;)
+
+    log_kext.write(f&#39;Kext `{kext_name}` loading...&#39;, LogLevel.DEBUG)
+    self.kext_definitions[kext_name] = kext_definition(self)
+    log_kext.write(
+        f&#39;Kext `{kext_name}` loaded succesfully!&#39;,
+        LogLevel.DEBUG
+    )</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -41,6 +347,25 @@
 <li><h3>Super-module</h3>
 <ul>
 <li><code><a title="tsteno.kernel" href="index.html">tsteno.kernel</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="tsteno.kernel.kernel.Kernel" href="#tsteno.kernel.kernel.Kernel">Kernel</a></code></h4>
+<ul class="two-column">
+<li><code><a title="tsteno.kernel.kernel.Kernel.create_subkernel" href="#tsteno.kernel.kernel.Kernel.create_subkernel">create_subkernel</a></code></li>
+<li><code><a title="tsteno.kernel.kernel.Kernel.get_kext" href="#tsteno.kernel.kernel.Kernel.get_kext">get_kext</a></code></li>
+<li><code><a title="tsteno.kernel.kernel.Kernel.get_kid" href="#tsteno.kernel.kernel.Kernel.get_kid">get_kid</a></code></li>
+<li><code><a title="tsteno.kernel.kernel.Kernel.get_option_value" href="#tsteno.kernel.kernel.Kernel.get_option_value">get_option_value</a></code></li>
+<li><code><a title="tsteno.kernel.kernel.Kernel.kext_definitions" href="#tsteno.kernel.kernel.Kernel.kext_definitions">kext_definitions</a></code></li>
+<li><code><a title="tsteno.kernel.kernel.Kernel.kid" href="#tsteno.kernel.kernel.Kernel.kid">kid</a></code></li>
+<li><code><a title="tsteno.kernel.kernel.Kernel.options" href="#tsteno.kernel.kernel.Kernel.options">options</a></code></li>
+<li><code><a title="tsteno.kernel.kernel.Kernel.parent" href="#tsteno.kernel.kernel.Kernel.parent">parent</a></code></li>
+<li><code><a title="tsteno.kernel.kernel.Kernel.register_kext" href="#tsteno.kernel.kernel.Kernel.register_kext">register_kext</a></code></li>
+<li><code><a title="tsteno.kernel.kernel.Kernel.start_dt" href="#tsteno.kernel.kernel.Kernel.start_dt">start_dt</a></code></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
