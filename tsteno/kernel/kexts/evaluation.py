@@ -3,10 +3,14 @@ import os
 from sympy import Symbol
 from .log import LogLevel
 from .kext_base import KextBase
-from tsteno.language.parser import *
+
 from tsteno.atoms.module import Module
 from importlib.machinery import SourceFileLoader
 from tsteno.language.tokenizer import Tokenizer
+
+from tsteno.language.parser import Parser, FunctionExpressionParserOutput
+from tsteno.language.parser import StringParserOutput, ExpressionParserOutput
+from tsteno.language.parser import NumberExpressionParserOutput
 
 PROTECTED_NAMES_BUILTIN = ['builtin_base.py', '__init__.py']
 
@@ -67,8 +71,11 @@ class Evaluation(KextBase):
         parser = Parser(tokens)
         parser_outputs = parser.get_all_parser_output()
 
+        result = []
         for parser_output in parser_outputs:
-            self.evaluate_parser_output(parser_output)
+            result.append(self.evaluate_parser_output(parser_output))
+
+        return result
 
     def evaluate_parser_output(self, parser_output):
         if isinstance(parser_output, FunctionExpressionParserOutput):

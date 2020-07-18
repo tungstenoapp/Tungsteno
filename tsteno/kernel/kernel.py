@@ -10,7 +10,7 @@ KERNEL_DEFAULT_OPTIONS = {
             'precission': 10,
         },
         'log': {
-            'log_level': LogLevel.DEBUG
+            'log_level': LogLevel.NORMAL
         }
     }
 }
@@ -22,8 +22,13 @@ class Kernel:
         'kext_definitions', '__kext_initialized'
     ]
 
-    def __init__(self, parent=None, options=KERNEL_DEFAULT_OPTIONS):
-        self.options = options
+    def __init__(self, parent=None, options={}):
+        if parent is None:
+            self.options = self.__calculate_options(
+                KERNEL_DEFAULT_OPTIONS, options
+            )
+        else:
+            self.options = options
 
         self.kid = uuid.uuid4()
         if parent is None:
@@ -43,6 +48,16 @@ class Kernel:
         self.__kext_initialized = False
         self.__bootstrap()
         self.__kext_initialized = True
+
+    def __calculate_options(self, default, differences):
+        options = default
+        for key, value in differences.items():
+            if isinstance(value, dict):
+                options[key] = self.__calculate_options(default[key], value)
+            else:
+                options[key] = value
+
+        return options
 
     def __bootstrap(self):
         log_kext = Log(self)
