@@ -42,5 +42,10 @@ class Module(Atoms):
     def get_arguments(self):
         raise Exception("get_arguments function should be defined")
 
+    def run_test(self, test):
+        raise Exception(
+            f"Run test function is undefined {self.__class__.__name__}"
+        )
+
     def __repr__(self, arguments=None):
         return self.__class__.__name__

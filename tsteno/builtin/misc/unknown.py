@@ -14,6 +14,9 @@ class Unknown(Module):
             ModuleArg(ARG_FLAG_ALL_NEXT)
         ]
 
+    def run_test(self, test):
+        pass
+
 
 class UnknownProxy(Unknown):
     def __init__(self, kernel, fname):

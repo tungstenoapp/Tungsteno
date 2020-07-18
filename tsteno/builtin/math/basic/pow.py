@@ -1,4 +1,5 @@
-from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_ALL_NEXT
+from sympy import parse_expr
+from tsteno.atoms.module import Module, ModuleArg
 
 
 class Pow(Module):
@@ -10,3 +11,15 @@ class Pow(Module):
         return [
             ModuleArg(), ModuleArg()
         ]
+
+    def run_test(self, test):
+        evaluation = self.get_kernel().get_kext('eval')
+
+        # Test symbolic pow
+        test.assertEqual(evaluation.evaluate_code('x^2')
+                         [0], parse_expr("x**2"))
+
+        # Test numerical pow.
+        test.assertEqual(evaluation.evaluate_code(
+            '2^10')[0], 2**10
+        )

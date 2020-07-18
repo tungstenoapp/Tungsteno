@@ -10,3 +10,6 @@ class Print(Module):
         return [
             ModuleArg(ARG_FLAG_ALL_NEXT)
         ]
+
+    def run_test(self, test):
+        pass

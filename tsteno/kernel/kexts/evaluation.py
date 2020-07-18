@@ -77,6 +77,15 @@ class Evaluation(KextBase):
 
         return result
 
+    def get_all_modules(self):
+        return list(self.builtin_modules.values()) +\
+            list(self.builtin_variables.values())
+
+    def run_builtin_tests(self, test):
+        modules = self.get_all_modules()
+        for module in modules:
+            module.run_test(test)
+
     def evaluate_parser_output(self, parser_output):
         if isinstance(parser_output, FunctionExpressionParserOutput):
             module_definition = self.get_module_definition(parser_output.fname)
@@ -129,6 +138,7 @@ class Evaluation(KextBase):
 
         if variable not in self.builtin_variables:
             return Symbol(variable)
+
         return self.builtin_variables[variable]
 
     def __bootstrap(self, log_kext):

@@ -11,3 +11,6 @@ class Integrate(Module):
         return [
             ModuleArg(), ModuleArg()
         ]
+
+    def run_test(self, test):
+        pass

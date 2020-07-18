@@ -8,12 +8,8 @@ evaluation = kernel.get_kext('eval')
 
 
 class TestTokenizer(unittest.TestCase):
-    def test_sum(self):
-        self.assertEqual(evaluation.evaluate_code('1+1+1')[0], 3)
-        self.assertEqual(evaluation.evaluate_code('1+x')[0], parse_expr("x+1"))
-        self.assertEqual(evaluation.evaluate_code(
-            '1+x+x')[0], parse_expr("2*x+1")
-        )
+    def test_all_modules(self):
+        evaluation.run_builtin_tests(self)
 
 
 if __name__ == '__main__':
