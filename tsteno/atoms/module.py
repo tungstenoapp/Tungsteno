@@ -44,7 +44,7 @@ class Module(Atoms):
 
     def run_test(self, test):
         raise Exception(
-            f"Run test function is undefined {self.__class__.__name__}"
+            "Run test function is undefined {}".format(self.__class__.__name__)
         )
 
     def __repr__(self, arguments=None):

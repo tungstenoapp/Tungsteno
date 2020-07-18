@@ -50,7 +50,7 @@ class Token:
         raise Exception("Method not defined")
 
     def __repr__(self):
-        return f'{self.__class__.__name__}: {self.value}'
+        return '{}: {}'.format(self.__class__.__name__, self.value)
 
 
 class NumberToken(Token):

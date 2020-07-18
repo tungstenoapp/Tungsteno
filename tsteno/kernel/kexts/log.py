@@ -33,7 +33,11 @@ class Log(KextBase):
         if level.value > self.log_level.value:
             return
 
-        format_message = f'[{self.get_kernel().get_kid()}] [{datetime.datetime.now().isoformat()}]: {msg}'
+        format_message = '[{}] [{}]: {}'.format(
+            self.get_kernel().get_kid(),
+            datetime.datetime.now().isoformat(),
+            msg
+        )
 
         for handler in self.log_handlers:
             handler(format_message, level)

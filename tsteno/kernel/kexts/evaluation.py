@@ -102,7 +102,7 @@ class Evaluation(KextBase):
             log_kext = self.get_kernel().get_kext('log')
 
         log_kext.write(
-            f"Loading `{module_def}`...",
+            "Loading `{}`...".format(module_def),
             LogLevel.DEBUG
         )
 
@@ -119,7 +119,7 @@ class Evaluation(KextBase):
             raise Exception("Unknown builtin definition, aborted")
 
         log_kext.write(
-            f"Loaded `{module_def}` succesfully!",
+            "Loaded `{}` succesfully!".format(module_def),
             LogLevel.DEBUG
         )
 
@@ -145,7 +145,7 @@ class Evaluation(KextBase):
         builtin_modules = self.__search_builtin()
 
         log_kext.write(
-            f'We have found {len(builtin_modules)} builtin modules',
+            'We have found {} builtin modules'.format(len(builtin_modules)),
             LogLevel.DEBUG
         )
 
@@ -157,6 +157,8 @@ class Evaluation(KextBase):
             )
 
         log_kext.write(
-            f'{len(builtin_modules)} builtin modules loaded succesfully',
+            '{} builtin modules loaded succesfully'.format(
+                len(builtin_modules)
+            ),
             LogLevel.DEBUG
         )
