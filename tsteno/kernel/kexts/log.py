@@ -33,7 +33,7 @@ class Log(KextBase):
         if level.value > self.log_level.value:
             return
 
-        format_message = '[{}] [{}]: {}'.format(
+        format_message = '[{}] [{}]: {msg}'.format(
             self.get_kernel().get_kid(),
             datetime.datetime.now().isoformat(),
             msg
@@ -43,11 +43,18 @@ class Log(KextBase):
             handler(format_message, level)
 
     def __default_log_handler(self, msg, level):
+        status = ''
+        color = Fore.RESET
+
         if level == LogLevel.ERROR:
-            msg = f'{Fore.RED}[ERROR] {msg} {Fore.RESET}'
+            status = 'ERROR'
+            color = Fore.RED
         elif level == LogLevel.NORMAL:
-            msg = f'[INFO] {msg}'
+            status = 'INFO'
         elif level == LogLevel.DEBUG:
-            msg = f'{Fore.BLUE}[DEBUG] {msg} {Fore.RESET}'
+            status = 'DEBUG'
+            color = Fore.BLUE
+
+        msg = '{}[{}] {} {}'.format(color, status, msg, Fore.RESET)
 
         print(msg)
