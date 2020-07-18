@@ -32,7 +32,7 @@ class Kernel:
 
         self.kid = uuid.uuid4()
         if parent is None:
-            self.kid = 'r00t-' + self.kid
+            self.kid = 'r00t-{}'.format(self.kid)
 
         """ Represent kernel ID """
 
