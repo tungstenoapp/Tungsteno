@@ -1,4 +1,4 @@
-from sympy import parse_expr
+from sympy.parsing.sympy_parser import parse_expr
 from tsteno.atoms.module import Module, ModuleArg
 
 

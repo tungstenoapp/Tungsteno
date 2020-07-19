@@ -1,5 +1,5 @@
-from sympy import parse_expr
 from tsteno.atoms.module import ModuleArg, Module
+from sympy.parsing.sympy_parser import parse_expr
 
 
 class Minus(Module):

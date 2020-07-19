@@ -1,8 +1,6 @@
 import unittest
 from tsteno.kernel.kernel import Kernel
 
-from sympy import parse_expr
-
 kernel = Kernel()
 evaluation = kernel.get_kext('eval')
 
