@@ -86,12 +86,12 @@ class NumberToken(Token):
 class BinOpToken(Token):
     """ Represent binary operation tokens """
 
-    BINARY_OP_CHARACTERS = ['+', '-', '*', '/', '^', '=', '<', '>']
+    BINARY_OP_CHARACTERS = ['+', '-', '*', '/', '^', '=', '<', '>', '!']
     """
     Set of different binary operation characters.
     """
 
-    COMPARATORS = ['<', '=', '>']
+    COMPARATORS = ['<', '=', '>', '!']
 
     @staticmethod
     def is_match(character):
