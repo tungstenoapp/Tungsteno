@@ -1,11 +1,17 @@
 import os
+import sys
 
 from sympy import Symbol
 from .log import LogLevel
 from .kext_base import KextBase
 
 from tsteno.atoms.module import Module
-from importlib.machinery import SourceFileLoader
+
+if sys.version_info.major < 3 and sys.version_info.major >= 2:
+    import imp
+elif sys.version_info.major >= 3:
+    from importlib.machinery import SourceFileLoader
+
 from tsteno.language.tokenizer import Tokenizer
 
 from tsteno.language.parser import Parser, FunctionExpressionParserOutput
@@ -106,9 +112,13 @@ class Evaluation(KextBase):
             LogLevel.DEBUG
         )
 
-        module = SourceFileLoader(
-            module_def, path
-        )
+        if sys.version_info.major < 3 and sys.version_info.major >= 2:
+            module = imp.load_source(module_def, path)
+        elif sys.version_info.major >= 3:
+            module = SourceFileLoader(
+                module_def, path
+            )
+
         module = module.load_module()
 
         definition = getattr(module, module_def)(self.get_kernel())
