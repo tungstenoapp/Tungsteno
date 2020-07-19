@@ -300,7 +300,11 @@ class FunctionIdentifierToken(IdentifierToken):
         return FunctionIdentifierToken(fname, tokens)
 
     def __repr__(self):
-        return f'{self.__class__.__name__}: {self.fname} ({self.arguments})'
+        return '{}: {} ({})'.format(
+            self.__class__.__name__,
+            self.fname,
+            self.arguments
+        )
 
 
 class ListToken(Token):

@@ -62,7 +62,7 @@ class Kernel:
     def __bootstrap(self):
         log_kext = Log(self)
         log_kext.write(
-            f'Initializing new tungsteno kernel ({self.kid})',
+            'Initializing new tungsteno kernel ({})'.format(self.kid),
             LogLevel.DEBUG
         )
 
@@ -70,7 +70,7 @@ class Kernel:
         self.register_kext('eval', Evaluation)
 
         log_kext.write(
-            f'Kernel ({self.kid}) loaded succesfully!',
+            'Kernel ({}) loaded succesfully!'.format(self.kid),
             LogLevel.DEBUG
         )
 
@@ -80,7 +80,7 @@ class Kernel:
     def get_kext(self, kext_name):
         if kext_name in self.kext_definitions:
             return self.kext_definitions[kext_name]
-        raise Exception(f"Kext extension `{kext_name}` doesn't exists")
+        raise Exception("Kext extension `{}` doesn't exists".format(kext_name))
 
     def register_kext(self, kext_name, kext_definition, log_kext=None):
         if self.__kext_initialized:
@@ -89,10 +89,11 @@ class Kernel:
         if log_kext is None:
             log_kext = self.get_kext('log')
 
-        log_kext.write(f'Kext `{kext_name}` loading...', LogLevel.DEBUG)
+        log_kext.write('Kext `{}` loading...'.format(
+            kext_name), LogLevel.DEBUG)
         self.kext_definitions[kext_name] = kext_definition(self)
         log_kext.write(
-            f'Kext `{kext_name}` loaded succesfully!',
+            'Kext `{}` loaded succesfully!'.format(kext_name),
             LogLevel.DEBUG
         )
 
@@ -108,5 +109,6 @@ class Kernel:
         return self.kid
 
     def __repr__(self):
-        return f'KID: {self.kid}, started at {self.start_dt} kext defs: ' +\
-            ', '.join(self.kext_definitions)
+        return 'KID: {}, started at {} kext defs: '.format(
+            self.kid, self.start_dt
+        ) + ', '.join(self.kext_definitions)
