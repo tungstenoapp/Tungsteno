@@ -12,3 +12,6 @@ class Comparator(Atoms):
 
     def eval(self):
         return reduce(self.op, (self.left, self.right))
+
+    def __repr__(self):
+        return str(self.eval()).capitalize()

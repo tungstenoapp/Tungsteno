@@ -19,3 +19,5 @@ class Equal(Module):
 
         test.assertTrue(evaluation.evaluate_code('x+1==1+x')[0].eval())
         test.assertFalse(evaluation.evaluate_code('x+1==x')[0].eval())
+
+        test.assertEqual(str(evaluation.evaluate_code('1==1')[0]), 'True')
