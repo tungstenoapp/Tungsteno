@@ -103,6 +103,25 @@ class TestTokenizer(unittest.TestCase):
         for arg in list_fn.arguments:
             self.assertEqual(arg.value, 1)
 
+    def test_comparator(self):
+        tokenizer = Tokenizer('1 > 2')
+        tokens = tokenizer.get_tokens()
+
+        parser = Parser(tokens)
+        parser_outputs = parser.get_all_parser_output()
+
+        self.assertEqual(len(parser_outputs), 1)
+
+        greater_than_fn = parser_outputs[0]
+        self.assertEqual(greater_than_fn.fname, "GreaterThan")
+
+        self.assertEqual(len(greater_than_fn.arguments), 2)
+
+        k = 1
+        for arg in greater_than_fn.arguments:
+            self.assertEqual(arg.value, k)
+            k = k + 1
+
 
 if __name__ == '__main__':
     unittest.main()

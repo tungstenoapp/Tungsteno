@@ -86,10 +86,12 @@ class NumberToken(Token):
 class BinOpToken(Token):
     """ Represent binary operation tokens """
 
-    BINARY_OP_CHARACTERS = ['+', '-', '*', '/', '^', '=']
+    BINARY_OP_CHARACTERS = ['+', '-', '*', '/', '^', '=', '<', '>']
     """
     Set of different binary operation characters.
     """
+
+    COMPARATORS = ['<', '=', '>']
 
     @staticmethod
     def is_match(character):
@@ -112,7 +114,10 @@ class BinOpToken(Token):
         if op == '-' and next_chr == '>':
             tokenizer.next_character()
             return BinOpToken("->")
-        if op == '.':
+        elif op in BinOpToken.COMPARATORS and next_chr == '=':
+            tokenizer.next_character()
+            return BinOpToken(op + next_chr)
+        elif op == '.':
             if next_chr != '/':
                 raise IllegalCharacter(tokenizer)
             return BinOpToken("./")

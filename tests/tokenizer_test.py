@@ -105,6 +105,15 @@ class TestTokenizer(unittest.TestCase):
         self.assertTrue(isinstance(item_4, IdentifierToken))
         self.assertEqual(item_4.get_value(), 'x')
 
+    def test_comparator(self):
+        tokenizer = Tokenizer('1 > 2')
+        tokens = tokenizer.get_tokens()
+
+        self.assertEqual(len(tokens), 3)
+        self.assertTrue(isinstance(tokens[0], NumberToken))
+        self.assertTrue(isinstance(tokens[1], BinOpToken))
+        self.assertTrue(isinstance(tokens[2], NumberToken))
+
 
 if __name__ == '__main__':
     unittest.main()

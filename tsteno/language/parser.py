@@ -10,10 +10,18 @@ OpInfo = namedtuple('OpInfo', 'prec assoc function')
 
 OPINFO_MAP = {
     '=':    OpInfo(0, 'LEFT', 'Set'),
+    '<':    OpInfo(0, 'LEFT', 'LessThan'),
+    '<=':   OpInfo(0, 'LEFT', 'LessEqual'),
+    '>':    OpInfo(0, 'LEFT', 'GreaterThan'),
+    '>=':   OpInfo(0, 'LEFT', 'GreaterEqual'),
+    '==':   OpInfo(0, 'LEFT', 'Equal'),
+
     '+':    OpInfo(1, 'LEFT', 'Plus'),
     '-':    OpInfo(1, 'LEFT', 'Minus'),
+
     '*':    OpInfo(2, 'LEFT', 'Product'),
     '/':    OpInfo(2, 'LEFT', 'Div'),
+
     '^':    OpInfo(3, 'RIGHT', 'Pow'),
 }
 """ Contains information of how to parse operation symbols """
