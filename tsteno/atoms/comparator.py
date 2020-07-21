@@ -13,5 +13,8 @@ class Comparator(Atoms):
     def eval(self):
         return reduce(self.op, (self.left, self.right))
 
+    def __bool__(self):
+        return self.eval()
+
     def __repr__(self):
         return str(self.eval()).capitalize()

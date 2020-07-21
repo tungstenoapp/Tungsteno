@@ -19,6 +19,7 @@ class Product(Module):
 
         # Test numerical sum
         test.assertEqual(evaluation.evaluate_code('3*1*2')[0], 6)
+        test.assertEqual(evaluation.evaluate_code('3 1 2')[0], 6)
 
         # Test symbolic sum.
         test.assertEqual(evaluation.evaluate_code(

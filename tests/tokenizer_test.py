@@ -15,6 +15,21 @@ class TestTokenizer(unittest.TestCase):
         self.assertTrue(isinstance(token, NumberToken))
         self.assertEqual(token.value, 12345)
 
+    def test_parseInvisibleProduct(self):
+        tokenizer = Tokenizer("2 x")
+        tokens = tokenizer.get_tokens()
+
+        self.assertEqual(len(tokens), 3)
+
+        self.assertTrue(isinstance(tokens[0], NumberToken))
+        self.assertEqual(tokens[0].value, 2)
+
+        self.assertTrue(isinstance(tokens[1], BinOpToken))
+        self.assertEqual(tokens[1].value, '*')
+
+        self.assertTrue(isinstance(tokens[2], IdentifierToken))
+        self.assertEqual(tokens[2].value, 'x')
+
     def test_parseNumberPlusNumber(self):
         tokenizer = Tokenizer("12345+123")
         tokens = tokenizer.get_tokens()

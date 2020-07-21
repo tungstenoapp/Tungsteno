@@ -1,16 +1,19 @@
 import operator
 from sympy import nsolve, Symbol
 from tsteno.atoms.module import ModuleArg, Module
+from random import randint
+from sympy.plotting import plot
 
 
 class NSolve(Module):
 
     def run(self, expressions, variables):
         if not isinstance(expressions, list):
+            fmt_expr = NSolve.calculate_one_expr(expressions)
             return nsolve(
-                NSolve.calculate_one_expr(expressions),
+                fmt_expr,
                 variables,
-                1,
+                0,
                 dict=True
             )
 
@@ -19,7 +22,12 @@ class NSolve(Module):
         for expression in expressions:
             fmt_expr.append(NSolve.calculate_one_expr(expression))
 
-        return nsolve(fmt_expr, variables, (-10, -10), dict=True)
+        return nsolve(
+            fmt_expr,
+            variables,
+            [0]*len(variables),
+            dict=True,
+        )
 
     @staticmethod
     def calculate_one_expr(expr):

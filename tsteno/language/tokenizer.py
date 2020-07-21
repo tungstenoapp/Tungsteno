@@ -518,6 +518,19 @@ class Tokenizer:
 
         raise IllegalCharacter(self)
 
+    @staticmethod
+    def is_invisible_product(token, tokens):
+        if len(tokens) != 0:
+            if (
+                isinstance(tokens[-1], NumberToken) or
+                isinstance(tokens[-1], IdentifierToken)
+            ) and (
+                isinstance(token, NumberToken) or
+                isinstance(token, IdentifierToken)
+            ):
+                return 1
+        return 0
+
     def get_tokens(self):
         """
         Get all tokens from buffer.
@@ -534,6 +547,9 @@ class Tokenizer:
         token = self.next_token()
 
         while token is not None:
+            if (Tokenizer.is_invisible_product(token, tokens)):
+                tokens.append(BinOpToken('*'))
+
             tokens.append(token)
             token = self.next_token()
 
