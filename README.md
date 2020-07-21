@@ -13,4 +13,5 @@ Designed to make users and contributors feel comfortable in a friendly and flexi
 - Basic operations of numerical and symbolical values. (Sum, Product, Division, ...)
 - Printing calculated values.
 - Arrays
-- Calculus: Symbolic integration
+- Calculus: Symbolic integration, Integrate
+- Solve / NSolve
