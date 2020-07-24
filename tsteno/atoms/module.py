@@ -2,6 +2,7 @@ from .atoms import Atoms
 
 ARG_FLAG_OPTIONAL = 1 << 1
 ARG_FLAG_ALL_NEXT = 1 << 2
+ARG_FLAG_NO_AUTO_EVAL = 1 << 3
 
 
 class ModuleArg:
@@ -24,12 +25,18 @@ class Module(Atoms):
         for i in range(0, len(module_args)):
             module_arg = module_args[i]
 
+            if module_arg.get_flag() & ARG_FLAG_NO_AUTO_EVAL == 0:
+                eval_fn = eval.evaluate_parser_output
+            else:
+                def eval_fn(args):
+                    return lambda: eval.evaluate_parser_output(args)
+
             if module_arg.get_flag() & ARG_FLAG_ALL_NEXT != 0:
                 fargs = fargs + \
-                    list(map(eval.evaluate_parser_output, arguments[i:]))
+                    list(map(eval_fn, arguments[i:]))
                 break
 
-            fargs.append(eval.evaluate_parser_output(arguments[i]))
+            fargs.append(eval_fn(arguments[i]))
 
         return self.run(*fargs)
 
@@ -44,7 +51,9 @@ class Module(Atoms):
 
     def run_test(self, test):
         raise Exception(
-            "Run test function is undefined {}".format(self.__class__.__name__)
+            "Run test function is undefined on `{}`".format(
+                self.__class__.__name__
+            )
         )
 
     def __repr__(self, arguments=None):
