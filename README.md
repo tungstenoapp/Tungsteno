@@ -1,9 +1,4 @@
 # Tungsteno
-**Windows: ** ![release status windows](https://github.com/JoseCarlosGarcia95/Tungsteno/workflows/release%20status%20windows/badge.svg)
-
-**Linux: ** ![release status linux](https://github.com/JoseCarlosGarcia95/Tungsteno/workflows/release%20status%linux/badge.svg)
-
-**MacOS: ** ![release status linux](https://github.com/JoseCarlosGarcia95/Tungsteno/workflows/release%20status%macos/badge.svg)
 
 Tungsten, or wolfram, is a chemical element with the symbol W and atomic number 74. The name tungsten comes from the former Swedish name for the tungstate mineral scheelite, tungsten which means "heavy stone". Tungsten is a rare metal found naturally on Earth almost exclusively combined with other elements in chemical compounds rather than alone. It was identified as a new element in 1781 and first isolated as a metal in 1783. Its important ores include wolframite and scheelite.
 
@@ -19,3 +14,13 @@ Designed to make users and contributors feel comfortable in a friendly and flexi
 - Arrays
 - Calculus: Symbolic integration, Integrate
 - Solve / NSolve
+
+## Release status
+### Windows
+![release status windows](https://github.com/JoseCarlosGarcia95/Tungsteno/workflows/release%20status%20windows/badge.svg)
+
+### Linux
+![release status linux](https://github.com/JoseCarlosGarcia95/Tungsteno/workflows/release%20status%20linux/badge.svg)
+
+### macOS
+![release status macOS](https://github.com/JoseCarlosGarcia95/Tungsteno/workflows/release%20status%20macOS/badge.svg)
