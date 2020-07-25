@@ -20,6 +20,22 @@ from tsteno.language.parser import NumberExpressionParserOutput
 
 PROTECTED_NAMES_BUILTIN = ['builtin_base.py', '__init__.py']
 
+CONTROL_FLOW_STATUS_P_STACK = 0
+CONTROL_FLOW_STATUS_R_STACK = 1
+
+
+class Context:
+    __slot__ = ['__control_flow']
+
+    def __init__(self):
+        self.__control_flow = CONTROL_FLOW_STATUS_P_STACK
+
+    def set_control_flow(self, control_flow):
+        self.__control_flow = control_flow
+
+    def get_control_flow(self):
+        return self.__control_flow
+
 
 class Evaluation(KextBase):
 
@@ -78,8 +94,12 @@ class Evaluation(KextBase):
         parser_outputs = parser.get_all_parser_output()
 
         result = []
+        context = Context()
+
         for parser_output in parser_outputs:
-            result.append(self.evaluate_parser_output(parser_output))
+            result.append(self.evaluate_parser_output(parser_output, context))
+            if context.get_control_flow() == CONTROL_FLOW_STATUS_R_STACK:
+                return result
 
         return result
 
@@ -92,10 +112,10 @@ class Evaluation(KextBase):
         for module in modules:
             module.run_test(test)
 
-    def evaluate_parser_output(self, parser_output):
+    def evaluate_parser_output(self, parser_output, context):
         if isinstance(parser_output, FunctionExpressionParserOutput):
             module_definition = self.get_module_definition(parser_output.fname)
-            return module_definition.eval(parser_output.arguments)
+            return module_definition.eval(parser_output.arguments, context)
         elif isinstance(parser_output, StringParserOutput):
             return parser_output.value
         elif isinstance(parser_output, NumberExpressionParserOutput):

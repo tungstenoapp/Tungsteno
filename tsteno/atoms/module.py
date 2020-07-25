@@ -3,6 +3,7 @@ from .atoms import Atoms
 ARG_FLAG_OPTIONAL = 1 << 1
 ARG_FLAG_ALL_NEXT = 1 << 2
 ARG_FLAG_NO_AUTO_EVAL = 1 << 3
+ARG_FLAG_SPECIAL_CONTEXT = 1 << 4
 
 
 class ModuleArg:
@@ -17,7 +18,7 @@ class ModuleArg:
 
 class Module(Atoms):
 
-    def eval(self, arguments):
+    def eval(self, arguments, context):
         fargs = []
         module_args = self.get_arguments()
         eval = self.get_kernel().get_kext('eval')
@@ -25,19 +26,22 @@ class Module(Atoms):
         for i in range(0, len(module_args)):
             module_arg = module_args[i]
 
+            if module_arg.get_flag() == ARG_FLAG_SPECIAL_CONTEXT:
+                fargs.append(context)
+                continue
+
             if module_arg.get_flag() & ARG_FLAG_NO_AUTO_EVAL == 0:
                 eval_fn = eval.evaluate_parser_output
             else:
-                def eval_fn(args):
-                    return lambda: eval.evaluate_parser_output(args)
+                def eval_fn(args, context):
+                    return lambda: eval.evaluate_parser_output(args, context)
 
             if module_arg.get_flag() & ARG_FLAG_ALL_NEXT != 0:
                 fargs = fargs + \
-                    list(map(eval_fn, arguments[i:]))
+                    list(map(lambda x: eval_fn(x, context), arguments[i:]))
                 break
 
-            fargs.append(eval_fn(arguments[i]))
-
+            fargs.append(eval_fn(arguments[i], context))
         return self.run(*fargs)
 
     def run(self, **arguments):

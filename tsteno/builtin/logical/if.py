@@ -15,4 +15,10 @@ class If(Module):
         ]
 
     def run_test(self, test):
-        pass
+        evaluation = self.get_kernel().get_kext('eval')
+
+        test.assertEqual(evaluation.evaluate_code(
+            'If[1 > 2, Return[2], Return[3]]')[0], 3)
+
+        test.assertEqual(evaluation.evaluate_code(
+            'If[1 < 2, Return[2], Return[3]]')[0], 2)
