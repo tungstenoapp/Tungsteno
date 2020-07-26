@@ -1,5 +1,6 @@
 import numbers
 from .atoms import Atoms
+from tsteno.language.parser import ParserOutput
 
 ARG_FLAG_OPTIONAL = 1 << 1
 ARG_FLAG_ALL_NEXT = 1 << 2
@@ -16,13 +17,19 @@ class ModuleArg:
     def get_flag(self):
         return self.__flag
 
+    def __repr__(self):
+        return 'ModuleArg: {}'.format(self.__flag)
+
 
 class Module(Atoms):
 
     def eval(self, arguments, context):
+        fargs = self.parse_arguments(arguments, context)
+        return self.run(*fargs)
+
+    def parse_arguments(self, arguments, context):
         fargs = []
         module_args = self.get_arguments()
-        eval = self.get_kernel().get_kext('eval')
 
         for i in range(0, len(module_args)):
             module_arg = module_args[i]
@@ -30,25 +37,35 @@ class Module(Atoms):
             if module_arg.get_flag() == ARG_FLAG_SPECIAL_CONTEXT:
                 fargs.append(context)
                 continue
-            if isinstance(arguments[i], str) or \
-                    isinstance(arguments[i], numbers.Number):
-                fargs.append(arguments[i])
-                continue
-            if module_arg.get_flag() & ARG_FLAG_NO_AUTO_EVAL == 0:
-                eval_fn = eval.evaluate_parser_output
-            else:
-                def eval_fn(args, context, flag):
-                    return lambda: eval.evaluate_parser_output(args, context, flag=flag)
 
             if module_arg.get_flag() & ARG_FLAG_ALL_NEXT != 0:
-                fargs = fargs + \
-                    list(map(lambda x: eval_fn(x, context,
-                                               flag=module_arg.get_flag()), arguments[i:]))
-                break
+                return fargs + list(map(lambda arg: self.parse_argument(
+                    module_arg, arg, context), arguments[i:]
+                ))
 
-            fargs.append(
-                eval_fn(arguments[i], context, flag=module_arg.get_flag()))
-        return self.run(*fargs)
+            user_arg = arguments[i]
+
+            farg = self.parse_argument(module_arg, user_arg, context)
+            if farg is not None:
+                fargs.append(farg)
+
+        return fargs
+
+    def parse_argument(self, module_arg, user_arg, context):
+        if not isinstance(user_arg, ParserOutput):
+            return user_arg
+
+        eval = self.get_kernel().get_kext('eval')
+
+        if module_arg.get_flag() & ARG_FLAG_NO_AUTO_EVAL == 0:
+            eval_fn = eval.evaluate_parser_output
+        else:
+            def eval_fn(args, context, flag):
+                return lambda: eval.evaluate_parser_output(
+                    args, context, flag
+                )
+
+        return eval_fn(user_arg, context, module_arg.get_flag())
 
     def run(self, **arguments):
         raise Exception("eval function should be defined")

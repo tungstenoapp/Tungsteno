@@ -23,6 +23,10 @@ class Plus(Module):
             'x+x+x')[0], parse_expr("3*x")
         )
 
+        test.assertEqual(evaluation.evaluate_code(
+            'x+1')[0], parse_expr("x+1")
+        )
+
         # Test symbolic sum.
         test.assertEqual(evaluation.evaluate_code(
             '1/2+1/3')[0], parse_expr("5/6")
