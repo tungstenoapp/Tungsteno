@@ -11,6 +11,8 @@ class Increment(Module):
             current_value = evaluation.get_variable_definition(var, context)
             evaluation.run_builtin_function(
                 'Set', [var, current_value + 1], context)
+            return current_value
+
         return var
 
     def get_arguments(self):
@@ -25,3 +27,6 @@ class Increment(Module):
         # Test increment.
         test.assertEqual(evaluation.evaluate_code(
             'imt_1=2; Increment[imt_1]; Return[imt_1]')[2], 3)
+
+        test.assertEqual(evaluation.evaluate_code(
+            'imt2=2; imt2++;')[1], 2)
