@@ -125,6 +125,45 @@ class BinOpToken(Token):
         return BinOpToken(op)
 
 
+class UnaryOpToken(Token):
+    """ Represent unary operation tokens """
+
+    UNARY_OP_CHARACTERS = ['+']
+    """
+    Set of different binary operation characters.
+    """
+
+    UNARY_CLONE_REF = {'+': ['+']}
+
+    @staticmethod
+    def is_match(character):
+        return character in UnaryOpToken.UNARY_OP_CHARACTERS
+
+    @staticmethod
+    def parse(tokenizer):
+        """ After a match, generate a token class from the current buffer.
+
+        Arguments:
+            **tokenizer**: current buffer
+
+        Return:
+            *(BinOpToken)* Token related to current tokenizer buffer.
+        """
+        op = tokenizer.get_current_character()
+        next_chr = tokenizer.next_character()
+
+        if op in UnaryOpToken.UNARY_CLONE_REF:
+            expected_next_ref = UnaryOpToken.UNARY_CLONE_REF[op]
+
+            if next_chr in expected_next_ref:
+                tokenizer.next_character()
+                return UnaryOpToken(op + next_chr)
+            else:
+                return BinOpToken(op)
+
+        return UnaryOpToken(op)
+
+
 class ListSeparatorToken(Token):
     """ Represent list separator token """
     SEPARATORS = [',']
@@ -415,10 +454,10 @@ class IllegalCharacter(TokenizerError):
 
 class Tokenizer:
     AVAILABLE_TOKENS = [
-        NumberToken, BinOpToken,
-        StringToken, IdentifierToken,
-        ClosureToken, ListSeparatorToken,
-        ListToken
+        NumberToken, UnaryOpToken,
+        BinOpToken, StringToken,
+        IdentifierToken, ClosureToken,
+        ListSeparatorToken, ListToken
     ]
     """ Represent all tokens class available """
 

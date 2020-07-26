@@ -30,6 +30,30 @@ class TestTokenizer(unittest.TestCase):
         self.assertTrue(isinstance(tokens[2], IdentifierToken))
         self.assertEqual(tokens[2].value, 'x')
 
+    def test_parseUnaryToken(self):
+        tokenizer = Tokenizer("1++")
+        tokens = tokenizer.get_tokens()
+
+        self.assertEqual(len(tokens), 2)
+
+        self.assertTrue(isinstance(tokens[0], NumberToken))
+        self.assertEqual(tokens[0].value, 1)
+
+        self.assertTrue(isinstance(tokens[1], UnaryOpToken))
+        self.assertEqual(tokens[1].value, '++')
+
+    def test_parseBeforeUnaryToken(self):
+        tokenizer = Tokenizer("++1")
+        tokens = tokenizer.get_tokens()
+
+        self.assertEqual(len(tokens), 2)
+
+        self.assertTrue(isinstance(tokens[1], NumberToken))
+        self.assertEqual(tokens[1].value, 1)
+
+        self.assertTrue(isinstance(tokens[0], UnaryOpToken))
+        self.assertEqual(tokens[0].value, '++')
+
     def test_parseNumberPlusNumber(self):
         tokenizer = Tokenizer("12345+123")
         tokens = tokenizer.get_tokens()
