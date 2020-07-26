@@ -2,13 +2,13 @@
 kernel """
 from .tokenizer import NumberToken, IdentifierToken, ClosureToken, StringToken
 from .tokenizer import FunctionIdentifierToken, ListSeparatorToken, BinOpToken
-from .tokenizer import ListToken
+from .tokenizer import ListToken, UnaryOpToken
 
 from collections import namedtuple
 
 OpInfo = namedtuple('OpInfo', 'prec assoc function')
 
-OPINFO_MAP = {
+BIN_OPINFO_MAP = {
     '=':    OpInfo(0, 'LEFT', 'Set'),
     '<':    OpInfo(0, 'LEFT', 'LessThan'),
     '<=':   OpInfo(0, 'LEFT', 'LessEqual'),
@@ -26,6 +26,10 @@ OPINFO_MAP = {
     '^':    OpInfo(3, 'RIGHT', 'Pow'),
 }
 """ Contains information of how to parse operation symbols """
+
+UNARY_OPINFO_MAP = {
+    '++': 'Increment'
+}
 
 
 class ParserOutput:
@@ -82,7 +86,7 @@ class ExpressionParserOutput(ParserOutput):
 
             cur = parser.curtok
             op = cur.get_value()
-            prec, assoc, function = OPINFO_MAP[op]
+            prec, assoc, function = BIN_OPINFO_MAP[op]
 
             if cur is None or not isinstance(cur, BinOpToken) or \
                prec < min_prec:
@@ -110,12 +114,18 @@ class ExpressionParserOutput(ParserOutput):
             *(ExpressionParserOutput)*: Pre-compiled eval.
         """
         token = parser.curtok
-        parser.get_next_token()
+        next_token = parser.get_next_token()
 
         if token is None:
             return None
 
         if isinstance(token, NumberToken):
+            if next_token is not None and isinstance(next_token, UnaryOpToken):
+                parser.get_next_token()
+                return FunctionExpressionParserOutput(
+                    UNARY_OPINFO_MAP[next_token.value],
+                    [NumberExpressionParserOutput(token.get_value())]
+                )
             return NumberExpressionParserOutput(token.get_value())
         elif isinstance(token, StringToken):
             return StringParserOutput(token.get_value())

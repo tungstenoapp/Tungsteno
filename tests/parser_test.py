@@ -56,6 +56,25 @@ class TestTokenizer(unittest.TestCase):
             product_args[1], NumberExpressionParserOutput))
         self.assertEqual(product_args[1].value, 3)
 
+    def test_unaryop(self):
+        tokenizer = Tokenizer("1++")
+        tokens = tokenizer.get_tokens()
+
+        parser = Parser(tokens)
+
+        parser_output = parser.get_all_parser_output()
+
+        self.assertEqual(len(parser_output), 1)
+
+        one_parser_output = parser_output[0]
+
+        self.assertTrue(isinstance(one_parser_output,
+                                   FunctionExpressionParserOutput))
+
+        self.assertEqual(one_parser_output.fname, 'Increment')
+        self.assertEqual(len(one_parser_output.arguments), 1)
+        self.assertEqual(one_parser_output.arguments[0].value, 1)
+
     def test_parseFunction2(self):
         tokenizer = Tokenizer('Print[1 + 1]')
 

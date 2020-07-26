@@ -23,6 +23,8 @@ PROTECTED_NAMES_BUILTIN = ['builtin_base.py', '__init__.py']
 CONTROL_FLOW_STATUS_P_STACK = 0
 CONTROL_FLOW_STATUS_R_STACK = 1
 
+EVAL_FLAG_RETURN_VAR_NAME = 1 << 1
+
 
 class Context:
     __slot__ = ['__control_flow__', '__is_global__']
@@ -116,14 +118,18 @@ class Evaluation(KextBase):
         for module in modules:
             module.run_test(test)
 
-    def evaluate_parser_output(self, parser_output, context):
+    def run_builtin_function(self, fname, arguments, context={}):
+        module_definition = self.get_module_definition(fname, context)
+        return module_definition.eval(arguments, context)
+
+    def evaluate_parser_output(self, parser_output, context, flag=0):
         if isinstance(parser_output, FunctionExpressionParserOutput):
             module_definition = self.get_module_definition(
                 parser_output.fname, context)
             return module_definition.eval(parser_output.arguments, context)
-        elif isinstance(parser_output, StringParserOutput):
-            return parser_output.value
-        elif isinstance(parser_output, NumberExpressionParserOutput):
+        elif isinstance(parser_output, StringParserOutput) or \
+                isinstance(parser_output, NumberExpressionParserOutput) or \
+                flag & EVAL_FLAG_RETURN_VAR_NAME:
             return parser_output.value
         elif isinstance(parser_output, ExpressionParserOutput):
             return self.get_variable_definition(parser_output.value, context)
