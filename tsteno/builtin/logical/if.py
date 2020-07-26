@@ -22,3 +22,6 @@ class If(Module):
 
         test.assertEqual(evaluation.evaluate_code(
             'If[1 < 2, Return[2], Return[3]]')[0], 2)
+
+        test.assertEqual(evaluation.evaluate_code(
+            'If[1 < 2, i = 0; i = i + 1; i = i * 3.14; Return[i], Return[1]]')[0], 3.14)

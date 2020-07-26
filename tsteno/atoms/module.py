@@ -52,18 +52,31 @@ class Module(Atoms):
         return fargs
 
     def parse_argument(self, module_arg, user_arg, context):
-        if not isinstance(user_arg, ParserOutput):
+        if not isinstance(user_arg, ParserOutput) and \
+                not isinstance(user_arg, list):
             return user_arg
 
         eval = self.get_kernel().get_kext('eval')
 
         if module_arg.get_flag() & ARG_FLAG_NO_AUTO_EVAL == 0:
-            eval_fn = eval.evaluate_parser_output
+            if isinstance(user_arg, list):
+                def eval_fn(args, context, flag):
+                    return list(map(lambda arg: eval.evaluate_parser_output(
+                        arg, context, flag
+                    ), args))[-1]
+            else:
+                eval_fn = eval.evaluate_parser_output
         else:
-            def eval_fn(args, context, flag):
-                return lambda: eval.evaluate_parser_output(
-                    args, context, flag
-                )
+            if isinstance(user_arg, list):
+                def eval_fn(args, context, flag):
+                    return lambda: list(map(lambda arg: eval.evaluate_parser_output(
+                        arg, context, flag
+                    ), args))[-1]
+            else:
+                def eval_fn(args, context, flag):
+                    return lambda: eval.evaluate_parser_output(
+                        args, context, flag
+                    )
 
         return eval_fn(user_arg, context, module_arg.get_flag())
 
