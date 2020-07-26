@@ -153,7 +153,11 @@ class ExpressionParserOutput(ParserOutput):
         for arg in arguments:
             if isinstance(arg, ListSeparatorToken):
                 arg_parser = Parser(token_group)
-                arg_parser_result = arg_parser.get_next_parser_output()
+                arg_parser_result = arg_parser.get_all_parser_output()
+
+                if len(arg_parser_result) == 1:
+                    arg_parser_result = arg_parser_result[0]
+
                 parser_output_args.append(arg_parser_result)
 
                 token_group = []
@@ -162,7 +166,11 @@ class ExpressionParserOutput(ParserOutput):
 
         if len(token_group) > 0:
             arg_parser = Parser(token_group)
-            arg_parser_result = arg_parser.get_next_parser_output()
+            arg_parser_result = arg_parser.get_all_parser_output()
+
+            if len(arg_parser_result) == 1:
+                arg_parser_result = arg_parser_result[0]
+
             parser_output_args.append(arg_parser_result)
 
         return parser_output_args

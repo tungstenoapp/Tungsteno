@@ -69,6 +69,15 @@ class TestTokenizer(unittest.TestCase):
         self.assertTrue(isinstance(tokens[2], NumberToken))
         self.assertEqual(tokens[2].value, 123)
 
+    def test_moduleDefinition(self):
+        tokenizer = Tokenizer(""" Module[{x = x0},
+            While[x > 0, x = Log[x]];
+            x
+            ]
+        """)
+
+        tokens = tokenizer.get_tokens()
+
     def test_parseString(self):
         tokenizer = Tokenizer('"Hola mundo, \\"Como estais\\""')
         tokens = tokenizer.get_tokens()

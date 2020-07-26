@@ -56,6 +56,18 @@ class TestTokenizer(unittest.TestCase):
             product_args[1], NumberExpressionParserOutput))
         self.assertEqual(product_args[1].value, 3)
 
+    def test_moduleDefinition(self):
+        tokenizer = Tokenizer(""" Module[{x = x0},
+            x = x+1
+            Return[x+1]
+            ]
+        """)
+
+        tokens = tokenizer.get_tokens()
+        parser = Parser(tokens)
+
+        parser_output = parser.get_all_parser_output()
+
     def test_unaryop(self):
         tokenizer = Tokenizer("1++")
         tokens = tokenizer.get_tokens()
