@@ -1,3 +1,4 @@
+from tsteno.kernel.kexts.evaluation import EVAL_FLAG_RETURN_VAR_NAME
 from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_SPECIAL_CONTEXT
 
 
@@ -11,7 +12,8 @@ class Set(Module):
 
     def get_arguments(self):
         return [
-            ModuleArg(), ModuleArg(), ModuleArg(ARG_FLAG_SPECIAL_CONTEXT)
+            ModuleArg(EVAL_FLAG_RETURN_VAR_NAME), ModuleArg(
+            ), ModuleArg(ARG_FLAG_SPECIAL_CONTEXT)
         ]
 
     def run_test(self, test):

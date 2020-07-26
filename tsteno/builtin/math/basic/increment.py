@@ -1,4 +1,3 @@
-import sympy
 from tsteno.kernel.kexts.evaluation import EVAL_FLAG_RETURN_VAR_NAME
 from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_SPECIAL_CONTEXT
 

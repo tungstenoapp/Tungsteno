@@ -135,6 +135,12 @@ class ExpressionParserOutput(ParserOutput):
                 ExpressionParserOutput.calculate_arguments(token.arguments)
             )
         elif isinstance(token, IdentifierToken):
+            if next_token is not None and isinstance(next_token, UnaryOpToken):
+                parser.get_next_token()
+                return FunctionExpressionParserOutput(
+                    UNARY_OPINFO_MAP[next_token.value],
+                    [ExpressionParserOutput(token.get_value())]
+                )
             return ExpressionParserOutput(token.get_value())
 
         raise Exception("Unknown token type")
