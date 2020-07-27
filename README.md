@@ -14,6 +14,7 @@ Designed to make users and contributors feel comfortable in a friendly and flexi
 - Arrays
 - Calculus: Symbolic integration, Integrate
 - Solve / NSolve
+- Logical: If, For, While
 
 ## Release status
 ### Windows
