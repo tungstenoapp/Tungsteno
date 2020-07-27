@@ -19,6 +19,9 @@ from tsteno.language.parser import StringParserOutput, ExpressionParserOutput
 from tsteno.language.parser import NumberExpressionParserOutput
 
 PROTECTED_NAMES_BUILTIN = ['builtin_base.py', '__init__.py']
+MODULE_DEF_REPLACEMENT = {
+    'CustomModule': 'Module'
+}
 
 CONTROL_FLOW_STATUS_P_STACK = 0
 CONTROL_FLOW_STATUS_R_STACK = 1
@@ -153,6 +156,9 @@ class Evaluation(KextBase):
         module = module.load_module()
 
         definition = getattr(module, module_def)(self.get_kernel())
+
+        if module_def in MODULE_DEF_REPLACEMENT:
+            module_def = MODULE_DEF_REPLACEMENT[module_def]
 
         if isinstance(definition, Module):
             self.builtin_modules[module_def] = definition
