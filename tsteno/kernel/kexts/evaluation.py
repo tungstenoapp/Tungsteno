@@ -30,7 +30,9 @@ EVAL_FLAG_RETURN_VAR_NAME = 1 << 1
 
 
 class Context:
-    __slot__ = ['__control_flow__', '__is_global__']
+    __slot__ = ['__control_flow__', '__is_global__',
+                '__local_context__', 'user_variables', 'user_modules'
+                ]
 
     def __init__(self):
         self.__reset__()
@@ -41,9 +43,28 @@ class Context:
     def get_control_flow(self):
         return self.__control_flow__
 
+    def set_local_context(self, val):
+        if not val and self.__local_context__:
+            self.user_modules.clear()
+            self.user_variables.clear()
+
+        self.__local_context__ = val
+
+    def set_user_variable(self, variable, value):
+        self.user_variables[variable] = value
+
+    def set_user_module(self, module, value):
+        self.user_modules[module] = value
+
+    def get_local_context(self):
+        return self.__local_context__
+
     def __reset__(self):
         self.__is_global__ = True
         self.__control_flow__ = CONTROL_FLOW_STATUS_P_STACK
+        self.user_variables = {}
+        self.__local_context__ = False
+        self.user_modules = {}
 
 
 class Evaluation(KextBase):
@@ -122,13 +143,14 @@ class Evaluation(KextBase):
             module.run_test(test)
 
     def run_builtin_function(self, fname, arguments, context={}):
-        module_definition = self.get_module_definition(fname, context)
+        module_definition = self.get_module_definition(
+            fname, arguments, context)
         return module_definition.eval(arguments, context)
 
     def evaluate_parser_output(self, parser_output, context, flag=0):
         if isinstance(parser_output, FunctionExpressionParserOutput):
             module_definition = self.get_module_definition(
-                parser_output.fname, context)
+                parser_output.fname, parser_output.arguments, context)
             return module_definition.eval(parser_output.arguments, context)
         elif isinstance(parser_output, StringParserOutput) or \
                 isinstance(parser_output, NumberExpressionParserOutput) or \
@@ -170,19 +192,30 @@ class Evaluation(KextBase):
             LogLevel.DEBUG
         )
 
-    def get_module_definition(self, module, context):
+    def get_module_definition(self, module, arguments, context):
+        if context.get_local_context():
+            if module in context.user_modules:
+                return context.user_modules[module]
+
         if module in self.user_modules:
             return self.user_modules[module]
 
         if module not in self.builtin_modules:
-            return self.builtin_modules['Unknown'].proxy(module)
+            return self.builtin_modules['Unknown'].proxy(module, arguments)
 
         return self.builtin_modules[module]
 
     def set_global_user_variable(self, variable, value):
         self.user_variables[variable] = value
 
+    def set_global_user_module(self, module, value):
+        self.user_modules[module] = value
+
     def get_variable_definition(self, variable, context):
+        if context.get_local_context():
+            if variable in context.user_variables:
+                return context.user_variables[variable]
+
         if variable in self.user_variables:
             return self.user_variables[variable]
 

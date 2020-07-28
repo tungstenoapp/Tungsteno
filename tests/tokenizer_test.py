@@ -69,14 +69,20 @@ class TestTokenizer(unittest.TestCase):
         self.assertTrue(isinstance(tokens[2], NumberToken))
         self.assertEqual(tokens[2].value, 123)
 
-    def test_moduleDefinition(self):
-        tokenizer = Tokenizer(""" Module[{x = x0},
-            While[x > 0, x = Log[x]];
-            x
-            ]
-        """)
-
+    def test_parseEqualFn(self):
+        tokenizer = Tokenizer("a[x_] = Print[x]")
         tokens = tokenizer.get_tokens()
+
+        self.assertEqual(len(tokens), 3)
+
+        self.assertTrue(isinstance(tokens[0], FunctionIdentifierToken))
+        self.assertEqual(tokens[0].fname, 'a')
+
+        self.assertTrue(isinstance(tokens[1], BinOpToken))
+        self.assertEqual(tokens[1].value, '=')
+
+        self.assertTrue(isinstance(tokens[2], FunctionIdentifierToken))
+        self.assertEqual(tokens[2].fname, 'Print')
 
     def test_parseString(self):
         tokenizer = Tokenizer('"Hola mundo, \\"Como estais\\""')

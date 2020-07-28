@@ -15,6 +15,7 @@ Designed to make users and contributors feel comfortable in a friendly and flexi
 - Calculus: Symbolic integration, Integrate
 - Solve / NSolve
 - Logical: If, For, While
+- Module definition.
 
 ## Release status
 ### Windows

@@ -69,13 +69,13 @@ class Module(Atoms):
         else:
             if isinstance(user_arg, list):
                 def eval_fn(args, context, flag):
-                    return lambda: list(map(lambda arg: eval.evaluate_parser_output(
-                        arg, context, flag
+                    return lambda ctx=context: list(map(lambda arg: eval.evaluate_parser_output(
+                        arg, ctx, flag
                     ), args))[-1]
             else:
                 def eval_fn(args, context, flag):
-                    return lambda: eval.evaluate_parser_output(
-                        args, context, flag
+                    return lambda ctx=context: eval.evaluate_parser_output(
+                        args, ctx, flag
                     )
 
         return eval_fn(user_arg, context, module_arg.get_flag())
