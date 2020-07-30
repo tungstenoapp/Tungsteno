@@ -125,15 +125,27 @@ class BinOpToken(Token):
         return BinOpToken(op)
 
 
+class ParensToken(Token):
+
+    def is_match(character):
+        return character in ['(', ')']
+
+    @staticmethod
+    def parse(tokenizer):
+        parens = tokenizer.get_current_character()
+        tokenizer.next_character()
+        return ParensToken(parens)
+
+
 class UnaryOpToken(Token):
     """ Represent unary operation tokens """
 
-    UNARY_OP_CHARACTERS = ['+']
+    UNARY_OP_CHARACTERS = ['+', '-']
     """
     Set of different binary operation characters.
     """
 
-    UNARY_CLONE_REF = {'+': ['+']}
+    UNARY_CLONE_REF = {'+': ['+'], '-': ['-']}
 
     @staticmethod
     def is_match(character):
@@ -456,6 +468,7 @@ class Tokenizer:
     AVAILABLE_TOKENS = [
         NumberToken, UnaryOpToken,
         BinOpToken, StringToken,
+        ParensToken,
         IdentifierToken, ClosureToken,
         ListSeparatorToken, ListToken
     ]

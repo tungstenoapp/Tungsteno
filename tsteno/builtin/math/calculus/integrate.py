@@ -26,3 +26,6 @@ class Integrate(Module):
 
         test.assertEqual(evaluation.evaluate_code(
             'Integrate[x y, {x, 0, 1}, {y, 0, 1}]')[0], 1/4)
+
+        test.assertEqual(evaluation.evaluate_code(
+            'Integrate[1/(x^3 + 1), {x, 0, 1}]')[0], parse_expr('log(2)/3 + sqrt(3)*pi/9'))

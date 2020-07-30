@@ -2,7 +2,7 @@
 kernel """
 from .tokenizer import NumberToken, IdentifierToken, ClosureToken, StringToken
 from .tokenizer import FunctionIdentifierToken, ListSeparatorToken, BinOpToken
-from .tokenizer import ListToken, UnaryOpToken
+from .tokenizer import ListToken, UnaryOpToken, ParensToken
 
 from collections import namedtuple
 
@@ -86,11 +86,17 @@ class ExpressionParserOutput(ParserOutput):
 
             cur = parser.curtok
             op = cur.get_value()
-            prec, assoc, function = BIN_OPINFO_MAP[op]
 
-            if cur is None or not isinstance(cur, BinOpToken) or \
-               prec < min_prec:
+            if cur is None or not isinstance(cur, BinOpToken):
                 break
+
+            prec, assoc, function = BIN_OPINFO_MAP[op]
+            if prec < min_prec:
+                break
+
+            cur = parser.curtok
+            op = cur.get_value()
+            prec, assoc, function = BIN_OPINFO_MAP[op]
 
             next_min_prec = prec + 1 if assoc == 'LEFT' else prec
             parser.get_next_token()
@@ -127,6 +133,12 @@ class ExpressionParserOutput(ParserOutput):
                     [NumberExpressionParserOutput(token.get_value())]
                 )
             return NumberExpressionParserOutput(token.get_value())
+        elif isinstance(token, ParensToken) and token.value == '(':
+            val = ExpressionParserOutput.parse(parser, 1)
+            if isinstance(parser.curtok, ParensToken) and token.value == ')':
+                raise Exception('unmatched "("')
+            parser.get_next_token()
+            return val
         elif isinstance(token, StringToken):
             return StringParserOutput(token.get_value())
         elif isinstance(token, FunctionIdentifierToken):
@@ -143,9 +155,9 @@ class ExpressionParserOutput(ParserOutput):
                 )
             return ExpressionParserOutput(token.get_value())
 
-        raise Exception("Unknown token type")
+        raise Exception("Unknown token type {}".format(type(token)))
 
-    @staticmethod
+    @ staticmethod
     def calculate_arguments(arguments):
         """
         Calculate parser-output arguments for functions.
@@ -214,11 +226,11 @@ class FunctionExpressionParserOutput(ExpressionParserOutput):
 
 
 class ListExpressionParserOutput(ParserOutput):
-    @staticmethod
+    @ staticmethod
     def is_match(token):
         return isinstance(token, ListToken)
 
-    @staticmethod
+    @ staticmethod
     def parse(parser):
         token = parser.curtok
         parser.get_next_token()
@@ -227,7 +239,7 @@ class ListExpressionParserOutput(ParserOutput):
 
         return FunctionExpressionParserOutput('List', items)
 
-    @staticmethod
+    @ staticmethod
     def calculate_items(arguments):
         """
         Calculate parser-output arguments for functions.
