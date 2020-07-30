@@ -29,6 +29,7 @@ class Module(Atoms):
 
     def parse_arguments(self, arguments, context):
         fargs = []
+        argssize = len(arguments)
         module_args = self.get_arguments()
 
         for i in range(0, len(module_args)):
@@ -38,11 +39,20 @@ class Module(Atoms):
                 fargs.append(context)
                 continue
 
+            if module_arg.get_flag() & ARG_FLAG_OPTIONAL != 0 and \
+                    i >= argssize:
+                break
+
             if module_arg.get_flag() & ARG_FLAG_ALL_NEXT != 0:
                 return fargs + list(map(lambda arg: self.parse_argument(
                     module_arg, arg, context), arguments[i:]
                 ))
 
+            if i >= argssize:
+                raise Exception(
+                    "Expected but {} arguments but {} given".format(
+                        len(module_args), argssize
+                    ))
             user_arg = arguments[i]
 
             farg = self.parse_argument(module_arg, user_arg, context)

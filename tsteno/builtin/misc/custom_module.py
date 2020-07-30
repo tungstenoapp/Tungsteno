@@ -1,5 +1,4 @@
 from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_NO_AUTO_EVAL
-from tsteno.atoms.comparator import Comparator
 
 
 class UserDefinedModule(Module):
