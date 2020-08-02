@@ -583,6 +583,24 @@ class Tokenizer:
                 return 1
         return 0
 
+    @staticmethod
+    def is_number_sign(token, tokens):
+        if len(tokens) != 0:
+            if (
+                isinstance(token, NumberToken) or
+                isinstance(token, IdentifierToken)
+            ) and (
+                isinstance(tokens[-1], BinOpToken)
+            ) and (
+                len(tokens) == 1 or
+                not (
+                    isinstance(tokens[-2], NumberToken) or
+                    isinstance(tokens[-2], IdentifierToken)
+                )
+            ):
+                return 1
+        return 0
+
     def get_tokens(self):
         """
         Get all tokens from buffer.
@@ -601,6 +619,8 @@ class Tokenizer:
         while token is not None:
             if (Tokenizer.is_invisible_product(token, tokens)):
                 tokens.append(BinOpToken('*'))
+            if (Tokenizer.is_number_sign(token, tokens)):
+                tokens[-1] = UnaryOpToken(tokens[-1].value)
 
             tokens.append(token)
             token = self.next_token()

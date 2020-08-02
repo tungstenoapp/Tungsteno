@@ -28,7 +28,8 @@ BIN_OPINFO_MAP = {
 """ Contains information of how to parse operation symbols """
 
 UNARY_OPINFO_MAP = {
-    '++': 'Increment'
+    '++': 'Increment',
+    '-': 'ChangeSign',
 }
 
 
@@ -74,7 +75,8 @@ class ExpressionParserOutput(ParserOutput):
     def is_match(token):
         return isinstance(token, NumberToken) or \
             isinstance(token, IdentifierToken) or \
-            isinstance(token, StringToken)
+            isinstance(token, StringToken) or \
+            isinstance(token, UnaryOpToken)
 
     @staticmethod
     def parse(parser, min_prec=0):
@@ -141,6 +143,19 @@ class ExpressionParserOutput(ParserOutput):
             return val
         elif isinstance(token, StringToken):
             return StringParserOutput(token.get_value())
+        elif isinstance(token, UnaryOpToken):
+            if isinstance(next_token, NumberToken):
+                parser.get_next_token()
+                return FunctionExpressionParserOutput(
+                    UNARY_OPINFO_MAP[token.value],
+                    [NumberExpressionParserOutput(next_token.get_value())]
+                )
+            elif isinstance(next_token, IdentifierToken):
+                parser.get_next_token()
+                return FunctionExpressionParserOutput(
+                    UNARY_OPINFO_MAP[token.value],
+                    [ExpressionParserOutput(next_token.get_value())]
+                )
         elif isinstance(token, FunctionIdentifierToken):
             return FunctionExpressionParserOutput(
                 token.fname,

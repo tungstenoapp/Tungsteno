@@ -18,6 +18,8 @@ from tsteno.language.parser import Parser, FunctionExpressionParserOutput
 from tsteno.language.parser import StringParserOutput, ExpressionParserOutput
 from tsteno.language.parser import NumberExpressionParserOutput
 
+from sympy import oo, pi
+
 PROTECTED_NAMES_BUILTIN = ['builtin_base.py', '__init__.py']
 MODULE_DEF_REPLACEMENT = {
     'CustomModule': 'Module'
@@ -80,7 +82,11 @@ class Evaluation(KextBase):
         log_kext = self.get_kernel().get_kext('log')
         log_kext.write('Starting definitions for eval kext...', LogLevel.DEBUG)
 
-        self.builtin_variables = {}
+        self.builtin_variables = {
+            'oo': oo,
+            'Pi': pi
+        }
+
         self.builtin_modules = {}
 
         self.user_modules = {}
@@ -134,8 +140,7 @@ class Evaluation(KextBase):
         return result
 
     def get_all_modules(self):
-        return list(self.builtin_modules.values()) +\
-            list(self.builtin_variables.values())
+        return list(self.builtin_modules.values())
 
     def run_builtin_tests(self, test):
         modules = self.get_all_modules()
