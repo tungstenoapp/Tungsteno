@@ -79,8 +79,10 @@ class TestTokenizer(unittest.TestCase):
 
     def test_comparator(self):
         global tokenizer, parser
-        tokens = list(tokenizer.get_tokens('x+1 == 1+x'))
+        tokens = list(tokenizer.get_tokens('x+1*2+2 -> {x->1, y->2}'))
         nodes = list(parser.get_nodes(tokens))
+
+        print(nodes)
 
 
 if __name__ == '__main__':
