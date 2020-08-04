@@ -15,4 +15,4 @@ class While(Module):
         evaluation = self.get_kernel().get_kext('eval')
 
         test.assertEqual(evaluation.evaluate_code(
-            'j = 0; While[j < 10, Increment[j]]; Return[j]'), 10)
+            'j = 0; While[j < 10, j++]; Return[j]'), 10)
