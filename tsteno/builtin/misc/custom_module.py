@@ -23,8 +23,8 @@ class UserDefinedModule(Module):
         for i in range(0, len(self.variable_mapping)):
             context.set_user_variable(self.variable_mapping[i], fargs[i])
 
-        self.local_variables()
-        execution_result = self.function()
+        self.local_variables(context)
+        execution_result = self.function(context)
         context.set_local_context(False)
 
         return execution_result
@@ -46,5 +46,8 @@ class CustomModule(Module):
     def run_test(self, test):
         evaluation = self.get_kernel().get_kext('eval')
 
+        evaluation.evaluate_code(
+            'Set[TFD2[x_], Module[{x0=x, c}, c=10; x0 + c]]')
+
         test.assertEqual(evaluation.evaluate_code(
-            'Set[TFD2[x_], Module[{x0=x, c}, c=10; x0 + c]]; TFD2[2]'), 12)
+            'TFD2[2]'), 12)
