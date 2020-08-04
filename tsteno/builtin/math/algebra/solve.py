@@ -37,12 +37,12 @@ class Solve(Module):
 
         # Test numerical minus
         test.assertEqual(evaluation.evaluate_code(
-            'Solve[x+1==0, x]')[0], [{Symbol('x'): -1}]
+            'Solve[x+1==0, x]'), [{Symbol('x'): -1}]
         )
 
         eq_sols = evaluation.evaluate_code(
             'Solve[{x+y==4, 2*x+y==5}, {x, y}]'
-        )[0][0]
+        )[0]
 
         test.assertEqual(eq_sols[Symbol('x')], 1)
         test.assertEqual(eq_sols[Symbol('y')], 3)

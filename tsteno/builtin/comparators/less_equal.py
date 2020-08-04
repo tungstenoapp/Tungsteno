@@ -17,5 +17,5 @@ class LessEqual(Module):
     def run_test(self, test):
         evaluation = self.get_kernel().get_kext('eval')
 
-        test.assertTrue(evaluation.evaluate_code('1<=2')[0].eval())
-        test.assertFalse(evaluation.evaluate_code('2<=1')[0].eval())
+        test.assertTrue(evaluation.evaluate_code('1<=2').eval())
+        test.assertFalse(evaluation.evaluate_code('2<=1').eval())

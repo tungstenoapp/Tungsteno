@@ -101,7 +101,8 @@ class Kernel:
         value = self.options
         for arg in args:
             if arg not in value:
-                raise Exception("Option doesn't exists")
+                raise Exception(
+                    "Option {} doesn't exists on {}".format(arg, value))
             value = value[arg]
         return value
 

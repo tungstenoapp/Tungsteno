@@ -1,5 +1,5 @@
-from tsteno.kernel.kexts.evaluation import EVAL_FLAG_RETURN_VAR_NAME
 from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_SPECIAL_CONTEXT
+from tsteno.atoms.module import ARG_FLAG_RETURN_VAR_NAME
 from tsteno.builtin.misc.custom_module import UserDefinedModule
 
 
@@ -9,8 +9,8 @@ class Set(Module):
         evaluation = self.get_kernel().get_kext('eval')
 
         if isinstance(value, Module):
-            variable_name = variable.fname
-            value.set_param_mapping(variable.arguments)
+            variable_name = variable.head
+            value.set_param_mapping(variable.childrens)
             if context.get_local_context():
                 define_var_fn = context.set_user_module
             else:
@@ -24,7 +24,7 @@ class Set(Module):
             if hasattr(value, '__call__'):
                 value = value()
 
-            variable_name = variable
+            variable_name = variable.get_value()
 
         define_var_fn(variable_name, value)
 
@@ -32,7 +32,7 @@ class Set(Module):
 
     def get_arguments(self):
         return [
-            ModuleArg(EVAL_FLAG_RETURN_VAR_NAME),
+            ModuleArg(ARG_FLAG_RETURN_VAR_NAME),
             ModuleArg(),
             ModuleArg(ARG_FLAG_SPECIAL_CONTEXT)
         ]
@@ -41,7 +41,7 @@ class Set(Module):
         evaluation = self.get_kernel().get_kext('eval')
 
         test.assertEqual(evaluation.evaluate_code(
-            'Set[a, 2]; Return[a+1]')[1], 3)
+            'Set[a, 2]; Return[a+1]'), 3)
 
         test.assertEqual(evaluation.evaluate_code(
-            'Set[TFD[x_], Module[{x0=x, c}, c=10; x0 + c]]; TFD[2]')[1], 12)
+            'Set[TFD[x_], Module[{x0=x, c}, c=10; x0 + c]]; TFD[2]'), 12)

@@ -17,4 +17,4 @@ class Return(Module):
         evaluation = self.get_kernel().get_kext('eval')
 
         test.assertEqual(evaluation.evaluate_code(
-            'Return[1]; Return[2]; Print[3]')[0], 1)
+            'Return[1]; Return[2]; Print[3]'), 1)

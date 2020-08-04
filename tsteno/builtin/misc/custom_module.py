@@ -13,7 +13,7 @@ class UserDefinedModule(Module):
     def set_param_mapping(self, arguments):
         self.variable_mapping = []
         for arg in arguments:
-            self.variable_mapping.append(str(arg)[0:-1])
+            self.variable_mapping.append(arg.get_value()[0:-1])
         self.argsize = len(self.variable_mapping)
 
     def eval(self, arguments, context):
@@ -47,4 +47,4 @@ class CustomModule(Module):
         evaluation = self.get_kernel().get_kext('eval')
 
         test.assertEqual(evaluation.evaluate_code(
-            'Set[TFD2[x_], Module[{x0=x, c}, c=10; x0 + c]]; TFD2[2]')[1], 12)
+            'Set[TFD2[x_], Module[{x0=x, c}, c=10; x0 + c]]; TFD2[2]'), 12)

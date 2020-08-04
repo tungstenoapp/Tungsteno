@@ -19,7 +19,7 @@ class NIntegrate(Module):
         evaluation = self.get_kernel().get_kext('eval')
 
         test.assertEqual(evaluation.evaluate_code(
-            'NIntegrate[x, {x, 0, 10}]')[0], 50)
+            'NIntegrate[x, {x, 0, 10}]'), 50)
 
         print(evaluation.evaluate_code(
             'NIntegrate[1/(1 + x^2), {x, 0, oo}]'))

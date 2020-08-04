@@ -1,11 +1,11 @@
 import numbers
 from .atoms import Atoms
-from tsteno.language.parser import ParserOutput
 
 ARG_FLAG_OPTIONAL = 1 << 1
 ARG_FLAG_ALL_NEXT = 1 << 2
 ARG_FLAG_NO_AUTO_EVAL = 1 << 3
 ARG_FLAG_SPECIAL_CONTEXT = 1 << 4
+ARG_FLAG_RETURN_VAR_NAME = 1 << 5
 
 
 class ModuleArg:
@@ -62,33 +62,32 @@ class Module(Atoms):
         return fargs
 
     def parse_argument(self, module_arg, user_arg, context):
-        if not isinstance(user_arg, ParserOutput) and \
-                not isinstance(user_arg, list):
-            return user_arg
-
         eval = self.get_kernel().get_kext('eval')
+
+        if module_arg.get_flag() & ARG_FLAG_RETURN_VAR_NAME != 0:
+            return user_arg
 
         if module_arg.get_flag() & ARG_FLAG_NO_AUTO_EVAL == 0:
             if isinstance(user_arg, list):
-                def eval_fn(args, context, flag):
-                    return list(map(lambda arg: eval.evaluate_parser_output(
-                        arg, context, flag
+                def eval_fn(args, context):
+                    return list(map(lambda arg: eval.evaluate_node(
+                        arg, context
                     ), args))[-1]
             else:
-                eval_fn = eval.evaluate_parser_output
+                eval_fn = eval.evaluate_node
         else:
             if isinstance(user_arg, list):
-                def eval_fn(args, context, flag):
-                    return lambda ctx=context: list(map(lambda arg: eval.evaluate_parser_output(
-                        arg, ctx, flag
+                def eval_fn(args, context):
+                    return lambda ctx=context: list(map(lambda arg: eval.evaluate_node(
+                        arg, ctx
                     ), args))[-1]
             else:
-                def eval_fn(args, context, flag):
-                    return lambda ctx=context: eval.evaluate_parser_output(
-                        args, ctx, flag
+                def eval_fn(args, context):
+                    return lambda ctx=context: eval.evaluate_node(
+                        args, ctx
                     )
 
-        return eval_fn(user_arg, context, module_arg.get_flag())
+        return eval_fn(user_arg, context)
 
     def run(self, **arguments):
         raise Exception("eval function should be defined")

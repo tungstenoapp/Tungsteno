@@ -19,4 +19,4 @@ class For(Module):
         evaluation = self.get_kernel().get_kext('eval')
 
         test.assertEqual(evaluation.evaluate_code(
-            'j = 0; For[i=0, i < 10, i++, j = i]; Return[j]')[2], 9)
+            'j = 0; For[i=0, i < 10, Increment[i], j = i]; Return[j]'), 9)

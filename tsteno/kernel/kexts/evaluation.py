@@ -4,19 +4,16 @@ import sys
 from sympy import Symbol
 from .log import LogLevel
 from .kext_base import KextBase
-
+from tsteno.language.ast import Node
+from tsteno.language.ast import IdentifierToken
 from tsteno.atoms.module import Module
+from tsteno.language.parser import Parser
+from tsteno.language.tokenizer import Tokenizer
 
 if sys.version_info.major < 3 and sys.version_info.major >= 2:
     import imp
 elif sys.version_info.major >= 3:
     from importlib.machinery import SourceFileLoader
-
-from tsteno.language.tokenizer import Tokenizer
-
-from tsteno.language.parser import Parser, FunctionExpressionParserOutput
-from tsteno.language.parser import StringParserOutput, ExpressionParserOutput
-from tsteno.language.parser import NumberExpressionParserOutput
 
 from sympy import oo, pi
 
@@ -28,12 +25,11 @@ MODULE_DEF_REPLACEMENT = {
 CONTROL_FLOW_STATUS_P_STACK = 0
 CONTROL_FLOW_STATUS_R_STACK = 1
 
-EVAL_FLAG_RETURN_VAR_NAME = 1 << 1
-
 
 class Context:
     __slot__ = ['__control_flow__', '__is_global__',
-                '__local_context__', 'user_variables', 'user_modules'
+                '__local_context__', 'user_variables', 'user_modules',
+                '__last_result__'
                 ]
 
     def __init__(self):
@@ -42,8 +38,14 @@ class Context:
     def set_control_flow(self, control_flow):
         self.__control_flow__ = control_flow
 
+    def set_last_result(self, last_result):
+        self.__last_result__ = last_result
+
     def get_control_flow(self):
         return self.__control_flow__
+
+    def get_last_result(self):
+        return self.__last_result__
 
     def set_local_context(self, val):
         if not val and self.__local_context__:
@@ -67,6 +69,7 @@ class Context:
         self.user_variables = {}
         self.__local_context__ = False
         self.user_modules = {}
+        self.__last_result__ = None
 
 
 class Evaluation(KextBase):
@@ -74,7 +77,7 @@ class Evaluation(KextBase):
     __slots__ = [
         'builtin_variables', 'builtin_modules',
         'user_modules', 'user_variables', 'user_modules',
-        'tokenizer'
+        'tokenizer', 'parser'
     ]
 
     def __init__(self, kernel):
@@ -91,6 +94,9 @@ class Evaluation(KextBase):
 
         self.user_modules = {}
         self.user_variables = {}
+
+        self.parser = Parser()
+        self.tokenizer = Tokenizer()
 
         if self.get_kernel().parent is None:
             self.__bootstrap(log_kext)
@@ -123,21 +129,24 @@ class Evaluation(KextBase):
         return modules
 
     def evaluate_code(self, code):
-        tokenizer = Tokenizer(code)
-        tokens = tokenizer.get_tokens()
-
-        parser = Parser(tokens)
-        parser_outputs = parser.get_all_parser_output()
-
-        result = []
+        tokens = list(self.tokenizer.get_tokens(code))
+        nodes = self.parser.get_nodes(tokens)
         context = Context()
 
-        for parser_output in parser_outputs:
-            result.append(self.evaluate_parser_output(parser_output, context))
+        nodes = list(nodes)
+        for node in nodes:
+            context.set_last_result(self.evaluate_node(node, context))
             if context.get_control_flow() == CONTROL_FLOW_STATUS_R_STACK:
-                return result
+                return context.get_last_result()
 
-        return result
+        return context.get_last_result()
+
+    def evaluate_node(self, node, context):
+        if isinstance(node, Node):
+            return self.run_function(node.head, node.childrens, context)
+        elif isinstance(node, IdentifierToken):
+            return self.get_variable_definition(node.get_value(), context)
+        return node
 
     def get_all_modules(self):
         return list(self.builtin_modules.values())
@@ -147,22 +156,10 @@ class Evaluation(KextBase):
         for module in modules:
             module.run_test(test)
 
-    def run_builtin_function(self, fname, arguments, context={}):
+    def run_function(self, fname, arguments, context={}):
         module_definition = self.get_module_definition(
             fname, arguments, context)
         return module_definition.eval(arguments, context)
-
-    def evaluate_parser_output(self, parser_output, context, flag=0):
-        if isinstance(parser_output, FunctionExpressionParserOutput):
-            module_definition = self.get_module_definition(
-                parser_output.fname, parser_output.arguments, context)
-            return module_definition.eval(parser_output.arguments, context)
-        elif isinstance(parser_output, StringParserOutput) or \
-                isinstance(parser_output, NumberExpressionParserOutput) or \
-                flag & EVAL_FLAG_RETURN_VAR_NAME:
-            return parser_output.value
-        elif isinstance(parser_output, ExpressionParserOutput):
-            return self.get_variable_definition(parser_output.value, context)
 
     def __load_builtin_module(self, path, module_def, log_kext=None):
         if log_kext is None:

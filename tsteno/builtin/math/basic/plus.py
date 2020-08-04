@@ -16,18 +16,18 @@ class Plus(Module):
         evaluation = self.get_kernel().get_kext('eval')
 
         # Test numerical sum
-        test.assertEqual(evaluation.evaluate_code('1+1+2')[0], 4)
+        test.assertEqual(evaluation.evaluate_code('1+1+2'), 4)
 
         # Test symbolic sum.
         test.assertEqual(evaluation.evaluate_code(
-            'x+x+x')[0], parse_expr("3*x")
+            'x+x+x'), parse_expr("3*x")
         )
 
         test.assertEqual(evaluation.evaluate_code(
-            'x+1')[0], parse_expr("x+1")
+            'x+1'), parse_expr("x+1")
         )
 
         # Test symbolic sum.
         test.assertEqual(evaluation.evaluate_code(
-            '1/2+1/3')[0], parse_expr("5/6")
+            '1/2+1/3'), parse_expr("5/6")
         )

@@ -16,6 +16,6 @@ class ChangeSign(Module):
         evaluation = self.get_kernel().get_kext('eval')
 
         # Test numerical pow.
-        test.assertEqual(evaluation.evaluate_code('-20')[0], -20)
+        test.assertEqual(evaluation.evaluate_code('-20'), -20)
         test.assertEqual(str(evaluation.evaluate_code(
-            '-oo')[0]), '-oo')
+            '-oo')), '-oo')

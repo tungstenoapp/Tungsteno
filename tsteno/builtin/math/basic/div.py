@@ -21,7 +21,7 @@ class Div(Module):
         evaluation = self.get_kernel().get_kext('eval')
 
         # Test numerical division
-        test.assertEqual(evaluation.evaluate_code('1.0/2')[0], .5)
+        test.assertEqual(evaluation.evaluate_code('1.0/2'), .5)
 
         # Test symbolic division.
-        test.assertEqual(evaluation.evaluate_code('1/2')[0], parse_expr("1/2"))
+        test.assertEqual(evaluation.evaluate_code('1/2'), parse_expr("1/2"))

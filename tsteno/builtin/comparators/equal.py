@@ -17,7 +17,7 @@ class Equal(Module):
     def run_test(self, test):
         evaluation = self.get_kernel().get_kext('eval')
 
-        test.assertTrue(evaluation.evaluate_code('x+1==1+x')[0].eval())
-        test.assertFalse(evaluation.evaluate_code('x+1==x')[0].eval())
+        test.assertTrue(evaluation.evaluate_code('x+1==1+x').eval())
+        test.assertFalse(evaluation.evaluate_code('x+1==x').eval())
 
-        test.assertEqual(str(evaluation.evaluate_code('1==1')[0]), 'True')
+        test.assertEqual(str(evaluation.evaluate_code('1==1')), 'True')

@@ -16,10 +16,9 @@ class Pow(Module):
         evaluation = self.get_kernel().get_kext('eval')
 
         # Test symbolic pow
-        test.assertEqual(evaluation.evaluate_code('x^2')
-                         [0], parse_expr("x**2"))
+        test.assertEqual(evaluation.evaluate_code('x^2'), parse_expr("x**2"))
 
         # Test numerical pow.
         test.assertEqual(evaluation.evaluate_code(
-            '2^10')[0], 2**10
+            '2^10'), 2**10
         )

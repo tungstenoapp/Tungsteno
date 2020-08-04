@@ -19,13 +19,13 @@ class Integrate(Module):
         evaluation = self.get_kernel().get_kext('eval')
 
         test.assertEqual(evaluation.evaluate_code(
-            'Integrate[x, x]')[0], parse_expr('x**2/2'))
+            'Integrate[x, x]'), parse_expr('x**2/2'))
 
         test.assertEqual(evaluation.evaluate_code(
-            'Integrate[x, {x, 0, 1}]')[0], 1/2)
+            'Integrate[x, {x, 0, 1}]'), 1/2)
 
         test.assertEqual(evaluation.evaluate_code(
-            'Integrate[x y, {x, 0, 1}, {y, 0, 1}]')[0], 1/4)
+            'Integrate[x * y, {x, 0, 1}, {y, 0, 1}]'), 1/4)
 
         test.assertEqual(evaluation.evaluate_code(
-            'Integrate[1/(x^3 + 1), {x, 0, 1}]')[0], parse_expr('log(2)/3 + sqrt(3)*pi/9'))
+            'Integrate[1/(x^3 + 1), {x, 0, 1}]'), parse_expr('log(2)/3 + sqrt(3)*pi/9'))

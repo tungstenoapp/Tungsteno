@@ -1,157 +1,86 @@
 import unittest
-from tsteno.language.parser import *
-from tsteno.language.tokenizer import *
+from tsteno.language.ast import Node
+from tsteno.language.parser import Parser
+from tsteno.language.tokenizer import Tokenizer
+
+parser = Parser()
+tokenizer = Tokenizer()
 
 
 class TestTokenizer(unittest.TestCase):
     def test_parseNumber(self):
-        tokenizer = Tokenizer("12345")
-        tokens = tokenizer.get_tokens()
+        global tokenizer, parser
+        tokens = tokenizer.get_tokens("12345")
 
-        parser = Parser(tokens)
+        nodes = list(parser.get_nodes(list(tokens)))
 
-        parser_output = parser.get_all_parser_output()
+        self.assertEqual(len(nodes), 1)
+        one_node = nodes[0]
 
-        self.assertEqual(len(parser_output), 1)
-        one_parser_output = parser_output[0]
-
-        self.assertEqual(one_parser_output.__class__,
-                         NumberExpressionParserOutput)
-        self.assertEqual(one_parser_output.value, 12345)
+        self.assertEqual(one_node, 12345)
 
     def test_opOrder(self):
-        tokenizer = Tokenizer("1+2*3")
-        tokens = tokenizer.get_tokens()
+        global tokenizer, parser
 
-        parser = Parser(tokens)
+        tokens = tokenizer.get_tokens("1+2*3")
 
-        parser_output = parser.get_all_parser_output()
+        nodes = list(parser.get_nodes(list(tokens)))
 
-        self.assertEqual(len(parser_output), 1)
+        self.assertEqual(len(nodes), 1)
 
-        one_parser_output = parser_output[0]
+        one_node = nodes[0]
 
-        self.assertTrue(isinstance(one_parser_output,
-                                   FunctionExpressionParserOutput))
-        self.assertEqual(one_parser_output.fname, "Plus")
+        self.assertEqual(one_node.head, 'Plus')
+        self.assertEqual(one_node.childrens[0], 1)
+        self.assertIsInstance(one_node.childrens[1], Node)
 
-        arguments = one_parser_output.arguments
-        self.assertEqual(len(arguments), 2)
-        self.assertTrue(isinstance(arguments[0], NumberExpressionParserOutput))
-        self.assertEqual(arguments[0].value, 1)
+        product = one_node.childrens[1]
+        self.assertEqual(product.head, 'Product')
+        self.assertEqual(product.childrens[0], 2)
+        self.assertEqual(product.childrens[1], 3)
 
-        product_fn = arguments[1]
+    def test_listDefinition(self):
+        global tokenizer, parser
 
-        self.assertTrue(isinstance(product_fn, FunctionExpressionParserOutput))
-        self.assertEqual(product_fn.fname, "Product")
+        tokens = list(tokenizer.get_tokens("{1, 2, 3}"))
+        nodes = list(parser.get_nodes(tokens))
 
-        product_args = product_fn.arguments
-
-        self.assertEqual(len(product_args), 2)
-        self.assertTrue(isinstance(
-            product_args[0], NumberExpressionParserOutput))
-        self.assertEqual(product_args[0].value, 2)
-
-        self.assertTrue(isinstance(
-            product_args[1], NumberExpressionParserOutput))
-        self.assertEqual(product_args[1].value, 3)
+        node_list = nodes[0]
+        self.assertEqual(node_list.head, 'List')
+        self.assertEqual(node_list.childrens[0], 1)
+        self.assertEqual(node_list.childrens[1], 2)
+        self.assertEqual(node_list.childrens[2], 3)
 
     def test_moduleDefinition(self):
-        tokenizer = Tokenizer(""" Module[{x = x0},
-            x = x+1
+        return
+        global tokenizer, parser
+
+        tokens = list(tokenizer.get_tokens("""Module[{x, y},
+            x=x+1
             Return[x+1]
-            ]
-        """)
+            ]"""))
 
-        tokens = tokenizer.get_tokens()
-        parser = Parser(tokens)
+        nodes = list(parser.get_nodes(tokens))
 
-        parser_output = parser.get_all_parser_output()
+        module = nodes[0]
 
-    def test_unaryop(self):
-        tokenizer = Tokenizer("1++")
-        tokens = tokenizer.get_tokens()
+        self.assertEqual(module.head, 'Module')
 
-        parser = Parser(tokens)
+        arguments = module.childrens
+        self.assertEqual(len(arguments), 2)
 
-        parser_output = parser.get_all_parser_output()
+        list_arg = arguments[0]
+        self.assertEqual(list_arg.head, 'List')
+        self.assertEqual(list_arg.childrens[0].get_value(), 'x')
+        self.assertEqual(list_arg.childrens[1].get_value(), 'y')
 
-        self.assertEqual(len(parser_output), 1)
-
-        one_parser_output = parser_output[0]
-
-        self.assertTrue(isinstance(one_parser_output,
-                                   FunctionExpressionParserOutput))
-
-        self.assertEqual(one_parser_output.fname, 'Increment')
-        self.assertEqual(len(one_parser_output.arguments), 1)
-        self.assertEqual(one_parser_output.arguments[0].value, 1)
-
-    def test_parseFunction2(self):
-        tokenizer = Tokenizer('Print[1 + 1]')
-
-        tokens = tokenizer.get_tokens()
-
-        parser = Parser(tokens)
-
-        parser_outputs = parser.get_all_parser_output()
-
-        self.assertEqual(len(parser_outputs), 1)
-        print_fn = parser_outputs[0]
-
-        self.assertEqual(print_fn.fname, "Print")
-
-        print_fn_args = print_fn.arguments
-        self.assertEqual(len(print_fn_args), 1)
-
-        plus_fn = print_fn_args[0]
-
-        self.assertEqual(plus_fn.fname, "Plus")
-
-        plus_fn_args = plus_fn.arguments
-        self.assertEqual(len(plus_fn_args), 2)
-
-        for arg in plus_fn_args:
-            self.assertTrue(isinstance(arg, NumberExpressionParserOutput))
-            self.assertEqual(arg.value, 1)
-
-    def test_parseList(self):
-        tokenizer = Tokenizer('{1, 1, 1}')
-
-        tokens = tokenizer.get_tokens()
-
-        parser = Parser(tokens)
-
-        parser_outputs = parser.get_all_parser_output()
-
-        self.assertEqual(len(parser_outputs), 1)
-
-        list_fn = parser_outputs[0]
-        self.assertEqual(list_fn.fname, "List")
-
-        self.assertEqual(len(list_fn.arguments), 3)
-
-        for arg in list_fn.arguments:
-            self.assertEqual(arg.value, 1)
+        module_fn = arguments[1]
+        self.assertEqual(len(module_fn), 2)
 
     def test_comparator(self):
-        tokenizer = Tokenizer('1 > 2')
-        tokens = tokenizer.get_tokens()
-
-        parser = Parser(tokens)
-        parser_outputs = parser.get_all_parser_output()
-
-        self.assertEqual(len(parser_outputs), 1)
-
-        greater_than_fn = parser_outputs[0]
-        self.assertEqual(greater_than_fn.fname, "GreaterThan")
-
-        self.assertEqual(len(greater_than_fn.arguments), 2)
-
-        k = 1
-        for arg in greater_than_fn.arguments:
-            self.assertEqual(arg.value, k)
-            k = k + 1
+        global tokenizer, parser
+        tokens = list(tokenizer.get_tokens('x+1 == 1+x'))
+        nodes = list(parser.get_nodes(tokens))
 
 
 if __name__ == '__main__':
