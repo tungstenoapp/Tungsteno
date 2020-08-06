@@ -27,6 +27,8 @@ class UnaryOpParser(BaseParser):
                     token.get_value() == '+'):
                 atom, pos = parser.compute_atom(tokens, toklen, pos + 2)
                 return Node('PreIncrement', atom), pos
+            atom, pos = parser.compute_atom(tokens, toklen, pos + 1)
+            return atom, pos
 
         raise Exception()
 
