@@ -77,13 +77,6 @@ class TestTokenizer(unittest.TestCase):
         module_fn = arguments[1]
         self.assertEqual(len(module_fn), 2)
 
-    def test_comparator(self):
-        global tokenizer, parser
-        tokens = list(tokenizer.get_tokens('x+1*2+2 -> {x->1, y->2}'))
-        nodes = list(parser.get_nodes(tokens))
-
-        print(nodes)
-
 
 if __name__ == '__main__':
     unittest.main()

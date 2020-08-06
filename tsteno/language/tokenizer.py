@@ -195,13 +195,13 @@ class Tokenizer:
         last_token = Token(token_list.TOKEN_NOTOKEN, '', pos)
 
         while pos < max_len:
+            if code[pos] == "\n" or code[pos] == ' ':
+                pos = pos + 1
+                continue
             last_token, pos = self.get_next_token(code, pos, max_len)
             yield last_token
 
     def get_next_token(self, code, pos, max_len):
-        while pos < max_len and code[pos].isspace():
-            pos = pos + 1
-
         for processor in self.token_processors:
             if processor.match(code[pos]):
                 return processor.calculate(code, pos, max_len)

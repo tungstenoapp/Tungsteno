@@ -28,7 +28,7 @@ class Set(Module):
 
         define_var_fn(variable_name, value)
 
-        return True
+        return value
 
     def get_arguments(self):
         return [
