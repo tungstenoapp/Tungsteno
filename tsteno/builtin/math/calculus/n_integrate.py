@@ -21,5 +21,5 @@ class NIntegrate(Module):
         test.assertEqual(evaluation.evaluate_code(
             'NIntegrate[x, {x, 0, 10}]'), 50)
 
-        print(evaluation.evaluate_code(
-            'NIntegrate[1/(1 + x^2), {x, 0, oo}]'))
+        test.assertTrue(abs(evaluation.evaluate_code(
+            'NIntegrate[1/(1 + x^2), {x, 0, oo}]') - 1.5707963267949) < 0.0001)

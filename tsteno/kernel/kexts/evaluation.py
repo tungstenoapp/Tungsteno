@@ -15,7 +15,7 @@ if sys.version_info.major < 3 and sys.version_info.major >= 2:
 elif sys.version_info.major >= 3:
     from importlib.machinery import SourceFileLoader
 
-from sympy import oo, pi
+from sympy import oo, pi, E, I
 
 PROTECTED_NAMES_BUILTIN = ['builtin_base.py', '__init__.py']
 MODULE_DEF_REPLACEMENT = {
@@ -77,7 +77,7 @@ class Evaluation(KextBase):
     __slots__ = [
         'builtin_variables', 'builtin_modules',
         'user_modules', 'user_variables', 'user_modules',
-        'tokenizer', 'parser'
+        'tokenizer', 'parser', 'auto_symbols'
     ]
 
     def __init__(self, kernel):
@@ -87,13 +87,17 @@ class Evaluation(KextBase):
 
         self.builtin_variables = {
             'oo': oo,
-            'Pi': pi
+            'Pi': pi,
+            'E': E,
+            'I': I
         }
 
         self.builtin_modules = {}
 
         self.user_modules = {}
         self.user_variables = {}
+
+        self.auto_symbols = {}
 
         self.parser = Parser()
         self.tokenizer = Tokenizer()
@@ -222,7 +226,10 @@ class Evaluation(KextBase):
             return self.user_variables[variable]
 
         if variable not in self.builtin_variables:
-            return Symbol(variable)
+            if variable in self.auto_symbols:
+                return self.auto_symbols[variable]
+            self.auto_symbols[variable] = Symbol(variable)
+            return self.auto_symbols[variable]
 
         return self.builtin_variables[variable]
 
