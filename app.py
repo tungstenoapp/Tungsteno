@@ -1,10 +1,4 @@
-from tsteno.kernel.kernel import Kernel
-from tsteno.kernel.kexts.log import LogLevel
+from tsteno.cli import main
 
-kernel = Kernel()
-
-eval = kernel.get_kext('eval')
-
-while True:
-    code = input('> ')
-    print(eval.evaluate_code(code))
+if __name__ == "__main__":
+    main()
