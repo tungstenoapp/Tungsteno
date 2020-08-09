@@ -1,5 +1,8 @@
 import click
-import readline
+from sys import platform
+
+if platform == "linux" or platform == "linux2":
+    import readline
 from sympy import mathematica_code as mcode
 from tsteno import VERSION, CODENAME, COPYRIGHT
 from tsteno.kernel.kernel import Kernel
@@ -35,8 +38,9 @@ def cli(kernel):
 
     evaluation = kernel.get_kext('eval')
 
-    readline.parse_and_bind("tab: complete")
-    readline.set_completer(evaluation.get_autocompletion)
+    if platform == "linux" or platform == "linux2":
+        readline.parse_and_bind("tab: complete")
+        readline.set_completer(evaluation.get_autocompletion)
 
     click.echo()
     click.echo()

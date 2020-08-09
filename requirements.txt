@@ -3,5 +3,5 @@ pdoc3
 colorama
 pyinstaller
 click
-readline
+readline;  platform_system == "Linux"
 numpy
