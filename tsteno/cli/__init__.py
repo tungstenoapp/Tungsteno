@@ -31,12 +31,24 @@ def main(debug, gui):
         cli(kernel)
 
 
+k = 0
+
+
+def cli_printer(obj):
+    click.echo("Out[{}]= {}".format(k, mcode(obj)))
+    click.echo()
+
+
 def cli(kernel):
+    global k
     # Print header
     click.echo("Tungsteno Language {} ({})".format(VERSION, CODENAME))
     click.echo(COPYRIGHT)
 
     evaluation = kernel.get_kext('eval')
+    output = kernel.get_kext('output')
+
+    output.register_output_handler(cli_printer)
 
     if platform == "linux" or platform == "linux2":
         readline.parse_and_bind("tab: complete")
@@ -45,15 +57,11 @@ def cli(kernel):
     click.echo()
     click.echo()
 
-    k = 0
     while True:
         to_execute = input("In[{}]:= ".format(k))
         click.echo()
         try:
-            result = evaluation.evaluate_code(to_execute)
-            if result is not None:
-                click.echo("Out[{}]= {}".format(k, mcode(result)))
-                click.echo()
+            evaluation.evaluate_code(to_execute)
         except Exception as err:
             click.echo(err)
         k = k + 1

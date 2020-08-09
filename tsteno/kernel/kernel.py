@@ -3,6 +3,7 @@ import uuid
 import datetime
 from .kexts.log import Log, LogLevel
 from .kexts.evaluation import Evaluation
+from .kexts.output import Output
 
 KERNEL_DEFAULT_OPTIONS = {
     'kext_extensions': {
@@ -68,6 +69,7 @@ class Kernel:
 
         self.register_kext('log', Log, log_kext=log_kext)
         self.register_kext('eval', Evaluation)
+        self.register_kext('output', Output)
 
         log_kext.write(
             'Kernel ({}) loaded succesfully!'.format(self.kid),
