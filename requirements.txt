@@ -4,3 +4,4 @@ colorama
 pyinstaller
 click
 readline
+numpy
