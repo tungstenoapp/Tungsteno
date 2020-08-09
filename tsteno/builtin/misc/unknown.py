@@ -21,9 +21,9 @@ class Unknown(Module):
 class UnknownProxy(Unknown):
     def __init__(self, kernel, fname, arguments):
         super().__init__(kernel)
-        self.fname = fname
-        self.arguments = arguments
+        self.head = fname
+        self.childrens = arguments
 
     def __repr__(self):
-        argument_repr = ", ".join(list(map(lambda x: str(x), self.arguments)))
-        return "{}[{}]".format(self.fname, argument_repr)
+        argument_repr = ", ".join(list(map(lambda x: str(x), self.childrens)))
+        return "{}[{}]".format(self.head, argument_repr)

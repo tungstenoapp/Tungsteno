@@ -5,9 +5,7 @@ from tsteno.builtin.misc.custom_module import UserDefinedModule
 
 class Set(Module):
 
-    def run(self, variable, value, context):
-        evaluation = self.get_kernel().get_kext('eval')
-
+    def define_one(self, evaluation, variable, value, context):
         if isinstance(value, Module):
             variable_name = variable.head
             value.set_param_mapping(variable.childrens)
@@ -28,7 +26,21 @@ class Set(Module):
 
         define_var_fn(variable_name, value)
 
-        return value
+    def run(self, all_variables, all_values, context):
+        evaluation = self.get_kernel().get_kext('eval')
+
+        if not isinstance(all_variables, list):
+            all_variables = [all_variables]
+
+        if not isinstance(all_values, list):
+            all_values = [all_values]
+
+        definers = zip(all_variables, all_values)
+
+        for definer in definers:
+            self.define_one(evaluation, definer[0], definer[1], context)
+
+        return all_values
 
     def get_arguments(self):
         return [
@@ -45,3 +57,6 @@ class Set(Module):
 
         test.assertEqual(evaluation.evaluate_code(
             'Set[TFD[x_], Module[{x0=x, c}, c=10; x0 + c]]; TFD[2]'), 12)
+
+        test.assertEqual(evaluation.evaluate_code(
+            '{a, b, c} = {1, 2, 3}; b'), 2)

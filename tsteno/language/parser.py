@@ -109,6 +109,7 @@ BIN_OPINFO_MAP = {
 
     '->':   OpInfo(0, 'LEFT', 'Rule'),
     '=':    OpInfo(0, 'LEFT', 'Set'),
+    ':=':    OpInfo(0, 'LEFT', 'Set'),
     '<':    OpInfo(0, 'LEFT', 'LessThan'),
     '<=':   OpInfo(0, 'LEFT', 'LessEqual'),
     '>':    OpInfo(0, 'LEFT', 'GreaterThan'),
@@ -210,6 +211,8 @@ class Parser:
     def compute_atom(self, tokens, toklen, pos):
         while tokens[pos].get_type() in CLOSURE_TOKENS:
             pos = pos + 1
+            if pos >= toklen:
+                return None, pos
 
         token = tokens[pos]
 

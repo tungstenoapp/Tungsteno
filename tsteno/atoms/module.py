@@ -1,5 +1,6 @@
 import numbers
 from .atoms import Atoms
+from tsteno.language.ast import Node
 
 ARG_FLAG_OPTIONAL = 1 << 1
 ARG_FLAG_ALL_NEXT = 1 << 2
@@ -65,7 +66,7 @@ class Module(Atoms):
         eval = self.get_kernel().get_kext('eval')
 
         if module_arg.get_flag() & ARG_FLAG_RETURN_VAR_NAME != 0:
-            return user_arg
+            context.set_no_var_mode(1)
 
         if module_arg.get_flag() & ARG_FLAG_NO_AUTO_EVAL == 0:
             if isinstance(user_arg, list):
@@ -87,7 +88,12 @@ class Module(Atoms):
                         args, ctx
                     )
 
-        return eval_fn(user_arg, context)
+        result = eval_fn(user_arg, context)
+
+        if module_arg.get_flag() & ARG_FLAG_RETURN_VAR_NAME != 0:
+            context.set_no_var_mode(0)
+
+        return result
 
     def run(self, **arguments):
         raise Exception("eval function should be defined")

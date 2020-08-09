@@ -35,6 +35,8 @@ k = 0
 
 
 def cli_printer(obj):
+    if obj is None:
+        return
     click.echo("Out[{}]= {}".format(k, mcode(obj)))
     click.echo()
 

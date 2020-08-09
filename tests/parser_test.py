@@ -19,6 +19,17 @@ class TestTokenizer(unittest.TestCase):
 
         self.assertEqual(one_node, 12345)
 
+    def test_parseSilence(self):
+        global tokenizer, parser
+        tokens = tokenizer.get_tokens("12345;")
+
+        nodes = list(parser.get_nodes(list(tokens)))
+
+        self.assertEqual(len(nodes), 1)
+        one_node = nodes[0]
+
+        self.assertEqual(one_node, 12345)
+
     def test_opOrder(self):
         global tokenizer, parser
 

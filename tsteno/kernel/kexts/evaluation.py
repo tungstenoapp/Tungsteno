@@ -9,6 +9,8 @@ from tsteno.language.ast import IdentifierToken
 from tsteno.atoms.module import Module
 from tsteno.language.parser import Parser
 from tsteno.language.tokenizer import Tokenizer
+import tsteno.language.token_list as token_list
+
 
 if sys.version_info.major < 3 and sys.version_info.major >= 2:
     import imp
@@ -29,7 +31,7 @@ CONTROL_FLOW_STATUS_R_STACK = 1
 class Context:
     __slot__ = ['__control_flow__', '__is_global__',
                 '__local_context__', 'user_variables', 'user_modules',
-                '__last_result__'
+                '__last_result__', '__no_var_mode__'
                 ]
 
     def __init__(self):
@@ -40,6 +42,12 @@ class Context:
 
     def set_last_result(self, last_result):
         self.__last_result__ = last_result
+
+    def set_no_var_mode(self, var_mode):
+        self.__no_var_mode__ = var_mode
+
+    def get_no_var_mode(self):
+        return self.__no_var_mode__
 
     def get_control_flow(self):
         return self.__control_flow__
@@ -70,6 +78,7 @@ class Context:
         self.__local_context__ = False
         self.user_modules = {}
         self.__last_result__ = None
+        self.__no_var_mode__ = 0
 
 
 class Evaluation(KextBase):
@@ -143,12 +152,15 @@ class Evaluation(KextBase):
             if context.get_control_flow() == CONTROL_FLOW_STATUS_R_STACK:
                 return context.get_last_result()
 
+        if tokens[-1].get_type() != token_list.TOKEN_CLOSE_EXPR:
+            self.run_function('Print', [context.get_last_result()], context)
         return context.get_last_result()
 
     def evaluate_node(self, node, context):
         if isinstance(node, Node):
             return self.run_function(node.head, node.childrens, context)
-        elif isinstance(node, IdentifierToken):
+        elif isinstance(node, IdentifierToken) and \
+                context.get_no_var_mode() == 0:
             return self.get_variable_definition(node.get_value(), context)
         return node
 
