@@ -117,6 +117,7 @@ BIN_OPINFO_MAP = {
     '>=':   OpInfo(0, 'LEFT', 'GreaterEqual'),
     '==':   OpInfo(0, 'LEFT', 'Equal'),
     '!=':   OpInfo(0, 'LEFT', 'NotEqual'),
+    '*^':   OpInfo(0, 'LEFT', 'ScientificForm'),
 
     '+':    OpInfo(1, 'LEFT', 'Plus'),
     '-':    OpInfo(1, 'LEFT', 'Minus'),

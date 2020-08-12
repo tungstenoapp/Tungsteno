@@ -121,6 +121,7 @@ class MiscTokenReader(BaseTokenReader):
         '>': token_list.TOKEN_OP,
         '.': token_list.TOKEN_OP,
         '!': token_list.TOKEN_OP,
+        '`': token_list.TOKEN_OP,
 
         # OP order
         '(': token_list.TOKEN_LEFTPAREN,
