@@ -1,2 +1,3 @@
 class Notebook:
-    pass
+    def __init__(self, cells):
+        print(cells)
