@@ -43,13 +43,14 @@ class NumberTokenReader(BaseTokenReader):
             if not code[pos].isdigit() and (
                 code[pos] != '.' or
                 code[pos] in num_buffer
-            ):
+            ) and code[pos] != '`':
                 break
 
             if code[pos] == '.':
                 num_cls = float
 
-            num_buffer.append(code[pos])
+            if code[pos] != '`':
+                num_buffer.append(code[pos])
             pos = pos + 1
             continue
 
@@ -196,6 +197,14 @@ class Tokenizer:
         last_token = Token(token_list.TOKEN_NOTOKEN, '', pos)
 
         while pos < max_len:
+            if pos+1 < max_len and code[pos] == '(' and code[pos+1] == '*':
+                while pos + 1 < max_len:
+                    if code[pos] == '*' and code[pos+1] == ')':
+                        pos = pos + 2
+                        break
+                    pos = pos + 1
+                if pos >= max_len:
+                    break
             if code[pos] == "\n" or code[pos] == ' ':
                 pos = pos + 1
                 continue

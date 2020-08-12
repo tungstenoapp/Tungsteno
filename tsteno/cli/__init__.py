@@ -12,7 +12,8 @@ from tsteno.kernel.kexts.log import LogLevel
 @click.command()
 @click.option('--debug', '-d', is_flag=True, help='Initialize tsteno kernel in debug mode')
 @click.option('--gui', '-g', is_flag=True, help='GUI mode (BETA)')
-def main(debug, gui):
+@click.option('--input', '-i', help="*.nb file for input")
+def main(debug, gui, input):
     kernel_opts = {}
     if debug:
         kernel_opts = {
@@ -24,9 +25,14 @@ def main(debug, gui):
         }
 
     kernel = Kernel(options=kernel_opts)
+    evaluation = kernel.get_kext('eval')
 
     if gui:
         pass
+    elif input is not None:
+        nb_file = open(input, 'r')
+
+        print(evaluation.evaluate_code(nb_file.read()))
     else:
         cli(kernel)
 

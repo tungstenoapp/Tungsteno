@@ -17,6 +17,16 @@ class TestTokenizer(unittest.TestCase):
         self.assertEqual(token.get_type(), token_list.TOKEN_NUMBER)
         self.assertEqual(token.get_value(), 12345)
 
+    def test_parseComment(self):
+        tokens = list(tokenizer.get_tokens("(*HOLA*)12345(*a*)"))
+
+        self.assertEqual(len(tokens), 1)
+
+        token = tokens[0]
+
+        self.assertEqual(token.get_type(), token_list.TOKEN_NUMBER)
+        self.assertEqual(token.get_value(), 12345)
+
     def test_parseNumberPlusNumber(self):
         tokens = list(tokenizer.get_tokens("12345+1.23"))
 
