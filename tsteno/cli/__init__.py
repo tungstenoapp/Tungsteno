@@ -31,7 +31,7 @@ def main(debug, gui, input):
         pass
     elif input is not None:
         nb_file = open(input, 'r')
-        evaluation.evaluate_code(nb_file.read())
+        eval_result = evaluation.evaluate_code(nb_file.read())
         nb_file.close()
     else:
         cli(kernel)
