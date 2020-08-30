@@ -1,0 +1,3 @@
+[submodule "submodules/tungnsteno-gui"]
+	path = submodules/tungnsteno-gui
+	url = git@github.com:JoseCarlosGarcia95/tungnsteno-gui.git
