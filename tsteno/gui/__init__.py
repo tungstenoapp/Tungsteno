@@ -9,12 +9,15 @@ evaluation = None
 
 @eel.expose
 def tsteno_eval(code):
-    eval_result = evaluation.evaluate_code(code)
+    try:
+        eval_result = evaluation.evaluate_code(code)
+    except Exception as err:
+        return {'processor': 'error',  'error': str(err)}
 
     if isinstance(eval_result, sympy.Expr):
         return {
             'processor': 'default',
-            'output': '$${}$$'.format(mcode(eval_result))
+            'output': mcode(eval_result)
         }
 
     return {'processor': 'default', 'output': str(eval_result)}

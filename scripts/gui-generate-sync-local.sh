@@ -9,7 +9,9 @@ OLDPWD=$PWD
 
 cd "$SUBMODULE_PATH"
 
-npm install
+if [[ ! -d "$SUBMODULE_PATH/node_modules/" ]]; then
+    npm install
+fi
 grunt
 
 cd "$OLDPWD"

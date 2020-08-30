@@ -76,5 +76,8 @@
   color: white;
   border-radius: 0 0 3px 3px;
 }
+.notebook .cell .cell_container_error {
+  background-color: #DD546E;
+}
 
 /*# sourceMappingURL=notebook.css.map */
