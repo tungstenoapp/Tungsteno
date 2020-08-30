@@ -7,6 +7,7 @@ from sympy import mathematica_code as mcode
 from tsteno import VERSION, CODENAME, COPYRIGHT
 from tsteno.kernel.kernel import Kernel
 from tsteno.kernel.kexts.log import LogLevel
+from tsteno.gui import init_gui
 
 
 @click.command()
@@ -28,7 +29,7 @@ def main(debug, gui, input):
     evaluation = kernel.get_kext('eval')
 
     if gui:
-        pass
+        init_gui(kernel)
     elif input is not None:
         nb_file = open(input, 'r')
         eval_result = evaluation.evaluate_code(nb_file.read())

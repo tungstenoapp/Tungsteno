@@ -1,0 +1,60 @@
+nav {
+  background-color: #4D6464;
+  float: left;
+  width: 100%;
+  color: #FFF;
+  font-weight: bold;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+nav ul {
+  text-align: center;
+}
+nav ul li {
+  display: inline;
+  list-style: none;
+  float: left;
+  padding: 10px;
+  display: block;
+  cursor: pointer;
+}
+nav ul li a {
+  color: #FFF;
+  text-decoration: none;
+}
+nav ul li a:hover {
+  text-decoration: none;
+}
+nav ul li:hover {
+  background-color: #9AC9C9;
+}
+nav ul li:hover ul {
+  top: 41.3px;
+  display: block;
+  position: absolute;
+  width: 150px;
+  border-bottom: 1px solid;
+}
+nav ul li:hover ul li {
+  width: 100%;
+  background-color: #4D6464;
+}
+nav ul li:hover ul li a {
+  display: block;
+}
+nav ul li:hover ul li:hover {
+  background-color: #9AC9C9;
+}
+nav ul ul {
+  display: none;
+  text-align: center;
+  background-color: #4D6464;
+}
+
+nav {
+  margin-bottom: 20px;
+}
+
+/*# sourceMappingURL=navbar.css.map */

@@ -1,0 +1,80 @@
+.notebook {
+  display: inline-block;
+  width: 100%;
+  padding: 10px;
+}
+.notebook .fade-enter-active, .notebook .fade-leave-active {
+  transition: opacity 0.25s;
+}
+.notebook .fade-enter, .notebook .fade-leave-to {
+  opacity: 0;
+}
+.notebook .cell {
+  display: inline-block;
+  width: 100%;
+}
+.notebook .cell [contenteditable] {
+  outline: 0px solid transparent;
+}
+.notebook .cell .caption {
+  display: inline-block;
+  color: white;
+  padding: 3px 6px;
+  float: left;
+  border: 2px solid #9AC9C9;
+  background: #9AC9C9;
+  border-radius: 3px 3px 0 0;
+}
+.notebook .cell .caption ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.notebook .cell .caption ul li {
+  font-size: 18px;
+  padding-right: 5px;
+  display: inline-block;
+  padding-left: 5px;
+}
+.notebook .cell .caption ul li.title {
+  padding-left: 0;
+  font-weight: bold;
+}
+.notebook .cell .caption ul li.run-cell {
+  cursor: pointer;
+  color: #049A70;
+}
+.notebook .cell .caption ul li.run-visibility {
+  cursor: pointer;
+  color: #485865;
+}
+.notebook .cell .caption ul li.run-settings {
+  color: #323D46;
+  cursor: pointer;
+}
+.notebook .cell .caption ul li.stop-cell {
+  color: red;
+  cursor: pointer;
+}
+.notebook .cell .input {
+  padding: 10px;
+  float: left;
+  border: 2px solid #9AC9C9;
+  font-weight: bold;
+  display: block;
+  width: 100%;
+  border-radius: 0 3px 0 0;
+  resize: none;
+  height: auto;
+}
+.notebook .cell .output {
+  float: left;
+  padding: 10px;
+  background-color: #4D6464;
+  display: block;
+  width: 100%;
+  color: white;
+  border-radius: 0 0 3px 3px;
+}
+
+/*# sourceMappingURL=notebook.css.map */
