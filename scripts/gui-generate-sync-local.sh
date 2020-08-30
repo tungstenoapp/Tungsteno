@@ -14,5 +14,4 @@ grunt
 
 cd "$OLDPWD"
 
-rm -rf "$GUI_PATH"
-echo rsync "$SUBMODULE_PATH/public" "$GUI_PATH"
+rsync -av --delete "$SUBMODULE_PATH/public/" "$GUI_PATH"
