@@ -23,6 +23,8 @@ def tsteno_eval(code):
             'output': mcode(eval_result)
         }
 
+    print(eval_result)
+
     return {'processor': 'default', 'output': str(eval_result)}
 
 
