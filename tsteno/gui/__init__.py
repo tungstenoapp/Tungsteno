@@ -1,6 +1,7 @@
 import os
 import eel
 import sympy
+import traceback
 
 from sympy import mathematica_code as mcode
 
@@ -12,6 +13,8 @@ def tsteno_eval(code):
     try:
         eval_result = evaluation.evaluate_code(code)
     except Exception as err:
+        print(traceback.format_exc())
+        print(err)
         return {'processor': 'error',  'error': str(err)}
 
     if isinstance(eval_result, sympy.Expr):

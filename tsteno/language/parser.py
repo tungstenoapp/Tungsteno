@@ -46,9 +46,6 @@ class IdentifierTokenParser(BaseParser):
                 arg = []
                 arguments = []
                 while pos < toklen:
-                    expr, pos = parser.compute_expr(tokens, toklen, pos)
-
-                    arg.append(expr)
                     ntok = tokens[pos]
 
                     if ntok.get_type() == token_list.TOKEN_COMMA_SEPARATOR:
@@ -61,6 +58,9 @@ class IdentifierTokenParser(BaseParser):
                         arguments.append(arg[0] if len(arg) == 1 else arg)
                         pos = pos + 1
                         break
+                    expr, pos = parser.compute_expr(tokens, toklen, pos)
+
+                    arg.append(expr)
 
                 return Node(itok.get_value(), *arguments), pos
 
@@ -74,9 +74,7 @@ class ListTokenParser(BaseParser):
             arguments = []
 
             while pos < toklen:
-                expr, pos = parser.compute_expr(tokens, toklen, pos)
                 ntok = tokens[pos]
-                arguments.append(expr)
 
                 if ntok.get_type() == token_list.TOKEN_COMMA_SEPARATOR:
                     pos = pos + 1
@@ -84,6 +82,9 @@ class ListTokenParser(BaseParser):
                 elif ntok.get_type() == token_list.TOKEN_RIGHTLIST:
                     pos = pos + 1
                     break
+                expr, pos = parser.compute_expr(tokens, toklen, pos)
+                arguments.append(expr)
+
             return Node('List', *arguments), pos
 
         raise Exception()
