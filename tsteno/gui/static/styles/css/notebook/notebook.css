@@ -66,6 +66,13 @@
   border-radius: 0 3px 0 0;
   resize: none;
   height: auto;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
 }
 .notebook .cell .output {
   float: left;
@@ -75,6 +82,13 @@
   width: 100%;
   color: white;
   border-radius: 0 0 3px 3px;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
 }
 .notebook .cell .cell_container_error {
   background-color: #DD546E;

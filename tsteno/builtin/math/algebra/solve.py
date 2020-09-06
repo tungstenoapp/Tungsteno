@@ -23,6 +23,7 @@ class Solve(Module):
 
         if len(solutions) == 1:
             return solutions[0]
+
         return solutions
 
     @staticmethod
