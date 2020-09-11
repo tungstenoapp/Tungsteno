@@ -1,3 +1,4 @@
+import numbers
 from collections import namedtuple
 import tsteno.language.token_list as token_list
 from tsteno.language.ast import Node, IdentifierToken
@@ -194,6 +195,16 @@ class Parser:
                 next_min_prec = prec + 1 if assoc == 'LEFT' else prec
 
                 pos = pos + len(op)
+
+                atom_rhs, pos = self.compute_expr(
+                    tokens, toklen, pos, next_min_prec
+                )
+
+                atom_lhs = self.compute_binop(node, atom_lhs, atom_rhs)
+            elif isinstance(atom_lhs, numbers.Number):
+                prec, assoc, node = BIN_OPINFO_MAP['*']
+
+                next_min_prec = prec + 1 if assoc == 'LEFT' else prec
 
                 atom_rhs, pos = self.compute_expr(
                     tokens, toklen, pos, next_min_prec

@@ -30,6 +30,16 @@ class TestTokenizer(unittest.TestCase):
 
         self.assertEqual(one_node, 12345)
 
+    def test_parseMultiplier(self):
+        global tokenizer, parser
+        tokens = tokenizer.get_tokens("2 3")
+        nodes = list(parser.get_nodes(list(tokens)))
+        product = nodes[0]
+
+        self.assertEqual(product.head, 'Product')
+        self.assertEqual(product.childrens[0], 2)
+        self.assertEqual(product.childrens[1], 3)
+
     def test_opOrder(self):
         global tokenizer, parser
 
