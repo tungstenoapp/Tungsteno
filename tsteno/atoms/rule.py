@@ -16,6 +16,7 @@ class RuleSet(Atoms):
 
     def __repr__(self):
         output = []
+
         for key, val in self.rules_dict.items():
             output.append(str(key))
             output.append('->')

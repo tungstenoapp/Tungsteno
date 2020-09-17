@@ -192,23 +192,40 @@ class Tokenizer:
             StringTokenReader(), IdentifierTokenReader()
         ]
 
+    def skip_comments(self, pos, max_len, code):
+        if pos+1 < max_len and code[pos] == '(' and code[pos+1] == '*':
+            while pos + 1 < max_len:
+                if code[pos] == '*' and code[pos+1] == ')':
+                    pos = pos + 2
+                    break
+                pos = pos + 1
+            if pos >= max_len:
+                return pos, True
+
+        return pos, False
+
+    def skip_blankspaces(self, code, pos, max_len):
+        while pos < max_len and (code[pos] == "\n" or code[pos] == ' '):
+            pos = pos + 1
+
+        return pos
+
     def get_tokens(self, code):
         pos = 0
         max_len = len(code)
         last_token = Token(token_list.TOKEN_NOTOKEN, '', pos)
 
         while pos < max_len:
-            if pos+1 < max_len and code[pos] == '(' and code[pos+1] == '*':
-                while pos + 1 < max_len:
-                    if code[pos] == '*' and code[pos+1] == ')':
-                        pos = pos + 2
-                        break
-                    pos = pos + 1
-                if pos >= max_len:
-                    break
-            if code[pos] == "\n" or code[pos] == ' ':
-                pos = pos + 1
-                continue
+            pos, ended = self.skip_comments(pos, max_len, code)
+
+            if ended:
+                break
+
+            pos = self.skip_blankspaces(code, pos, max_len)
+
+            if pos >= max_len:
+                break
+
             last_token, pos = self.get_next_token(code, pos, max_len)
             yield last_token
 
