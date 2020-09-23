@@ -28,8 +28,36 @@ def tsteno_eval(code):
     return {'processor': 'default', 'output': str(eval_result)}
 
 
+@eel.expose
+def suggestions(input):
+    global evaluation
+
+    options = []
+    input_len = len(input)
+
+    if input_len < 2:
+        return options
+
+    definitions = evaluation.get_all_definitions()
+
+    for definition in definitions:
+        definition_len = len(definition)
+
+        if definition.startswith(input) and definition_len - input_len > 0:
+            options.append({
+                'caption': definition,
+                'append': definition[input_len+1:],
+                'distance': definition_len - input_len
+            })
+
+    options.sort(key=lambda op: op['distance'])
+    options = options[:3]
+
+    return options
+
+
 def init_gui(kernel):
     global evaluation
     evaluation = kernel.get_kext('eval')
     eel.init(os.path.join(os.path.dirname(__file__), 'static'))
-    eel.start('notebook.html')
+    eel.start('notebook.html', mode='web')

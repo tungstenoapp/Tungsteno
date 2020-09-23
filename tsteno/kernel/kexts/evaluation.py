@@ -173,10 +173,19 @@ class Evaluation(KextBase):
         autocomplete_opts += list(self.builtin_variables.keys())
 
         options = [i for i in autocomplete_opts if i.startswith(text)]
+
         if state < len(options):
             return options[state]
         else:
             return None
+
+    def get_all_definitions(self):
+        autocomplete_opts = list(self.user_modules.keys())
+        autocomplete_opts += list(self.builtin_modules.keys())
+        autocomplete_opts += list(self.user_variables.keys())
+        autocomplete_opts += list(self.builtin_variables.keys())
+
+        return autocomplete_opts
 
     def get_all_modules(self):
         return list(self.builtin_modules.values())

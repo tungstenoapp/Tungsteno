@@ -13,6 +13,22 @@
   display: inline-block;
   width: 100%;
 }
+.notebook .cell .smart-ac li {
+  border-radius: 3px;
+  font-size: 17px !important;
+  background: #F4FB87;
+  border: 2px solid #4D6464;
+  color: #4D6464;
+  font-weight: bold;
+  padding: 3px;
+  margin-left: 4px;
+  cursor: pointer;
+  display: block;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 .notebook .cell [contenteditable] {
   outline: 0px solid transparent;
 }
@@ -62,7 +78,7 @@
   border: 2px solid #9AC9C9;
   font-weight: bold;
   display: block;
-  width: 100%;
+  min-width: 100%;
   border-radius: 0 3px 0 0;
   resize: none;
   height: auto;
@@ -73,6 +89,16 @@
   -moz-hyphens: auto;
   -ms-hyphens: auto;
   hyphens: auto;
+}
+.notebook .cell .input-wrapper {
+  position: "relative";
+}
+.notebook .cell .input-suggest-results {
+  cursor: "pointer";
+  position: "absolute";
+  opacity: ".4";
+  top: 0;
+  left: 0;
 }
 .notebook .cell .output {
   float: left;
