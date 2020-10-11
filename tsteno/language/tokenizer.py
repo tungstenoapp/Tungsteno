@@ -201,7 +201,6 @@ class Tokenizer:
                 pos = pos + 1
             if pos >= max_len:
                 return pos, True
-
         return pos, False
 
     def skip_blankspaces(self, code, pos, max_len):
@@ -216,12 +215,16 @@ class Tokenizer:
         last_token = Token(token_list.TOKEN_NOTOKEN, '', pos)
 
         while pos < max_len:
-            pos, ended = self.skip_comments(pos, max_len, code)
 
-            if ended:
-                break
+            previous_pos = -1
 
-            pos = self.skip_blankspaces(code, pos, max_len)
+            while previous_pos != pos:
+                previous_pos = pos
+                pos, ended = self.skip_comments(pos, max_len, code)
+                pos = self.skip_blankspaces(code, pos, max_len)
+
+                if pos >= max_len:
+                    break
 
             if pos >= max_len:
                 break
