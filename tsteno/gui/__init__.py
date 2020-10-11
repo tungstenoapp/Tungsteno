@@ -60,4 +60,4 @@ def init_gui(kernel):
     global evaluation
     evaluation = kernel.get_kext('eval')
     eel.init(os.path.join(os.path.dirname(__file__), 'static'))
-    eel.start('notebook.html', mode='web')
+    eel.start('notebook.html', mode='web', all_interfaces=False)
