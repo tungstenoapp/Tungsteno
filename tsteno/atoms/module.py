@@ -95,6 +95,15 @@ class Module(Atoms):
 
         return result
 
+    def configuration_list2dict(self, list_of_properties):
+        prop_dict = {}
+
+        for prop in list_of_properties:
+            prop_key = list(prop.rules_dict.keys())[0]
+            prop_dict[prop_key] = prop[prop_key]
+
+        return prop_dict
+
     def run(self, **arguments):
         raise Exception("eval function should be defined")
 

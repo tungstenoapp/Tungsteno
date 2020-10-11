@@ -31,7 +31,6 @@ class UnaryOpParser(BaseParser):
             atom, pos = parser.compute_atom(tokens, toklen, pos + 1)
             return atom, pos
 
-        print(token)
         raise Exception()
 
 

@@ -8,6 +8,7 @@ from tsteno import VERSION, CODENAME, COPYRIGHT
 from tsteno.kernel.kernel import Kernel
 from tsteno.kernel.kexts.log import LogLevel
 from tsteno.gui import init_gui
+from tsteno.notebook import Notebook
 
 
 @click.command()
@@ -33,6 +34,14 @@ def main(debug, gui, input):
     elif input is not None:
         nb_file = open(input, 'r')
         eval_result = evaluation.evaluate_code(nb_file.read())
+
+        output = kernel.get_kext('output')
+
+        output.register_output_handler(cli_printer)
+
+        if isinstance(eval_result, Notebook):
+            eval_result.cli(evaluation)
+
         nb_file.close()
     else:
         cli(kernel)
@@ -42,10 +51,16 @@ k = 0
 
 
 def cli_printer(obj):
-    if obj is None:
+    if obj is None or isinstance(obj, Notebook):
         return
-    click.echo("Out[{}]= {}".format(k, mcode(obj)))
-    click.echo()
+
+    to_print = obj
+
+    if not isinstance(to_print, str):
+        to_print = mcode(to_print)
+
+    click.echo("Out[{}]= {}".format(k, to_print))
+    # click.echo()
 
 
 def cli(kernel):
@@ -64,11 +79,9 @@ def cli(kernel):
         readline.set_completer(evaluation.get_autocompletion)
 
     click.echo()
-    click.echo()
 
     while True:
         to_execute = input("In[{}]:= ".format(k))
-        click.echo()
         try:
             evaluation.evaluate_code(to_execute)
         except Exception as err:
