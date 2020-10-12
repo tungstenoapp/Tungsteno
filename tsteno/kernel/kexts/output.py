@@ -19,5 +19,8 @@ class Output(KextBase):
         for handler in self.handlers:
             handler(obj)
 
+    def deregister_output_handlers(self):
+        self.handlers.clear()
+
     def register_output_handler(self, handler):
         self.handlers.append(handler)

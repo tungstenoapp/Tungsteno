@@ -7,11 +7,30 @@ from sympy import mathematica_code as mcode
 from tsteno.notebook import Notebook
 
 evaluation = None
+output = None
 eel_configuration = {}
 
 
 @eel.expose
 def tsteno_eval(code):
+    global output
+
+    output_result = []
+
+    def gui_printer(obj):
+        if obj is None or isinstance(obj, Notebook):
+            return
+
+        to_print = obj
+
+        if not isinstance(to_print, str):
+            to_print = mcode(to_print)
+
+        output_result.append(to_print)
+
+    output.deregister_output_handlers()
+    output.register_output_handler(gui_printer)
+
     try:
         eval_result = evaluation.evaluate_code(code)
     except Exception as err:
@@ -22,10 +41,10 @@ def tsteno_eval(code):
     if isinstance(eval_result, sympy.Expr):
         return {
             'processor': 'default',
-            'output': mcode(eval_result)
+            'output': "\n".join(output_result)
         }
 
-    return {'processor': 'default', 'output': str(eval_result)}
+    return {'processor': 'default', 'output': "\n".join(output_result)}
 
 
 @eel.expose
@@ -75,11 +94,14 @@ def get_eel_configuration():
 
 def init_gui(kernel, input_file):
     global evaluation
+    global output
     global eel_configuration
 
     if input_file is not None:
         eel_configuration['input_file'] = input_file
 
+    output = kernel.get_kext('output')
     evaluation = kernel.get_kext('eval')
+
     eel.init(os.path.join(os.path.dirname(__file__), 'static'))
     eel.start('notebook.html', mode='web', all_interfaces=False)
