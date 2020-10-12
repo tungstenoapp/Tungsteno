@@ -17,6 +17,17 @@ class Cell:
             print(self.cell_content)
             raise Exception("Unable to construct cell object")
 
+    def dump(self):
+        if isinstance(self.cell_content, CellGroupData) or (
+            isinstance(self.cell_content, BoxData) and self.status == 'Input'
+        ):
+            return {
+                'content': self.cell_content.dump(),
+                'status': self.status,
+                'properties': self.cell_properties,
+                '__cls__': 'cell'
+            }
+
 
 class CellGroupData:
 
@@ -36,3 +47,18 @@ class CellGroupData:
                 cell_result.append(one_cell_result)
 
         return cell_result
+
+    def dump(self):
+        cell_dump = []
+
+        for cell in self.cells:
+            one_cell_dump = cell.dump()
+
+            if one_cell_dump is not None:
+                cell_dump.append(one_cell_dump)
+
+        return {
+            'cells': cell_dump,
+            'status': self.status,
+            '__cls__': 'cell_group_data'
+        }

@@ -4,8 +4,10 @@ import sympy
 import traceback
 
 from sympy import mathematica_code as mcode
+from tsteno.notebook import Notebook
 
 evaluation = None
+eel_configuration = {}
 
 
 @eel.expose
@@ -23,9 +25,18 @@ def tsteno_eval(code):
             'output': mcode(eval_result)
         }
 
-    print(eval_result)
-
     return {'processor': 'default', 'output': str(eval_result)}
+
+
+@eel.expose
+def read_file(input_file):
+    nb_file = open(input_file, 'r')
+    eval_result = evaluation.evaluate_code(nb_file.read())
+
+    if not isinstance(eval_result, Notebook):
+        raise Exception("Expected notebook")
+
+    return eval_result.dump()
 
 
 @eel.expose
@@ -56,8 +67,19 @@ def suggestions(input):
     return options
 
 
-def init_gui(kernel):
+@eel.expose
+def get_eel_configuration():
+    global eel_configuration
+    return eel_configuration
+
+
+def init_gui(kernel, input_file):
     global evaluation
+    global eel_configuration
+
+    if input_file is not None:
+        eel_configuration['input_file'] = input_file
+
     evaluation = kernel.get_kext('eval')
     eel.init(os.path.join(os.path.dirname(__file__), 'static'))
     eel.start('notebook.html', mode='web', all_interfaces=False)

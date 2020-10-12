@@ -14,8 +14,8 @@ from tsteno.notebook import Notebook
 @click.command()
 @click.option('--debug', '-d', is_flag=True, help='Initialize tsteno kernel in debug mode')
 @click.option('--gui', '-g', is_flag=True, help='GUI mode (BETA)')
-@click.option('--input', '-i', help="*.nb file for input")
-def main(debug, gui, input):
+@click.option('--input', '-i', 'input_', help="*.nb file for input")
+def main(debug, gui, input_):
     kernel_opts = {}
     if debug:
         kernel_opts = {
@@ -30,9 +30,9 @@ def main(debug, gui, input):
     evaluation = kernel.get_kext('eval')
 
     if gui:
-        init_gui(kernel)
+        init_gui(kernel, input_)
     elif input is not None:
-        nb_file = open(input, 'r')
+        nb_file = open(input_, 'r')
         eval_result = evaluation.evaluate_code(nb_file.read())
 
         output = kernel.get_kext('output')

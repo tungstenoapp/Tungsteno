@@ -13,3 +13,14 @@ class Notebook:
 
         nb_input_code = "".join(nb_result)
         evaluation.evaluate_code(nb_input_code)
+
+    def dump(self):
+        nb_dump = []
+        for cell in self.cells:
+            nb_dump.append(cell.dump())
+
+        return {
+            'cells': nb_dump,
+            'properties': self.nb_properties,
+            '__cls__': 'notebook'
+        }

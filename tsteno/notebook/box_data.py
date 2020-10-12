@@ -4,3 +4,9 @@ class BoxData:
 
     def cli(self):
         return self.boxes.cli()
+
+    def dump(self):
+        return {
+            'boxes': self.boxes.dump(),
+            '__cls__': 'box_data'
+        }
