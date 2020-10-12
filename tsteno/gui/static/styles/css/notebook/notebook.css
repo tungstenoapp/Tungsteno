@@ -29,6 +29,9 @@
   -ms-user-select: none;
   user-select: none;
 }
+.notebook .cell .smart-ac li:hover {
+  background: #eefa45;
+}
 .notebook .cell [contenteditable] {
   outline: 0px solid transparent;
 }
