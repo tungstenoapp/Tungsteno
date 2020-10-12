@@ -118,6 +118,7 @@
   -moz-hyphens: auto;
   -ms-hyphens: auto;
   hyphens: auto;
+  white-space: pre-line;
 }
 .notebook .cell .cell_container_error {
   background-color: #DD546E;
