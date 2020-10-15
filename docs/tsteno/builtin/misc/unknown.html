@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.8.3" />
+<meta name="generator" content="pdoc 0.8.4" />
 <title>tsteno.builtin.misc.unknown API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -32,25 +32,29 @@
 class Unknown(Module):
 
     def run(self, *arguments):
-        return self.__repr__(arguments)
+        return self
 
-    def proxy(self, fname):
-        return UnknownProxy(self.get_kernel(), fname)
+    def proxy(self, fname, arguments):
+        return UnknownProxy(self.get_kernel(), fname, arguments)
 
     def get_arguments(self):
         return [
             ModuleArg(ARG_FLAG_ALL_NEXT)
         ]
 
+    def run_test(self, test):
+        pass
+
 
 class UnknownProxy(Unknown):
-    def __init__(self, kernel, fname):
+    def __init__(self, kernel, fname, arguments):
         super().__init__(kernel)
-        self.fname = fname
+        self.head = fname
+        self.childrens = arguments
 
-    def __repr__(self, arguments=None):
-        argument_repr = &#34;, &#34;.join(list(map(lambda x: str(x), arguments)))
-        return &#34;{}[{}]&#34;.format(self.fname, argument_repr)</code></pre>
+    def __repr__(self):
+        argument_repr = &#34;, &#34;.join(list(map(lambda x: str(x), self.childrens)))
+        return &#34;{}[{}]&#34;.format(self.head, argument_repr)</code></pre>
 </details>
 </section>
 <section>
@@ -75,15 +79,18 @@ class UnknownProxy(Unknown):
 <pre><code class="python">class Unknown(Module):
 
     def run(self, *arguments):
-        return self.__repr__(arguments)
+        return self
 
-    def proxy(self, fname):
-        return UnknownProxy(self.get_kernel(), fname)
+    def proxy(self, fname, arguments):
+        return UnknownProxy(self.get_kernel(), fname, arguments)
 
     def get_arguments(self):
         return [
             ModuleArg(ARG_FLAG_ALL_NEXT)
-        ]</code></pre>
+        ]
+
+    def run_test(self, test):
+        pass</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -112,7 +119,7 @@ class UnknownProxy(Unknown):
 </details>
 </dd>
 <dt id="tsteno.builtin.misc.unknown.Unknown.proxy"><code class="name flex">
-<span>def <span class="ident">proxy</span></span>(<span>self, fname)</span>
+<span>def <span class="ident">proxy</span></span>(<span>self, fname, arguments)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -120,8 +127,8 @@ class UnknownProxy(Unknown):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def proxy(self, fname):
-    return UnknownProxy(self.get_kernel(), fname)</code></pre>
+<pre><code class="python">def proxy(self, fname, arguments):
+    return UnknownProxy(self.get_kernel(), fname, arguments)</code></pre>
 </details>
 </dd>
 <dt id="tsteno.builtin.misc.unknown.Unknown.run"><code class="name flex">
@@ -134,14 +141,27 @@ class UnknownProxy(Unknown):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def run(self, *arguments):
-    return self.__repr__(arguments)</code></pre>
+    return self</code></pre>
+</details>
+</dd>
+<dt id="tsteno.builtin.misc.unknown.Unknown.run_test"><code class="name flex">
+<span>def <span class="ident">run_test</span></span>(<span>self, test)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run_test(self, test):
+    pass</code></pre>
 </details>
 </dd>
 </dl>
 </dd>
 <dt id="tsteno.builtin.misc.unknown.UnknownProxy"><code class="flex name class">
 <span>class <span class="ident">UnknownProxy</span></span>
-<span>(</span><span>kernel, fname)</span>
+<span>(</span><span>kernel, fname, arguments)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -150,13 +170,14 @@ class UnknownProxy(Unknown):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class UnknownProxy(Unknown):
-    def __init__(self, kernel, fname):
+    def __init__(self, kernel, fname, arguments):
         super().__init__(kernel)
-        self.fname = fname
+        self.head = fname
+        self.childrens = arguments
 
-    def __repr__(self, arguments=None):
-        argument_repr = &#34;, &#34;.join(list(map(lambda x: str(x), arguments)))
-        return &#34;{}[{}]&#34;.format(self.fname, argument_repr)</code></pre>
+    def __repr__(self):
+        argument_repr = &#34;, &#34;.join(list(map(lambda x: str(x), self.childrens)))
+        return &#34;{}[{}]&#34;.format(self.head, argument_repr)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -187,6 +208,7 @@ class UnknownProxy(Unknown):
 <li><code><a title="tsteno.builtin.misc.unknown.Unknown.get_arguments" href="#tsteno.builtin.misc.unknown.Unknown.get_arguments">get_arguments</a></code></li>
 <li><code><a title="tsteno.builtin.misc.unknown.Unknown.proxy" href="#tsteno.builtin.misc.unknown.Unknown.proxy">proxy</a></code></li>
 <li><code><a title="tsteno.builtin.misc.unknown.Unknown.run" href="#tsteno.builtin.misc.unknown.Unknown.run">run</a></code></li>
+<li><code><a title="tsteno.builtin.misc.unknown.Unknown.run_test" href="#tsteno.builtin.misc.unknown.Unknown.run_test">run_test</a></code></li>
 </ul>
 </li>
 <li>
@@ -198,7 +220,7 @@ class UnknownProxy(Unknown):
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.3</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.4</a>.</p>
 </footer>
 </body>
 </html>

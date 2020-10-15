@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.8.3" />
+<meta name="generator" content="pdoc 0.8.4" />
 <title>tsteno.atoms.module API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -26,10 +26,15 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from .atoms import Atoms
+<pre><code class="python">import numbers
+from .atoms import Atoms
+from tsteno.language.ast import Node
 
 ARG_FLAG_OPTIONAL = 1 &lt;&lt; 1
 ARG_FLAG_ALL_NEXT = 1 &lt;&lt; 2
+ARG_FLAG_NO_AUTO_EVAL = 1 &lt;&lt; 3
+ARG_FLAG_SPECIAL_CONTEXT = 1 &lt;&lt; 4
+ARG_FLAG_RETURN_VAR_NAME = 1 &lt;&lt; 5
 
 
 class ModuleArg:
@@ -41,25 +46,91 @@ class ModuleArg:
     def get_flag(self):
         return self.__flag
 
+    def __repr__(self):
+        return &#39;ModuleArg: {}&#39;.format(self.__flag)
+
 
 class Module(Atoms):
 
-    def eval(self, arguments):
+    def eval(self, arguments, context):
+        fargs = self.parse_arguments(arguments, context)
+        return self.run(*fargs)
+
+    def parse_arguments(self, arguments, context):
         fargs = []
+        argssize = len(arguments)
         module_args = self.get_arguments()
-        eval = self.get_kernel().get_kext(&#39;eval&#39;)
 
         for i in range(0, len(module_args)):
             module_arg = module_args[i]
 
-            if module_arg.get_flag() &amp; ARG_FLAG_ALL_NEXT != 0:
-                fargs = fargs + \
-                    list(map(eval.evaluate_parser_output, arguments[i:]))
+            if module_arg.get_flag() == ARG_FLAG_SPECIAL_CONTEXT:
+                fargs.append(context)
+                continue
+
+            if module_arg.get_flag() &amp; ARG_FLAG_OPTIONAL != 0 and \
+                    i &gt;= argssize:
                 break
 
-            fargs.append(eval.evaluate_parser_output(arguments[i]))
+            if module_arg.get_flag() &amp; ARG_FLAG_ALL_NEXT != 0:
+                return fargs + list(map(lambda arg: self.parse_argument(
+                    module_arg, arg, context), arguments[i:]
+                ))
 
-        return self.run(*fargs)
+            if i &gt;= argssize:
+                raise Exception(
+                    &#34;Expected but {} arguments but {} given&#34;.format(
+                        len(module_args), argssize
+                    ))
+            user_arg = arguments[i]
+
+            farg = self.parse_argument(module_arg, user_arg, context)
+            if farg is not None:
+                fargs.append(farg)
+
+        return fargs
+
+    def parse_argument(self, module_arg, user_arg, context):
+        eval = self.get_kernel().get_kext(&#39;eval&#39;)
+
+        if module_arg.get_flag() &amp; ARG_FLAG_RETURN_VAR_NAME != 0:
+            context.set_no_var_mode(1)
+
+        if module_arg.get_flag() &amp; ARG_FLAG_NO_AUTO_EVAL == 0:
+            if isinstance(user_arg, list):
+                def eval_fn(args, context):
+                    return list(map(lambda arg: eval.evaluate_node(
+                        arg, context
+                    ), args))[-1]
+            else:
+                eval_fn = eval.evaluate_node
+        else:
+            if isinstance(user_arg, list):
+                def eval_fn(args, context):
+                    return lambda ctx=context: list(map(lambda arg: eval.evaluate_node(
+                        arg, ctx
+                    ), args))[-1]
+            else:
+                def eval_fn(args, context):
+                    return lambda ctx=context: eval.evaluate_node(
+                        args, ctx
+                    )
+
+        result = eval_fn(user_arg, context)
+
+        if module_arg.get_flag() &amp; ARG_FLAG_RETURN_VAR_NAME != 0:
+            context.set_no_var_mode(0)
+
+        return result
+
+    def configuration_list2dict(self, list_of_properties):
+        prop_dict = {}
+
+        for prop in list_of_properties:
+            prop_key = list(prop.rules_dict.keys())[0]
+            prop_dict[prop_key] = prop[prop_key]
+
+        return prop_dict
 
     def run(self, **arguments):
         raise Exception(&#34;eval function should be defined&#34;)
@@ -69,6 +140,13 @@ class Module(Atoms):
 
     def get_arguments(self):
         raise Exception(&#34;get_arguments function should be defined&#34;)
+
+    def run_test(self, test):
+        raise Exception(
+            &#34;Run test function is undefined on `{}`&#34;.format(
+                self.__class__.__name__
+            )
+        )
 
     def __repr__(self, arguments=None):
         return self.__class__.__name__</code></pre>
@@ -95,22 +173,85 @@ class Module(Atoms):
 </summary>
 <pre><code class="python">class Module(Atoms):
 
-    def eval(self, arguments):
+    def eval(self, arguments, context):
+        fargs = self.parse_arguments(arguments, context)
+        return self.run(*fargs)
+
+    def parse_arguments(self, arguments, context):
         fargs = []
+        argssize = len(arguments)
         module_args = self.get_arguments()
-        eval = self.get_kernel().get_kext(&#39;eval&#39;)
 
         for i in range(0, len(module_args)):
             module_arg = module_args[i]
 
-            if module_arg.get_flag() &amp; ARG_FLAG_ALL_NEXT != 0:
-                fargs = fargs + \
-                    list(map(eval.evaluate_parser_output, arguments[i:]))
+            if module_arg.get_flag() == ARG_FLAG_SPECIAL_CONTEXT:
+                fargs.append(context)
+                continue
+
+            if module_arg.get_flag() &amp; ARG_FLAG_OPTIONAL != 0 and \
+                    i &gt;= argssize:
                 break
 
-            fargs.append(eval.evaluate_parser_output(arguments[i]))
+            if module_arg.get_flag() &amp; ARG_FLAG_ALL_NEXT != 0:
+                return fargs + list(map(lambda arg: self.parse_argument(
+                    module_arg, arg, context), arguments[i:]
+                ))
 
-        return self.run(*fargs)
+            if i &gt;= argssize:
+                raise Exception(
+                    &#34;Expected but {} arguments but {} given&#34;.format(
+                        len(module_args), argssize
+                    ))
+            user_arg = arguments[i]
+
+            farg = self.parse_argument(module_arg, user_arg, context)
+            if farg is not None:
+                fargs.append(farg)
+
+        return fargs
+
+    def parse_argument(self, module_arg, user_arg, context):
+        eval = self.get_kernel().get_kext(&#39;eval&#39;)
+
+        if module_arg.get_flag() &amp; ARG_FLAG_RETURN_VAR_NAME != 0:
+            context.set_no_var_mode(1)
+
+        if module_arg.get_flag() &amp; ARG_FLAG_NO_AUTO_EVAL == 0:
+            if isinstance(user_arg, list):
+                def eval_fn(args, context):
+                    return list(map(lambda arg: eval.evaluate_node(
+                        arg, context
+                    ), args))[-1]
+            else:
+                eval_fn = eval.evaluate_node
+        else:
+            if isinstance(user_arg, list):
+                def eval_fn(args, context):
+                    return lambda ctx=context: list(map(lambda arg: eval.evaluate_node(
+                        arg, ctx
+                    ), args))[-1]
+            else:
+                def eval_fn(args, context):
+                    return lambda ctx=context: eval.evaluate_node(
+                        args, ctx
+                    )
+
+        result = eval_fn(user_arg, context)
+
+        if module_arg.get_flag() &amp; ARG_FLAG_RETURN_VAR_NAME != 0:
+            context.set_no_var_mode(0)
+
+        return result
+
+    def configuration_list2dict(self, list_of_properties):
+        prop_dict = {}
+
+        for prop in list_of_properties:
+            prop_key = list(prop.rules_dict.keys())[0]
+            prop_dict[prop_key] = prop[prop_key]
+
+        return prop_dict
 
     def run(self, **arguments):
         raise Exception(&#34;eval function should be defined&#34;)
@@ -121,6 +262,13 @@ class Module(Atoms):
     def get_arguments(self):
         raise Exception(&#34;get_arguments function should be defined&#34;)
 
+    def run_test(self, test):
+        raise Exception(
+            &#34;Run test function is undefined on `{}`&#34;.format(
+                self.__class__.__name__
+            )
+        )
+
     def __repr__(self, arguments=None):
         return self.__class__.__name__</code></pre>
 </details>
@@ -130,19 +278,54 @@ class Module(Atoms):
 </ul>
 <h3>Subclasses</h3>
 <ul class="hlist">
+<li><a title="tsteno.builtin.arrays.list.List" href="../builtin/arrays/list.html#tsteno.builtin.arrays.list.List">List</a></li>
+<li><a title="tsteno.builtin.comparators.equal.Equal" href="../builtin/comparators/equal.html#tsteno.builtin.comparators.equal.Equal">Equal</a></li>
+<li><a title="tsteno.builtin.comparators.greater_equal.GreaterEqual" href="../builtin/comparators/greater_equal.html#tsteno.builtin.comparators.greater_equal.GreaterEqual">GreaterEqual</a></li>
+<li><a title="tsteno.builtin.comparators.greater_than.GreaterThan" href="../builtin/comparators/greater_than.html#tsteno.builtin.comparators.greater_than.GreaterThan">GreaterThan</a></li>
+<li><a title="tsteno.builtin.comparators.less_equal.LessEqual" href="../builtin/comparators/less_equal.html#tsteno.builtin.comparators.less_equal.LessEqual">LessEqual</a></li>
+<li><a title="tsteno.builtin.comparators.less_than.LessThan" href="../builtin/comparators/less_than.html#tsteno.builtin.comparators.less_than.LessThan">LessThan</a></li>
+<li><a title="tsteno.builtin.comparators.not_equal.NotEqual" href="../builtin/comparators/not_equal.html#tsteno.builtin.comparators.not_equal.NotEqual">NotEqual</a></li>
+<li><a title="tsteno.builtin.logical.for.For" href="../builtin/logical/for.html#tsteno.builtin.logical.for.For">For</a></li>
+<li><a title="tsteno.builtin.logical.if.If" href="../builtin/logical/if.html#tsteno.builtin.logical.if.If">If</a></li>
+<li><a title="tsteno.builtin.logical.while.While" href="../builtin/logical/while.html#tsteno.builtin.logical.while.While">While</a></li>
+<li><a title="tsteno.builtin.math.algebra.expand.Expand" href="../builtin/math/algebra/expand.html#tsteno.builtin.math.algebra.expand.Expand">Expand</a></li>
+<li><a title="tsteno.builtin.math.algebra.n_solve.NSolve" href="../builtin/math/algebra/n_solve.html#tsteno.builtin.math.algebra.n_solve.NSolve">NSolve</a></li>
+<li><a title="tsteno.builtin.math.algebra.simplify.Simplify" href="../builtin/math/algebra/simplify.html#tsteno.builtin.math.algebra.simplify.Simplify">Simplify</a></li>
+<li><a title="tsteno.builtin.math.algebra.solve.Solve" href="../builtin/math/algebra/solve.html#tsteno.builtin.math.algebra.solve.Solve">Solve</a></li>
+<li><a title="tsteno.builtin.math.basic.change_sign.ChangeSign" href="../builtin/math/basic/change_sign.html#tsteno.builtin.math.basic.change_sign.ChangeSign">ChangeSign</a></li>
 <li><a title="tsteno.builtin.math.basic.div.Div" href="../builtin/math/basic/div.html#tsteno.builtin.math.basic.div.Div">Div</a></li>
+<li><a title="tsteno.builtin.math.basic.increment.Increment" href="../builtin/math/basic/increment.html#tsteno.builtin.math.basic.increment.Increment">Increment</a></li>
 <li><a title="tsteno.builtin.math.basic.minus.Minus" href="../builtin/math/basic/minus.html#tsteno.builtin.math.basic.minus.Minus">Minus</a></li>
 <li><a title="tsteno.builtin.math.basic.plus.Plus" href="../builtin/math/basic/plus.html#tsteno.builtin.math.basic.plus.Plus">Plus</a></li>
 <li><a title="tsteno.builtin.math.basic.pow.Pow" href="../builtin/math/basic/pow.html#tsteno.builtin.math.basic.pow.Pow">Pow</a></li>
+<li><a title="tsteno.builtin.math.basic.pre_increment.PreIncrement" href="../builtin/math/basic/pre_increment.html#tsteno.builtin.math.basic.pre_increment.PreIncrement">PreIncrement</a></li>
 <li><a title="tsteno.builtin.math.basic.product.Product" href="../builtin/math/basic/product.html#tsteno.builtin.math.basic.product.Product">Product</a></li>
+<li><a title="tsteno.builtin.math.calculus.d.D" href="../builtin/math/calculus/d.html#tsteno.builtin.math.calculus.d.D">D</a></li>
+<li><a title="tsteno.builtin.math.calculus.elementals.cos.Cos" href="../builtin/math/calculus/elementals/cos.html#tsteno.builtin.math.calculus.elementals.cos.Cos">Cos</a></li>
+<li><a title="tsteno.builtin.math.calculus.elementals.exp.Exp" href="../builtin/math/calculus/elementals/exp.html#tsteno.builtin.math.calculus.elementals.exp.Exp">Exp</a></li>
+<li><a title="tsteno.builtin.math.calculus.elementals.log.Log" href="../builtin/math/calculus/elementals/log.html#tsteno.builtin.math.calculus.elementals.log.Log">Log</a></li>
+<li><a title="tsteno.builtin.math.calculus.elementals.sin.Sin" href="../builtin/math/calculus/elementals/sin.html#tsteno.builtin.math.calculus.elementals.sin.Sin">Sin</a></li>
+<li><a title="tsteno.builtin.math.calculus.elementals.sqrt.Sqrt" href="../builtin/math/calculus/elementals/sqrt.html#tsteno.builtin.math.calculus.elementals.sqrt.Sqrt">Sqrt</a></li>
 <li><a title="tsteno.builtin.math.calculus.integrate.Integrate" href="../builtin/math/calculus/integrate.html#tsteno.builtin.math.calculus.integrate.Integrate">Integrate</a></li>
+<li><a title="tsteno.builtin.math.calculus.n_integrate.NIntegrate" href="../builtin/math/calculus/n_integrate.html#tsteno.builtin.math.calculus.n_integrate.NIntegrate">NIntegrate</a></li>
+<li><a title="tsteno.builtin.mathematica.box_data.BoxData" href="../builtin/mathematica/box_data.html#tsteno.builtin.mathematica.box_data.BoxData">BoxData</a></li>
+<li><a title="tsteno.builtin.mathematica.cell.Cell" href="../builtin/mathematica/cell.html#tsteno.builtin.mathematica.cell.Cell">Cell</a></li>
+<li><a title="tsteno.builtin.mathematica.cell_group_data.CellGroupData" href="../builtin/mathematica/cell_group_data.html#tsteno.builtin.mathematica.cell_group_data.CellGroupData">CellGroupData</a></li>
+<li><a title="tsteno.builtin.mathematica.notebook.Notebook" href="../builtin/mathematica/notebook.html#tsteno.builtin.mathematica.notebook.Notebook">Notebook</a></li>
+<li><a title="tsteno.builtin.mathematica.row_box.RowBox" href="../builtin/mathematica/row_box.html#tsteno.builtin.mathematica.row_box.RowBox">RowBox</a></li>
+<li><a title="tsteno.builtin.misc.custom_module.CustomModule" href="../builtin/misc/custom_module.html#tsteno.builtin.misc.custom_module.CustomModule">CustomModule</a></li>
+<li><a title="tsteno.builtin.misc.custom_module.UserDefinedModule" href="../builtin/misc/custom_module.html#tsteno.builtin.misc.custom_module.UserDefinedModule">UserDefinedModule</a></li>
 <li><a title="tsteno.builtin.misc.print.Print" href="../builtin/misc/print.html#tsteno.builtin.misc.print.Print">Print</a></li>
+<li><a title="tsteno.builtin.misc.range.Range" href="../builtin/misc/range.html#tsteno.builtin.misc.range.Range">Range</a></li>
+<li><a title="tsteno.builtin.misc.return.Return" href="../builtin/misc/return.html#tsteno.builtin.misc.return.Return">Return</a></li>
+<li><a title="tsteno.builtin.misc.rule.Rule" href="../builtin/misc/rule.html#tsteno.builtin.misc.rule.Rule">Rule</a></li>
+<li><a title="tsteno.builtin.misc.set.Set" href="../builtin/misc/set.html#tsteno.builtin.misc.set.Set">Set</a></li>
 <li><a title="tsteno.builtin.misc.unknown.Unknown" href="../builtin/misc/unknown.html#tsteno.builtin.misc.unknown.Unknown">Unknown</a></li>
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="tsteno.atoms.module.Module.eval"><code class="name flex">
-<span>def <span class="ident">eval</span></span>(<span>self, arguments)</span>
+<dt id="tsteno.atoms.module.Module.configuration_list2dict"><code class="name flex">
+<span>def <span class="ident">configuration_list2dict</span></span>(<span>self, list_of_properties)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -150,21 +333,27 @@ class Module(Atoms):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def eval(self, arguments):
-    fargs = []
-    module_args = self.get_arguments()
-    eval = self.get_kernel().get_kext(&#39;eval&#39;)
+<pre><code class="python">def configuration_list2dict(self, list_of_properties):
+    prop_dict = {}
 
-    for i in range(0, len(module_args)):
-        module_arg = module_args[i]
+    for prop in list_of_properties:
+        prop_key = list(prop.rules_dict.keys())[0]
+        prop_dict[prop_key] = prop[prop_key]
 
-        if module_arg.get_flag() &amp; ARG_FLAG_ALL_NEXT != 0:
-            fargs = fargs + \
-                list(map(eval.evaluate_parser_output, arguments[i:]))
-            break
-
-        fargs.append(eval.evaluate_parser_output(arguments[i]))
-
+    return prop_dict</code></pre>
+</details>
+</dd>
+<dt id="tsteno.atoms.module.Module.eval"><code class="name flex">
+<span>def <span class="ident">eval</span></span>(<span>self, arguments, context)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def eval(self, arguments, context):
+    fargs = self.parse_arguments(arguments, context)
     return self.run(*fargs)</code></pre>
 </details>
 </dd>
@@ -179,6 +368,93 @@ class Module(Atoms):
 </summary>
 <pre><code class="python">def get_arguments(self):
     raise Exception(&#34;get_arguments function should be defined&#34;)</code></pre>
+</details>
+</dd>
+<dt id="tsteno.atoms.module.Module.parse_argument"><code class="name flex">
+<span>def <span class="ident">parse_argument</span></span>(<span>self, module_arg, user_arg, context)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parse_argument(self, module_arg, user_arg, context):
+    eval = self.get_kernel().get_kext(&#39;eval&#39;)
+
+    if module_arg.get_flag() &amp; ARG_FLAG_RETURN_VAR_NAME != 0:
+        context.set_no_var_mode(1)
+
+    if module_arg.get_flag() &amp; ARG_FLAG_NO_AUTO_EVAL == 0:
+        if isinstance(user_arg, list):
+            def eval_fn(args, context):
+                return list(map(lambda arg: eval.evaluate_node(
+                    arg, context
+                ), args))[-1]
+        else:
+            eval_fn = eval.evaluate_node
+    else:
+        if isinstance(user_arg, list):
+            def eval_fn(args, context):
+                return lambda ctx=context: list(map(lambda arg: eval.evaluate_node(
+                    arg, ctx
+                ), args))[-1]
+        else:
+            def eval_fn(args, context):
+                return lambda ctx=context: eval.evaluate_node(
+                    args, ctx
+                )
+
+    result = eval_fn(user_arg, context)
+
+    if module_arg.get_flag() &amp; ARG_FLAG_RETURN_VAR_NAME != 0:
+        context.set_no_var_mode(0)
+
+    return result</code></pre>
+</details>
+</dd>
+<dt id="tsteno.atoms.module.Module.parse_arguments"><code class="name flex">
+<span>def <span class="ident">parse_arguments</span></span>(<span>self, arguments, context)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parse_arguments(self, arguments, context):
+    fargs = []
+    argssize = len(arguments)
+    module_args = self.get_arguments()
+
+    for i in range(0, len(module_args)):
+        module_arg = module_args[i]
+
+        if module_arg.get_flag() == ARG_FLAG_SPECIAL_CONTEXT:
+            fargs.append(context)
+            continue
+
+        if module_arg.get_flag() &amp; ARG_FLAG_OPTIONAL != 0 and \
+                i &gt;= argssize:
+            break
+
+        if module_arg.get_flag() &amp; ARG_FLAG_ALL_NEXT != 0:
+            return fargs + list(map(lambda arg: self.parse_argument(
+                module_arg, arg, context), arguments[i:]
+            ))
+
+        if i &gt;= argssize:
+            raise Exception(
+                &#34;Expected but {} arguments but {} given&#34;.format(
+                    len(module_args), argssize
+                ))
+        user_arg = arguments[i]
+
+        farg = self.parse_argument(module_arg, user_arg, context)
+        if farg is not None:
+            fargs.append(farg)
+
+    return fargs</code></pre>
 </details>
 </dd>
 <dt id="tsteno.atoms.module.Module.run"><code class="name flex">
@@ -207,6 +483,23 @@ class Module(Atoms):
     return self.run(arguments)</code></pre>
 </details>
 </dd>
+<dt id="tsteno.atoms.module.Module.run_test"><code class="name flex">
+<span>def <span class="ident">run_test</span></span>(<span>self, test)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run_test(self, test):
+    raise Exception(
+        &#34;Run test function is undefined on `{}`&#34;.format(
+            self.__class__.__name__
+        )
+    )</code></pre>
+</details>
+</dd>
 </dl>
 </dd>
 <dt id="tsteno.atoms.module.ModuleArg"><code class="flex name class">
@@ -226,7 +519,10 @@ class Module(Atoms):
         self.__flag = flag
 
     def get_flag(self):
-        return self.__flag</code></pre>
+        return self.__flag
+
+    def __repr__(self):
+        return &#39;ModuleArg: {}&#39;.format(self.__flag)</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
@@ -264,10 +560,14 @@ class Module(Atoms):
 <li>
 <h4><code><a title="tsteno.atoms.module.Module" href="#tsteno.atoms.module.Module">Module</a></code></h4>
 <ul class="">
+<li><code><a title="tsteno.atoms.module.Module.configuration_list2dict" href="#tsteno.atoms.module.Module.configuration_list2dict">configuration_list2dict</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.eval" href="#tsteno.atoms.module.Module.eval">eval</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.get_arguments" href="#tsteno.atoms.module.Module.get_arguments">get_arguments</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.parse_argument" href="#tsteno.atoms.module.Module.parse_argument">parse_argument</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.parse_arguments" href="#tsteno.atoms.module.Module.parse_arguments">parse_arguments</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.run" href="#tsteno.atoms.module.Module.run">run</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.run_parallel" href="#tsteno.atoms.module.Module.run_parallel">run_parallel</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.run_test" href="#tsteno.atoms.module.Module.run_test">run_test</a></code></li>
 </ul>
 </li>
 <li>
@@ -282,7 +582,7 @@ class Module(Atoms):
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.3</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.4</a>.</p>
 </footer>
 </body>
 </html>

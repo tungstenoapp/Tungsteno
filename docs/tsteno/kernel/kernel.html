@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-<meta name="generator" content="pdoc 0.8.3" />
+<meta name="generator" content="pdoc 0.8.4" />
 <title>tsteno.kernel.kernel API documentation</title>
 <meta name="description" content="Kernel represent basic evaluation environment" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
@@ -32,6 +32,7 @@ import uuid
 import datetime
 from .kexts.log import Log, LogLevel
 from .kexts.evaluation import Evaluation
+from .kexts.output import Output
 
 KERNEL_DEFAULT_OPTIONS = {
     &#39;kext_extensions&#39;: {
@@ -39,7 +40,7 @@ KERNEL_DEFAULT_OPTIONS = {
             &#39;precission&#39;: 10,
         },
         &#39;log&#39;: {
-            &#39;log_level&#39;: LogLevel.DEBUG
+            &#39;log_level&#39;: LogLevel.NORMAL
         }
     }
 }
@@ -51,12 +52,17 @@ class Kernel:
         &#39;kext_definitions&#39;, &#39;__kext_initialized&#39;
     ]
 
-    def __init__(self, parent=None, options=KERNEL_DEFAULT_OPTIONS):
-        self.options = options
+    def __init__(self, parent=None, options={}):
+        if parent is None:
+            self.options = self.__calculate_options(
+                KERNEL_DEFAULT_OPTIONS, options
+            )
+        else:
+            self.options = options
 
         self.kid = uuid.uuid4()
         if parent is None:
-            self.kid = f&#39;r00t-{self.kid}&#39;
+            self.kid = &#39;r00t-{}&#39;.format(self.kid)
 
         &#34;&#34;&#34; Represent kernel ID &#34;&#34;&#34;
 
@@ -73,18 +79,29 @@ class Kernel:
         self.__bootstrap()
         self.__kext_initialized = True
 
+    def __calculate_options(self, default, differences):
+        options = default
+        for key, value in differences.items():
+            if isinstance(value, dict):
+                options[key] = self.__calculate_options(default[key], value)
+            else:
+                options[key] = value
+
+        return options
+
     def __bootstrap(self):
         log_kext = Log(self)
         log_kext.write(
-            f&#39;Initializing new tungsteno kernel ({self.kid})&#39;,
+            &#39;Initializing new tungsteno kernel ({})&#39;.format(self.kid),
             LogLevel.DEBUG
         )
 
         self.register_kext(&#39;log&#39;, Log, log_kext=log_kext)
         self.register_kext(&#39;eval&#39;, Evaluation)
+        self.register_kext(&#39;output&#39;, Output)
 
         log_kext.write(
-            f&#39;Kernel ({self.kid}) loaded succesfully!&#39;,
+            &#39;Kernel ({}) loaded succesfully!&#39;.format(self.kid),
             LogLevel.DEBUG
         )
 
@@ -94,7 +111,7 @@ class Kernel:
     def get_kext(self, kext_name):
         if kext_name in self.kext_definitions:
             return self.kext_definitions[kext_name]
-        raise Exception(f&#34;Kext extension `{kext_name}` doesn&#39;t exists&#34;)
+        raise Exception(&#34;Kext extension `{}` doesn&#39;t exists&#34;.format(kext_name))
 
     def register_kext(self, kext_name, kext_definition, log_kext=None):
         if self.__kext_initialized:
@@ -103,10 +120,11 @@ class Kernel:
         if log_kext is None:
             log_kext = self.get_kext(&#39;log&#39;)
 
-        log_kext.write(f&#39;Kext `{kext_name}` loading...&#39;, LogLevel.DEBUG)
+        log_kext.write(&#39;Kext `{}` loading...&#39;.format(
+            kext_name), LogLevel.DEBUG)
         self.kext_definitions[kext_name] = kext_definition(self)
         log_kext.write(
-            f&#39;Kext `{kext_name}` loaded succesfully!&#39;,
+            &#39;Kext `{}` loaded succesfully!&#39;.format(kext_name),
             LogLevel.DEBUG
         )
 
@@ -114,7 +132,8 @@ class Kernel:
         value = self.options
         for arg in args:
             if arg not in value:
-                raise Exception(&#34;Option doesn&#39;t exists&#34;)
+                raise Exception(
+                    &#34;Option {} doesn&#39;t exists on {}&#34;.format(arg, value))
             value = value[arg]
         return value
 
@@ -122,8 +141,9 @@ class Kernel:
         return self.kid
 
     def __repr__(self):
-        return f&#39;KID: {self.kid}, started at {self.start_dt} kext defs: &#39; +\
-            &#39;, &#39;.join(self.kext_definitions)</code></pre>
+        return &#39;KID: {}, started at {} kext defs: &#39;.format(
+            self.kid, self.start_dt
+        ) + &#39;, &#39;.join(self.kext_definitions)</code></pre>
 </details>
 </section>
 <section>
@@ -137,7 +157,7 @@ class Kernel:
 <dl>
 <dt id="tsteno.kernel.kernel.Kernel"><code class="flex name class">
 <span>class <span class="ident">Kernel</span></span>
-<span>(</span><span>parent=None, options={&#x27;kext_extensions&#x27;: {&#x27;numerical&#x27;: {&#x27;precission&#x27;: 10}, &#x27;log&#x27;: {&#x27;log_level&#x27;: &lt;LogLevel.DEBUG: 5&gt;}}})</span>
+<span>(</span><span>parent=None, options={})</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -151,12 +171,17 @@ class Kernel:
         &#39;kext_definitions&#39;, &#39;__kext_initialized&#39;
     ]
 
-    def __init__(self, parent=None, options=KERNEL_DEFAULT_OPTIONS):
-        self.options = options
+    def __init__(self, parent=None, options={}):
+        if parent is None:
+            self.options = self.__calculate_options(
+                KERNEL_DEFAULT_OPTIONS, options
+            )
+        else:
+            self.options = options
 
         self.kid = uuid.uuid4()
         if parent is None:
-            self.kid = f&#39;r00t-{self.kid}&#39;
+            self.kid = &#39;r00t-{}&#39;.format(self.kid)
 
         &#34;&#34;&#34; Represent kernel ID &#34;&#34;&#34;
 
@@ -173,18 +198,29 @@ class Kernel:
         self.__bootstrap()
         self.__kext_initialized = True
 
+    def __calculate_options(self, default, differences):
+        options = default
+        for key, value in differences.items():
+            if isinstance(value, dict):
+                options[key] = self.__calculate_options(default[key], value)
+            else:
+                options[key] = value
+
+        return options
+
     def __bootstrap(self):
         log_kext = Log(self)
         log_kext.write(
-            f&#39;Initializing new tungsteno kernel ({self.kid})&#39;,
+            &#39;Initializing new tungsteno kernel ({})&#39;.format(self.kid),
             LogLevel.DEBUG
         )
 
         self.register_kext(&#39;log&#39;, Log, log_kext=log_kext)
         self.register_kext(&#39;eval&#39;, Evaluation)
+        self.register_kext(&#39;output&#39;, Output)
 
         log_kext.write(
-            f&#39;Kernel ({self.kid}) loaded succesfully!&#39;,
+            &#39;Kernel ({}) loaded succesfully!&#39;.format(self.kid),
             LogLevel.DEBUG
         )
 
@@ -194,7 +230,7 @@ class Kernel:
     def get_kext(self, kext_name):
         if kext_name in self.kext_definitions:
             return self.kext_definitions[kext_name]
-        raise Exception(f&#34;Kext extension `{kext_name}` doesn&#39;t exists&#34;)
+        raise Exception(&#34;Kext extension `{}` doesn&#39;t exists&#34;.format(kext_name))
 
     def register_kext(self, kext_name, kext_definition, log_kext=None):
         if self.__kext_initialized:
@@ -203,10 +239,11 @@ class Kernel:
         if log_kext is None:
             log_kext = self.get_kext(&#39;log&#39;)
 
-        log_kext.write(f&#39;Kext `{kext_name}` loading...&#39;, LogLevel.DEBUG)
+        log_kext.write(&#39;Kext `{}` loading...&#39;.format(
+            kext_name), LogLevel.DEBUG)
         self.kext_definitions[kext_name] = kext_definition(self)
         log_kext.write(
-            f&#39;Kext `{kext_name}` loaded succesfully!&#39;,
+            &#39;Kext `{}` loaded succesfully!&#39;.format(kext_name),
             LogLevel.DEBUG
         )
 
@@ -214,7 +251,8 @@ class Kernel:
         value = self.options
         for arg in args:
             if arg not in value:
-                raise Exception(&#34;Option doesn&#39;t exists&#34;)
+                raise Exception(
+                    &#34;Option {} doesn&#39;t exists on {}&#34;.format(arg, value))
             value = value[arg]
         return value
 
@@ -222,8 +260,9 @@ class Kernel:
         return self.kid
 
     def __repr__(self):
-        return f&#39;KID: {self.kid}, started at {self.start_dt} kext defs: &#39; +\
-            &#39;, &#39;.join(self.kext_definitions)</code></pre>
+        return &#39;KID: {}, started at {} kext defs: &#39;.format(
+            self.kid, self.start_dt
+        ) + &#39;, &#39;.join(self.kext_definitions)</code></pre>
 </details>
 <h3>Instance variables</h3>
 <dl>
@@ -275,7 +314,7 @@ class Kernel:
 <pre><code class="python">def get_kext(self, kext_name):
     if kext_name in self.kext_definitions:
         return self.kext_definitions[kext_name]
-    raise Exception(f&#34;Kext extension `{kext_name}` doesn&#39;t exists&#34;)</code></pre>
+    raise Exception(&#34;Kext extension `{}` doesn&#39;t exists&#34;.format(kext_name))</code></pre>
 </details>
 </dd>
 <dt id="tsteno.kernel.kernel.Kernel.get_kid"><code class="name flex">
@@ -304,7 +343,8 @@ class Kernel:
     value = self.options
     for arg in args:
         if arg not in value:
-            raise Exception(&#34;Option doesn&#39;t exists&#34;)
+            raise Exception(
+                &#34;Option {} doesn&#39;t exists on {}&#34;.format(arg, value))
         value = value[arg]
     return value</code></pre>
 </details>
@@ -325,10 +365,11 @@ class Kernel:
     if log_kext is None:
         log_kext = self.get_kext(&#39;log&#39;)
 
-    log_kext.write(f&#39;Kext `{kext_name}` loading...&#39;, LogLevel.DEBUG)
+    log_kext.write(&#39;Kext `{}` loading...&#39;.format(
+        kext_name), LogLevel.DEBUG)
     self.kext_definitions[kext_name] = kext_definition(self)
     log_kext.write(
-        f&#39;Kext `{kext_name}` loaded succesfully!&#39;,
+        &#39;Kext `{}` loaded succesfully!&#39;.format(kext_name),
         LogLevel.DEBUG
     )</code></pre>
 </details>
@@ -372,7 +413,7 @@ class Kernel:
 </nav>
 </main>
 <footer id="footer">
-<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.3</a>.</p>
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.8.4</a>.</p>
 </footer>
 </body>
 </html>
