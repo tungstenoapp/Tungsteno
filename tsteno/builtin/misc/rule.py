@@ -1,4 +1,4 @@
-from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_ALL_NEXT
+from tsteno.atoms.module import Module, ModuleArg
 from tsteno.atoms.rule import RuleSet
 
 

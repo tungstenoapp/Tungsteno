@@ -1,7 +1,5 @@
-from functools import reduce
 import sympy as sp
 from tsteno.atoms.module import ModuleArg, Module
-from tsteno.atoms.module import ARG_FLAG_OPTIONAL, ARG_FLAG_ALL_NEXT
 
 
 class Expand(Module):

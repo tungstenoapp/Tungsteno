@@ -30,7 +30,7 @@ class UserDefinedModule(Module):
         return execution_result
 
     def get_arguments(self):
-        return [ModuleArg()]*self.argsize
+        return [ModuleArg()] * self.argsize
 
 
 class CustomModule(Module):

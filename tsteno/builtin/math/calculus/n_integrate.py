@@ -1,6 +1,6 @@
-from sympy import integrate, parse_expr
 from tsteno.atoms.module import ModuleArg, Module
 from tsteno.atoms.module import ARG_FLAG_OPTIONAL, ARG_FLAG_ALL_NEXT
+from sympy import integrate
 
 
 class NIntegrate(Module):

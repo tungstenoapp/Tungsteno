@@ -1,6 +1,5 @@
 from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_SPECIAL_CONTEXT
 from tsteno.atoms.module import ARG_FLAG_RETURN_VAR_NAME
-from tsteno.builtin.misc.custom_module import UserDefinedModule
 
 
 class Set(Module):

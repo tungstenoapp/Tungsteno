@@ -1,5 +1,5 @@
 from tsteno.notebook.row_box import RowBox as RowBoxObj
-from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_ALL_NEXT
+from tsteno.atoms.module import Module, ModuleArg
 
 
 class RowBox(Module):

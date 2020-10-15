@@ -1,5 +1,5 @@
 from tsteno.notebook.cell import CellGroupData as CellGroupDataObj
-from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_ALL_NEXT, ARG_FLAG_OPTIONAL
+from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_OPTIONAL
 
 
 class CellGroupData(Module):

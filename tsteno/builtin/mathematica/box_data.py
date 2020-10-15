@@ -1,5 +1,5 @@
 from tsteno.notebook.box_data import BoxData as BoxDataObj
-from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_ALL_NEXT
+from tsteno.atoms.module import Module, ModuleArg
 
 
 class BoxData(Module):

@@ -1,6 +1,4 @@
-import numbers
 from .atoms import Atoms
-from tsteno.language.ast import Node
 
 ARG_FLAG_OPTIONAL = 1 << 1
 ARG_FLAG_ALL_NEXT = 1 << 2
@@ -79,9 +77,8 @@ class Module(Atoms):
         else:
             if isinstance(user_arg, list):
                 def eval_fn(args, context):
-                    return lambda ctx=context: list(map(lambda arg: eval.evaluate_node(
-                        arg, ctx
-                    ), args))[-1]
+                    return lambda ctx=context: list(
+                        map(lambda arg: eval.evaluate_node(arg, ctx), args))[-1]
             else:
                 def eval_fn(args, context):
                     return lambda ctx=context: eval.evaluate_node(

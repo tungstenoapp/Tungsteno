@@ -36,7 +36,7 @@ def tsteno_eval(code):
     except Exception as err:
         print(traceback.format_exc())
         print(err)
-        return {'processor': 'error',  'error': str(err)}
+        return {'processor': 'error', 'error': str(err)}
 
     if isinstance(eval_result, sympy.Expr):
         return {
@@ -76,7 +76,7 @@ def suggestions(input):
         if definition.startswith(input) and definition_len - input_len > 0:
             options.append({
                 'caption': definition,
-                'append': definition[input_len+1:],
+                'append': definition[input_len + 1:],
                 'distance': definition_len - input_len
             })
 

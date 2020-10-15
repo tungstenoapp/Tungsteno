@@ -171,7 +171,7 @@ class TokenError(Exception):
         lines = code.split("\n")
 
         extra_information = "\n{}\n{}".format(
-            lines[0], (' '*(col)) + '^'
+            lines[0], (' ' * (col)) + '^'
         )
 
         character = code[pos] if pos < max_len else 'EOF'
@@ -193,9 +193,9 @@ class Tokenizer:
         ]
 
     def skip_comments(self, pos, max_len, code):
-        if pos+1 < max_len and code[pos] == '(' and code[pos+1] == '*':
+        if pos + 1 < max_len and code[pos] == '(' and code[pos + 1] == '*':
             while pos + 1 < max_len:
-                if code[pos] == '*' and code[pos+1] == ')':
+                if code[pos] == '*' and code[pos + 1] == ')':
                     pos = pos + 2
                     break
                 pos = pos + 1

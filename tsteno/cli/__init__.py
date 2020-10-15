@@ -12,7 +12,8 @@ from tsteno.notebook import Notebook
 
 
 @click.command()
-@click.option('--debug', '-d', is_flag=True, help='Initialize tsteno kernel in debug mode')
+@click.option('--debug', '-d', is_flag=True,
+              help='Initialize tsteno kernel in debug mode')
 @click.option('--gui', '-g', is_flag=True, help='GUI mode (BETA)')
 @click.option('--input', '-i', 'input_', help="*.nb file for input")
 def main(debug, gui, input_):

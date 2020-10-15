@@ -107,26 +107,26 @@ class ParensParser(BaseParser):
 OpInfo = namedtuple('OpInfo', 'prec assoc function')
 
 BIN_OPINFO_MAP = {
-    '/.':   OpInfo(-1, 'LEFT', 'ReplaceAll'),
+    '/.': OpInfo(-1, 'LEFT', 'ReplaceAll'),
 
-    '->':   OpInfo(0, 'LEFT', 'Rule'),
-    '=':    OpInfo(0, 'LEFT', 'Set'),
-    ':=':    OpInfo(0, 'LEFT', 'Set'),
-    '<':    OpInfo(0, 'LEFT', 'LessThan'),
-    '<=':   OpInfo(0, 'LEFT', 'LessEqual'),
-    '>':    OpInfo(0, 'LEFT', 'GreaterThan'),
-    '>=':   OpInfo(0, 'LEFT', 'GreaterEqual'),
-    '==':   OpInfo(0, 'LEFT', 'Equal'),
-    '!=':   OpInfo(0, 'LEFT', 'NotEqual'),
-    '*^':   OpInfo(0, 'LEFT', 'ScientificForm'),
+    '->': OpInfo(0, 'LEFT', 'Rule'),
+    '=': OpInfo(0, 'LEFT', 'Set'),
+    ':=': OpInfo(0, 'LEFT', 'Set'),
+    '<': OpInfo(0, 'LEFT', 'LessThan'),
+    '<=': OpInfo(0, 'LEFT', 'LessEqual'),
+    '>': OpInfo(0, 'LEFT', 'GreaterThan'),
+    '>=': OpInfo(0, 'LEFT', 'GreaterEqual'),
+    '==': OpInfo(0, 'LEFT', 'Equal'),
+    '!=': OpInfo(0, 'LEFT', 'NotEqual'),
+    '*^': OpInfo(0, 'LEFT', 'ScientificForm'),
 
-    '+':    OpInfo(1, 'LEFT', 'Plus'),
-    '-':    OpInfo(1, 'LEFT', 'Minus'),
+    '+': OpInfo(1, 'LEFT', 'Plus'),
+    '-': OpInfo(1, 'LEFT', 'Minus'),
 
-    '*':    OpInfo(2, 'LEFT', 'Product'),
-    '/':    OpInfo(2, 'LEFT', 'Div'),
+    '*': OpInfo(2, 'LEFT', 'Product'),
+    '/': OpInfo(2, 'LEFT', 'Div'),
 
-    '^':    OpInfo(3, 'RIGHT', 'Pow'),
+    '^': OpInfo(3, 'RIGHT', 'Pow'),
 }
 
 UNARY_OPINFO_MAP = {

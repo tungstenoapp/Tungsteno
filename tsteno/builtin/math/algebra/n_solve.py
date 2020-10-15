@@ -1,8 +1,6 @@
 import operator
 from sympy import nsolve, Symbol
 from tsteno.atoms.module import ModuleArg, Module
-from random import randint
-from sympy.plotting import plot
 
 
 class NSolve(Module):
@@ -25,7 +23,7 @@ class NSolve(Module):
         return nsolve(
             fmt_expr,
             variables,
-            [0]*len(variables),
+            [0] * len(variables),
             dict=True,
         )
 
