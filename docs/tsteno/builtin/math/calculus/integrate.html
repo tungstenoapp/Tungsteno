@@ -50,13 +50,14 @@ class Integrate(Module):
             &#39;Integrate[x, x]&#39;), parse_expr(&#39;x**2/2&#39;))
 
         test.assertEqual(evaluation.evaluate_code(
-            &#39;Integrate[x, {x, 0, 1}]&#39;), 1/2)
+            &#39;Integrate[x, {x, 0, 1}]&#39;), 1 / 2)
 
         test.assertEqual(evaluation.evaluate_code(
-            &#39;Integrate[x * y, {x, 0, 1}, {y, 0, 1}]&#39;), 1/4)
+            &#39;Integrate[x * y, {x, 0, 1}, {y, 0, 1}]&#39;), 1 / 4)
 
-        test.assertEqual(evaluation.evaluate_code(
-            &#39;Integrate[1/(x^3 + 1), {x, 0, 1}]&#39;), parse_expr(&#39;log(2)/3 + sqrt(3)*pi/9&#39;))</code></pre>
+        test.assertEqual(
+            evaluation.evaluate_code(&#39;Integrate[1/(x^3 + 1), {x, 0, 1}]&#39;),
+            parse_expr(&#39;log(2)/3 + sqrt(3)*pi/9&#39;))</code></pre>
 </details>
 </section>
 <section>
@@ -97,13 +98,14 @@ class Integrate(Module):
             &#39;Integrate[x, x]&#39;), parse_expr(&#39;x**2/2&#39;))
 
         test.assertEqual(evaluation.evaluate_code(
-            &#39;Integrate[x, {x, 0, 1}]&#39;), 1/2)
+            &#39;Integrate[x, {x, 0, 1}]&#39;), 1 / 2)
 
         test.assertEqual(evaluation.evaluate_code(
-            &#39;Integrate[x * y, {x, 0, 1}, {y, 0, 1}]&#39;), 1/4)
+            &#39;Integrate[x * y, {x, 0, 1}, {y, 0, 1}]&#39;), 1 / 4)
 
-        test.assertEqual(evaluation.evaluate_code(
-            &#39;Integrate[1/(x^3 + 1), {x, 0, 1}]&#39;), parse_expr(&#39;log(2)/3 + sqrt(3)*pi/9&#39;))</code></pre>
+        test.assertEqual(
+            evaluation.evaluate_code(&#39;Integrate[1/(x^3 + 1), {x, 0, 1}]&#39;),
+            parse_expr(&#39;log(2)/3 + sqrt(3)*pi/9&#39;))</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -158,13 +160,14 @@ class Integrate(Module):
         &#39;Integrate[x, x]&#39;), parse_expr(&#39;x**2/2&#39;))
 
     test.assertEqual(evaluation.evaluate_code(
-        &#39;Integrate[x, {x, 0, 1}]&#39;), 1/2)
+        &#39;Integrate[x, {x, 0, 1}]&#39;), 1 / 2)
 
     test.assertEqual(evaluation.evaluate_code(
-        &#39;Integrate[x * y, {x, 0, 1}, {y, 0, 1}]&#39;), 1/4)
+        &#39;Integrate[x * y, {x, 0, 1}, {y, 0, 1}]&#39;), 1 / 4)
 
-    test.assertEqual(evaluation.evaluate_code(
-        &#39;Integrate[1/(x^3 + 1), {x, 0, 1}]&#39;), parse_expr(&#39;log(2)/3 + sqrt(3)*pi/9&#39;))</code></pre>
+    test.assertEqual(
+        evaluation.evaluate_code(&#39;Integrate[1/(x^3 + 1), {x, 0, 1}]&#39;),
+        parse_expr(&#39;log(2)/3 + sqrt(3)*pi/9&#39;))</code></pre>
 </details>
 </dd>
 </dl>

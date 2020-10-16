@@ -40,7 +40,8 @@ from tsteno.notebook import Notebook
 
 
 @click.command()
-@click.option(&#39;--debug&#39;, &#39;-d&#39;, is_flag=True, help=&#39;Initialize tsteno kernel in debug mode&#39;)
+@click.option(&#39;--debug&#39;, &#39;-d&#39;, is_flag=True,
+              help=&#39;Initialize tsteno kernel in debug mode&#39;)
 @click.option(&#39;--gui&#39;, &#39;-g&#39;, is_flag=True, help=&#39;GUI mode (BETA)&#39;)
 @click.option(&#39;--input&#39;, &#39;-i&#39;, &#39;input_&#39;, help=&#34;*.nb file for input&#34;)
 def main(debug, gui, input_):

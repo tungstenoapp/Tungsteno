@@ -64,7 +64,7 @@ def tsteno_eval(code):
     except Exception as err:
         print(traceback.format_exc())
         print(err)
-        return {&#39;processor&#39;: &#39;error&#39;,  &#39;error&#39;: str(err)}
+        return {&#39;processor&#39;: &#39;error&#39;, &#39;error&#39;: str(err)}
 
     if isinstance(eval_result, sympy.Expr):
         return {
@@ -104,7 +104,7 @@ def suggestions(input):
         if definition.startswith(input) and definition_len - input_len &gt; 0:
             options.append({
                 &#39;caption&#39;: definition,
-                &#39;append&#39;: definition[input_len+1:],
+                &#39;append&#39;: definition[input_len + 1:],
                 &#39;distance&#39;: definition_len - input_len
             })
 
@@ -228,7 +228,7 @@ def suggestions(input):
         if definition.startswith(input) and definition_len - input_len &gt; 0:
             options.append({
                 &#39;caption&#39;: definition,
-                &#39;append&#39;: definition[input_len+1:],
+                &#39;append&#39;: definition[input_len + 1:],
                 &#39;distance&#39;: definition_len - input_len
             })
 
@@ -272,7 +272,7 @@ def tsteno_eval(code):
     except Exception as err:
         print(traceback.format_exc())
         print(err)
-        return {&#39;processor&#39;: &#39;error&#39;,  &#39;error&#39;: str(err)}
+        return {&#39;processor&#39;: &#39;error&#39;, &#39;error&#39;: str(err)}
 
     if isinstance(eval_result, sympy.Expr):
         return {

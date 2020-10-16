@@ -58,7 +58,7 @@ class UserDefinedModule(Module):
         return execution_result
 
     def get_arguments(self):
-        return [ModuleArg()]*self.argsize
+        return [ModuleArg()] * self.argsize
 
 
 class CustomModule(Module):
@@ -214,7 +214,7 @@ class CustomModule(Module):
         return execution_result
 
     def get_arguments(self):
-        return [ModuleArg()]*self.argsize</code></pre>
+        return [ModuleArg()] * self.argsize</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -275,7 +275,7 @@ class CustomModule(Module):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_arguments(self):
-    return [ModuleArg()]*self.argsize</code></pre>
+    return [ModuleArg()] * self.argsize</code></pre>
 </details>
 </dd>
 <dt id="tsteno.builtin.misc.custom_module.UserDefinedModule.set_param_mapping"><code class="name flex">

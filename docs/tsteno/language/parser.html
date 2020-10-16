@@ -135,26 +135,26 @@ class ParensParser(BaseParser):
 OpInfo = namedtuple(&#39;OpInfo&#39;, &#39;prec assoc function&#39;)
 
 BIN_OPINFO_MAP = {
-    &#39;/.&#39;:   OpInfo(-1, &#39;LEFT&#39;, &#39;ReplaceAll&#39;),
+    &#39;/.&#39;: OpInfo(-1, &#39;LEFT&#39;, &#39;ReplaceAll&#39;),
 
-    &#39;-&gt;&#39;:   OpInfo(0, &#39;LEFT&#39;, &#39;Rule&#39;),
-    &#39;=&#39;:    OpInfo(0, &#39;LEFT&#39;, &#39;Set&#39;),
-    &#39;:=&#39;:    OpInfo(0, &#39;LEFT&#39;, &#39;Set&#39;),
-    &#39;&lt;&#39;:    OpInfo(0, &#39;LEFT&#39;, &#39;LessThan&#39;),
-    &#39;&lt;=&#39;:   OpInfo(0, &#39;LEFT&#39;, &#39;LessEqual&#39;),
-    &#39;&gt;&#39;:    OpInfo(0, &#39;LEFT&#39;, &#39;GreaterThan&#39;),
-    &#39;&gt;=&#39;:   OpInfo(0, &#39;LEFT&#39;, &#39;GreaterEqual&#39;),
-    &#39;==&#39;:   OpInfo(0, &#39;LEFT&#39;, &#39;Equal&#39;),
-    &#39;!=&#39;:   OpInfo(0, &#39;LEFT&#39;, &#39;NotEqual&#39;),
-    &#39;*^&#39;:   OpInfo(0, &#39;LEFT&#39;, &#39;ScientificForm&#39;),
+    &#39;-&gt;&#39;: OpInfo(0, &#39;LEFT&#39;, &#39;Rule&#39;),
+    &#39;=&#39;: OpInfo(0, &#39;LEFT&#39;, &#39;Set&#39;),
+    &#39;:=&#39;: OpInfo(0, &#39;LEFT&#39;, &#39;Set&#39;),
+    &#39;&lt;&#39;: OpInfo(0, &#39;LEFT&#39;, &#39;LessThan&#39;),
+    &#39;&lt;=&#39;: OpInfo(0, &#39;LEFT&#39;, &#39;LessEqual&#39;),
+    &#39;&gt;&#39;: OpInfo(0, &#39;LEFT&#39;, &#39;GreaterThan&#39;),
+    &#39;&gt;=&#39;: OpInfo(0, &#39;LEFT&#39;, &#39;GreaterEqual&#39;),
+    &#39;==&#39;: OpInfo(0, &#39;LEFT&#39;, &#39;Equal&#39;),
+    &#39;!=&#39;: OpInfo(0, &#39;LEFT&#39;, &#39;NotEqual&#39;),
+    &#39;*^&#39;: OpInfo(0, &#39;LEFT&#39;, &#39;ScientificForm&#39;),
 
-    &#39;+&#39;:    OpInfo(1, &#39;LEFT&#39;, &#39;Plus&#39;),
-    &#39;-&#39;:    OpInfo(1, &#39;LEFT&#39;, &#39;Minus&#39;),
+    &#39;+&#39;: OpInfo(1, &#39;LEFT&#39;, &#39;Plus&#39;),
+    &#39;-&#39;: OpInfo(1, &#39;LEFT&#39;, &#39;Minus&#39;),
 
-    &#39;*&#39;:    OpInfo(2, &#39;LEFT&#39;, &#39;Product&#39;),
-    &#39;/&#39;:    OpInfo(2, &#39;LEFT&#39;, &#39;Div&#39;),
+    &#39;*&#39;: OpInfo(2, &#39;LEFT&#39;, &#39;Product&#39;),
+    &#39;/&#39;: OpInfo(2, &#39;LEFT&#39;, &#39;Div&#39;),
 
-    &#39;^&#39;:    OpInfo(3, &#39;RIGHT&#39;, &#39;Pow&#39;),
+    &#39;^&#39;: OpInfo(3, &#39;RIGHT&#39;, &#39;Pow&#39;),
 }
 
 UNARY_OPINFO_MAP = {

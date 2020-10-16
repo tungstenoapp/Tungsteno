@@ -199,7 +199,7 @@ class TokenError(Exception):
         lines = code.split(&#34;\n&#34;)
 
         extra_information = &#34;\n{}\n{}&#34;.format(
-            lines[0], (&#39; &#39;*(col)) + &#39;^&#39;
+            lines[0], (&#39; &#39; * (col)) + &#39;^&#39;
         )
 
         character = code[pos] if pos &lt; max_len else &#39;EOF&#39;
@@ -221,9 +221,9 @@ class Tokenizer:
         ]
 
     def skip_comments(self, pos, max_len, code):
-        if pos+1 &lt; max_len and code[pos] == &#39;(&#39; and code[pos+1] == &#39;*&#39;:
+        if pos + 1 &lt; max_len and code[pos] == &#39;(&#39; and code[pos + 1] == &#39;*&#39;:
             while pos + 1 &lt; max_len:
-                if code[pos] == &#39;*&#39; and code[pos+1] == &#39;)&#39;:
+                if code[pos] == &#39;*&#39; and code[pos + 1] == &#39;)&#39;:
                     pos = pos + 2
                     break
                 pos = pos + 1
@@ -788,7 +788,7 @@ class Tokenizer:
         lines = code.split(&#34;\n&#34;)
 
         extra_information = &#34;\n{}\n{}&#34;.format(
-            lines[0], (&#39; &#39;*(col)) + &#39;^&#39;
+            lines[0], (&#39; &#39; * (col)) + &#39;^&#39;
         )
 
         character = code[pos] if pos &lt; max_len else &#39;EOF&#39;
@@ -831,9 +831,9 @@ class Tokenizer:
         ]
 
     def skip_comments(self, pos, max_len, code):
-        if pos+1 &lt; max_len and code[pos] == &#39;(&#39; and code[pos+1] == &#39;*&#39;:
+        if pos + 1 &lt; max_len and code[pos] == &#39;(&#39; and code[pos + 1] == &#39;*&#39;:
             while pos + 1 &lt; max_len:
-                if code[pos] == &#39;*&#39; and code[pos+1] == &#39;)&#39;:
+                if code[pos] == &#39;*&#39; and code[pos + 1] == &#39;)&#39;:
                     pos = pos + 2
                     break
                 pos = pos + 1
@@ -962,9 +962,9 @@ class Tokenizer:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def skip_comments(self, pos, max_len, code):
-    if pos+1 &lt; max_len and code[pos] == &#39;(&#39; and code[pos+1] == &#39;*&#39;:
+    if pos + 1 &lt; max_len and code[pos] == &#39;(&#39; and code[pos + 1] == &#39;*&#39;:
         while pos + 1 &lt; max_len:
-            if code[pos] == &#39;*&#39; and code[pos+1] == &#39;)&#39;:
+            if code[pos] == &#39;*&#39; and code[pos + 1] == &#39;)&#39;:
                 pos = pos + 2
                 break
             pos = pos + 1
