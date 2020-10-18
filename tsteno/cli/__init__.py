@@ -32,7 +32,7 @@ def main(debug, gui, input_):
 
     if gui:
         init_gui(kernel, input_)
-    elif input is not None:
+    elif input_ is not None:
         nb_file = open(input_, 'r')
         eval_result = evaluation.evaluate_code(nb_file.read())
 
