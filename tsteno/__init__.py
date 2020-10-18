@@ -8,9 +8,11 @@ Designed to make users and contributors feel comfortable in a friendly and
 flexible environment.
 """
 
-""" Specify the current version of Tungsteno core """
 VERSION = 0.1
-""" Code name for current Tungsteno version """
+""" Specify the current version of Tungsteno core """
+
 CODENAME = "Sophie"
-""" License information """
+""" Code name for current Tungsteno version """
+
 COPYRIGHT = "Distributed under GPLv3 license 2020-2021"
+""" License information """
