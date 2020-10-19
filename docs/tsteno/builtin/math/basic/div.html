@@ -107,53 +107,19 @@ class Div(Module):
 <li><a title="tsteno.atoms.module.Module" href="../../../atoms/module.html#tsteno.atoms.module.Module">Module</a></li>
 <li><a title="tsteno.atoms.atoms.Atoms" href="../../../atoms/atoms.html#tsteno.atoms.atoms.Atoms">Atoms</a></li>
 </ul>
-<h3>Methods</h3>
-<dl>
-<dt id="tsteno.builtin.math.basic.div.Div.get_arguments"><code class="name flex">
-<span>def <span class="ident">get_arguments</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_arguments(self):
-    return [
-        ModuleArg(), ModuleArg()
-    ]</code></pre>
-</details>
-</dd>
-<dt id="tsteno.builtin.math.basic.div.Div.run_test"><code class="name flex">
-<span>def <span class="ident">run_test</span></span>(<span>self, test)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def run_test(self, test):
-    evaluation = self.get_kernel().get_kext(&#39;eval&#39;)
-
-    # Test numerical division
-    test.assertEqual(evaluation.evaluate_code(&#39;1.0/2&#39;), .5)
-
-    # Test symbolic division.
-    test.assertEqual(evaluation.evaluate_code(&#39;1/2&#39;), parse_expr(&#34;1/2&#34;))</code></pre>
-</details>
-</dd>
-</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="tsteno.atoms.module.Module" href="../../../atoms/module.html#tsteno.atoms.module.Module">Module</a></b></code>:
 <ul class="hlist">
 <li><code><a title="tsteno.atoms.module.Module.configuration_list2dict" href="../../../atoms/module.html#tsteno.atoms.module.Module.configuration_list2dict">configuration_list2dict</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.eval" href="../../../atoms/module.html#tsteno.atoms.module.Module.eval">eval</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.get_arguments" href="../../../atoms/module.html#tsteno.atoms.module.Module.get_arguments">get_arguments</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.get_kernel" href="../../../atoms/atoms.html#tsteno.atoms.atoms.Atoms.get_kernel">get_kernel</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.parse_argument" href="../../../atoms/module.html#tsteno.atoms.module.Module.parse_argument">parse_argument</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.parse_arguments" href="../../../atoms/module.html#tsteno.atoms.module.Module.parse_arguments">parse_arguments</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.run" href="../../../atoms/module.html#tsteno.atoms.module.Module.run">run</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.run_parallel" href="../../../atoms/module.html#tsteno.atoms.module.Module.run_parallel">run_parallel</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.run_test" href="../../../atoms/module.html#tsteno.atoms.module.Module.run_test">run_test</a></code></li>
 </ul>
 </li>
 </ul>
@@ -176,10 +142,6 @@ class Div(Module):
 <ul>
 <li>
 <h4><code><a title="tsteno.builtin.math.basic.div.Div" href="#tsteno.builtin.math.basic.div.Div">Div</a></code></h4>
-<ul class="">
-<li><code><a title="tsteno.builtin.math.basic.div.Div.get_arguments" href="#tsteno.builtin.math.basic.div.Div.get_arguments">get_arguments</a></code></li>
-<li><code><a title="tsteno.builtin.math.basic.div.Div.run_test" href="#tsteno.builtin.math.basic.div.Div.run_test">run_test</a></code></li>
-</ul>
 </li>
 </ul>
 </li>

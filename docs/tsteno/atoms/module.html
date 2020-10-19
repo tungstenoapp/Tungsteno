@@ -198,19 +198,33 @@ class Module(Atoms):
 
     def run(self, **arguments):
         &#34;&#34;&#34;
-        Should be implemented by child class.
+        Run module itself. Should be implemented by child class.
         Parameters:
             - **arguments** - List of arguments.
         &#34;&#34;&#34;
         raise Exception(&#34;eval function should be defined&#34;)
 
     def run_parallel(self, **arguments):
+        &#34;&#34;&#34;
+        Should be implemented by child class, by default call to run
+        Parameters:
+            - **arguments** - List of arguments.
+        &#34;&#34;&#34;
         return self.run(arguments)
 
     def get_arguments(self):
+        &#34;&#34;&#34;
+        Get module arguments configuration. Should be implemented by child
+        class.
+        Parameters:
+            - **arguments** - List of arguments.
+        &#34;&#34;&#34;
         raise Exception(&#34;get_arguments function should be defined&#34;)
 
     def run_test(self, test):
+        &#34;&#34;&#34;
+        Configure module tests. Should be implemented by child
+        &#34;&#34;&#34;
         raise Exception(
             &#34;Run test function is undefined on `{}`&#34;.format(
                 self.__class__.__name__
@@ -393,19 +407,33 @@ class Module(Atoms):
 
     def run(self, **arguments):
         &#34;&#34;&#34;
-        Should be implemented by child class.
+        Run module itself. Should be implemented by child class.
         Parameters:
             - **arguments** - List of arguments.
         &#34;&#34;&#34;
         raise Exception(&#34;eval function should be defined&#34;)
 
     def run_parallel(self, **arguments):
+        &#34;&#34;&#34;
+        Should be implemented by child class, by default call to run
+        Parameters:
+            - **arguments** - List of arguments.
+        &#34;&#34;&#34;
         return self.run(arguments)
 
     def get_arguments(self):
+        &#34;&#34;&#34;
+        Get module arguments configuration. Should be implemented by child
+        class.
+        Parameters:
+            - **arguments** - List of arguments.
+        &#34;&#34;&#34;
         raise Exception(&#34;get_arguments function should be defined&#34;)
 
     def run_test(self, test):
+        &#34;&#34;&#34;
+        Configure module tests. Should be implemented by child
+        &#34;&#34;&#34;
         raise Exception(
             &#34;Run test function is undefined on `{}`&#34;.format(
                 self.__class__.__name__
@@ -539,12 +567,23 @@ List of rules.</li>
 <span>def <span class="ident">get_arguments</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Get module arguments configuration. Should be implemented by child
+class.</p>
+<h2 id="parameters">Parameters</h2>
+<ul>
+<li><strong>arguments</strong> - List of arguments.</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_arguments(self):
+    &#34;&#34;&#34;
+    Get module arguments configuration. Should be implemented by child
+    class.
+    Parameters:
+        - **arguments** - List of arguments.
+    &#34;&#34;&#34;
     raise Exception(&#34;get_arguments function should be defined&#34;)</code></pre>
 </details>
 </dd>
@@ -679,7 +718,7 @@ List of rules.</li>
 <span>def <span class="ident">run</span></span>(<span>self, **arguments)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Should be implemented by child class.</p>
+<div class="desc"><p>Run module itself. Should be implemented by child class.</p>
 <h2 id="parameters">Parameters</h2>
 <ul>
 <li><strong>arguments</strong> - List of arguments.</li>
@@ -690,7 +729,7 @@ List of rules.</li>
 </summary>
 <pre><code class="python">def run(self, **arguments):
     &#34;&#34;&#34;
-    Should be implemented by child class.
+    Run module itself. Should be implemented by child class.
     Parameters:
         - **arguments** - List of arguments.
     &#34;&#34;&#34;
@@ -701,12 +740,21 @@ List of rules.</li>
 <span>def <span class="ident">run_parallel</span></span>(<span>self, **arguments)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Should be implemented by child class, by default call to run</p>
+<h2 id="parameters">Parameters</h2>
+<ul>
+<li><strong>arguments</strong> - List of arguments.</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def run_parallel(self, **arguments):
+    &#34;&#34;&#34;
+    Should be implemented by child class, by default call to run
+    Parameters:
+        - **arguments** - List of arguments.
+    &#34;&#34;&#34;
     return self.run(arguments)</code></pre>
 </details>
 </dd>
@@ -714,12 +762,15 @@ List of rules.</li>
 <span>def <span class="ident">run_test</span></span>(<span>self, test)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Configure module tests. Should be implemented by child</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def run_test(self, test):
+    &#34;&#34;&#34;
+    Configure module tests. Should be implemented by child
+    &#34;&#34;&#34;
     raise Exception(
         &#34;Run test function is undefined on `{}`&#34;.format(
             self.__class__.__name__

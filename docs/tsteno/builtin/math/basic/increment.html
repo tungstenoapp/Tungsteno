@@ -121,55 +121,19 @@ class Increment(Module):
 <li><a title="tsteno.atoms.module.Module" href="../../../atoms/module.html#tsteno.atoms.module.Module">Module</a></li>
 <li><a title="tsteno.atoms.atoms.Atoms" href="../../../atoms/atoms.html#tsteno.atoms.atoms.Atoms">Atoms</a></li>
 </ul>
-<h3>Methods</h3>
-<dl>
-<dt id="tsteno.builtin.math.basic.increment.Increment.get_arguments"><code class="name flex">
-<span>def <span class="ident">get_arguments</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def get_arguments(self):
-    return [
-        ModuleArg(ARG_FLAG_RETURN_VAR_NAME), ModuleArg(
-            ARG_FLAG_SPECIAL_CONTEXT)
-    ]</code></pre>
-</details>
-</dd>
-<dt id="tsteno.builtin.math.basic.increment.Increment.run_test"><code class="name flex">
-<span>def <span class="ident">run_test</span></span>(<span>self, test)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def run_test(self, test):
-    evaluation = self.get_kernel().get_kext(&#39;eval&#39;)
-
-    # Test increment.
-    test.assertEqual(evaluation.evaluate_code(
-        &#39;imt_1=2; Increment[imt_1]; Return[imt_1]&#39;), 3)
-
-    test.assertEqual(evaluation.evaluate_code(
-        &#39;imt2=2; imt2++&#39;), 2)</code></pre>
-</details>
-</dd>
-</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="tsteno.atoms.module.Module" href="../../../atoms/module.html#tsteno.atoms.module.Module">Module</a></b></code>:
 <ul class="hlist">
 <li><code><a title="tsteno.atoms.module.Module.configuration_list2dict" href="../../../atoms/module.html#tsteno.atoms.module.Module.configuration_list2dict">configuration_list2dict</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.eval" href="../../../atoms/module.html#tsteno.atoms.module.Module.eval">eval</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.get_arguments" href="../../../atoms/module.html#tsteno.atoms.module.Module.get_arguments">get_arguments</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.get_kernel" href="../../../atoms/atoms.html#tsteno.atoms.atoms.Atoms.get_kernel">get_kernel</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.parse_argument" href="../../../atoms/module.html#tsteno.atoms.module.Module.parse_argument">parse_argument</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.parse_arguments" href="../../../atoms/module.html#tsteno.atoms.module.Module.parse_arguments">parse_arguments</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.run" href="../../../atoms/module.html#tsteno.atoms.module.Module.run">run</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.run_parallel" href="../../../atoms/module.html#tsteno.atoms.module.Module.run_parallel">run_parallel</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.run_test" href="../../../atoms/module.html#tsteno.atoms.module.Module.run_test">run_test</a></code></li>
 </ul>
 </li>
 </ul>
@@ -192,10 +156,6 @@ class Increment(Module):
 <ul>
 <li>
 <h4><code><a title="tsteno.builtin.math.basic.increment.Increment" href="#tsteno.builtin.math.basic.increment.Increment">Increment</a></code></h4>
-<ul class="">
-<li><code><a title="tsteno.builtin.math.basic.increment.Increment.get_arguments" href="#tsteno.builtin.math.basic.increment.Increment.get_arguments">get_arguments</a></code></li>
-<li><code><a title="tsteno.builtin.math.basic.increment.Increment.run_test" href="#tsteno.builtin.math.basic.increment.Increment.run_test">run_test</a></code></li>
-</ul>
 </li>
 </ul>
 </li>

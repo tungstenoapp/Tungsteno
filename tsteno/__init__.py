@@ -1,11 +1,15 @@
 """
-# Tungsteno
-Tugnsteno is a programming language intended to be 100 % compatible with
+# Introduction
+Tungsteno is a programming language intended to be 100 % compatible with
 Wolfram Language. It is designed to be lightweight, and easily extensible
 through modules, and module repositories.
 
 Designed to make users and contributors feel comfortable in a friendly and
 flexible environment.
+
+# Architecture
+
+
 """
 
 VERSION = 0.1
