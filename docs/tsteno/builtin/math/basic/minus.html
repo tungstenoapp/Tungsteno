@@ -68,10 +68,12 @@ class Minus(Module):
 <span>(</span><span>kernel)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Atoms super class used to abstract atoms.</p>
+<div class="desc"><p>Super class that represent basic Tungsteno Language modules.</p>
 <p>Create a new atoms instance.</p>
 <h2 id="parameters">Parameters</h2>
-<p><strong>kernel</strong> - Represent a Tungsteno kernel instance</p></div>
+<ul>
+<li><strong>kernel</strong> - Represent a Tungsteno kernel instance</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -121,19 +123,6 @@ class Minus(Module):
     ]</code></pre>
 </details>
 </dd>
-<dt id="tsteno.builtin.math.basic.minus.Minus.run"><code class="name flex">
-<span>def <span class="ident">run</span></span>(<span>self, a, b)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def run(self, a, b):
-    return a - b</code></pre>
-</details>
-</dd>
 <dt id="tsteno.builtin.math.basic.minus.Minus.run_test"><code class="name flex">
 <span>def <span class="ident">run_test</span></span>(<span>self, test)</span>
 </code></dt>
@@ -162,7 +151,12 @@ class Minus(Module):
 <ul class="hlist">
 <li><code><b><a title="tsteno.atoms.module.Module" href="../../../atoms/module.html#tsteno.atoms.module.Module">Module</a></b></code>:
 <ul class="hlist">
+<li><code><a title="tsteno.atoms.module.Module.configuration_list2dict" href="../../../atoms/module.html#tsteno.atoms.module.Module.configuration_list2dict">configuration_list2dict</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.eval" href="../../../atoms/module.html#tsteno.atoms.module.Module.eval">eval</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.get_kernel" href="../../../atoms/atoms.html#tsteno.atoms.atoms.Atoms.get_kernel">get_kernel</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.parse_argument" href="../../../atoms/module.html#tsteno.atoms.module.Module.parse_argument">parse_argument</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.parse_arguments" href="../../../atoms/module.html#tsteno.atoms.module.Module.parse_arguments">parse_arguments</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.run" href="../../../atoms/module.html#tsteno.atoms.module.Module.run">run</a></code></li>
 </ul>
 </li>
 </ul>
@@ -187,7 +181,6 @@ class Minus(Module):
 <h4><code><a title="tsteno.builtin.math.basic.minus.Minus" href="#tsteno.builtin.math.basic.minus.Minus">Minus</a></code></h4>
 <ul class="">
 <li><code><a title="tsteno.builtin.math.basic.minus.Minus.get_arguments" href="#tsteno.builtin.math.basic.minus.Minus.get_arguments">get_arguments</a></code></li>
-<li><code><a title="tsteno.builtin.math.basic.minus.Minus.run" href="#tsteno.builtin.math.basic.minus.Minus.run">run</a></code></li>
 <li><code><a title="tsteno.builtin.math.basic.minus.Minus.run_test" href="#tsteno.builtin.math.basic.minus.Minus.run_test">run_test</a></code></li>
 </ul>
 </li>

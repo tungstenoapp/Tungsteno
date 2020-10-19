@@ -14,9 +14,9 @@ class Comparator(Atoms):
     def __init__(self, left, right, op):
         """
         Parameters:
-            ** left ** - Left value to be compared.
-            ** right ** - Right value to be compared.
-            ** op ** -  Operator used to compare.
+            - ** left ** - Left value to be compared.
+            - ** right ** - Right value to be compared.
+            - ** op ** -  Operator used to compare.
         """
         self.left = left
         self.right = right
@@ -27,8 +27,8 @@ class Comparator(Atoms):
         Evaluate current comparator and generate an answer.
 
         Return:
-            Return a boolean value if left & right are numeric.
-            Return a symbol if left or right are symbols.
+            - Return a boolean value if left & right are numeric.
+            - Return a symbol if left or right are symbols.
         """
         return reduce(self.op, (self.left, self.right))
 

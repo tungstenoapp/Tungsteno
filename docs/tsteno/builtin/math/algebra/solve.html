@@ -97,10 +97,12 @@ class Solve(Module):
 <span>(</span><span>kernel)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Atoms super class used to abstract atoms.</p>
+<div class="desc"><p>Super class that represent basic Tungsteno Language modules.</p>
 <p>Create a new atoms instance.</p>
 <h2 id="parameters">Parameters</h2>
-<p><strong>kernel</strong> - Represent a Tungsteno kernel instance</p></div>
+<ul>
+<li><strong>kernel</strong> - Represent a Tungsteno kernel instance</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -197,36 +199,6 @@ def calculate_one_expr(expr):
     ]</code></pre>
 </details>
 </dd>
-<dt id="tsteno.builtin.math.algebra.solve.Solve.run"><code class="name flex">
-<span>def <span class="ident">run</span></span>(<span>self, expressions, variables)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def run(self, expressions, variables):
-    if not isinstance(expressions, list):
-        expressions = [expressions]
-
-    fmt_expr = []
-
-    for expression in expressions:
-        fmt_expr.append(Solve.calculate_one_expr(expression))
-
-    solutions = solve(fmt_expr, variables, dict=True)
-    solutions = list(map(lambda d: RuleSet(
-        self.get_kernel(),
-        {str(k): v for k, v in d.items()}
-    ), solutions))
-
-    if len(solutions) == 1:
-        return solutions[0]
-
-    return solutions</code></pre>
-</details>
-</dd>
 <dt id="tsteno.builtin.math.algebra.solve.Solve.run_test"><code class="name flex">
 <span>def <span class="ident">run_test</span></span>(<span>self, test)</span>
 </code></dt>
@@ -258,7 +230,12 @@ def calculate_one_expr(expr):
 <ul class="hlist">
 <li><code><b><a title="tsteno.atoms.module.Module" href="../../../atoms/module.html#tsteno.atoms.module.Module">Module</a></b></code>:
 <ul class="hlist">
+<li><code><a title="tsteno.atoms.module.Module.configuration_list2dict" href="../../../atoms/module.html#tsteno.atoms.module.Module.configuration_list2dict">configuration_list2dict</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.eval" href="../../../atoms/module.html#tsteno.atoms.module.Module.eval">eval</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.get_kernel" href="../../../atoms/atoms.html#tsteno.atoms.atoms.Atoms.get_kernel">get_kernel</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.parse_argument" href="../../../atoms/module.html#tsteno.atoms.module.Module.parse_argument">parse_argument</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.parse_arguments" href="../../../atoms/module.html#tsteno.atoms.module.Module.parse_arguments">parse_arguments</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.run" href="../../../atoms/module.html#tsteno.atoms.module.Module.run">run</a></code></li>
 </ul>
 </li>
 </ul>
@@ -284,7 +261,6 @@ def calculate_one_expr(expr):
 <ul class="">
 <li><code><a title="tsteno.builtin.math.algebra.solve.Solve.calculate_one_expr" href="#tsteno.builtin.math.algebra.solve.Solve.calculate_one_expr">calculate_one_expr</a></code></li>
 <li><code><a title="tsteno.builtin.math.algebra.solve.Solve.get_arguments" href="#tsteno.builtin.math.algebra.solve.Solve.get_arguments">get_arguments</a></code></li>
-<li><code><a title="tsteno.builtin.math.algebra.solve.Solve.run" href="#tsteno.builtin.math.algebra.solve.Solve.run">run</a></code></li>
 <li><code><a title="tsteno.builtin.math.algebra.solve.Solve.run_test" href="#tsteno.builtin.math.algebra.solve.Solve.run_test">run_test</a></code></li>
 </ul>
 </li>

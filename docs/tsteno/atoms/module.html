@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.1" />
 <title>tsteno.atoms.module API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="Represent basic Tungsteno Language modules representation" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,26 +22,51 @@
 <h1 class="title">Module <code>tsteno.atoms.module</code></h1>
 </header>
 <section id="section-intro">
+<p>Represent basic Tungsteno Language modules representation</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from .atoms import Atoms
+<pre><code class="python">&#34;&#34;&#34;
+Represent basic Tungsteno Language modules representation
+&#34;&#34;&#34;
+
+from .atoms import Atoms
 
 ARG_FLAG_OPTIONAL = 1 &lt;&lt; 1
+&#34;&#34;&#34; Specify if given argument is optional &#34;&#34;&#34;
+
 ARG_FLAG_ALL_NEXT = 1 &lt;&lt; 2
+&#34;&#34;&#34; Specify if you want to receive the rest of argument as list &#34;&#34;&#34;
+
 ARG_FLAG_NO_AUTO_EVAL = 1 &lt;&lt; 3
+&#34;&#34;&#34; Specify if you want to read argument as executable lambda function &#34;&#34;&#34;
+
 ARG_FLAG_SPECIAL_CONTEXT = 1 &lt;&lt; 4
+&#34;&#34;&#34; Special argument used to receive execution context &#34;&#34;&#34;
+
 ARG_FLAG_RETURN_VAR_NAME = 1 &lt;&lt; 5
+&#34;&#34;&#34; Special argument that return var name &#34;&#34;&#34;
 
 
 class ModuleArg:
+    &#34;&#34;&#34;
+    Represent module argument type configuration
+    &#34;&#34;&#34;
     __slots__ = [&#39;__flag&#39;]
 
     def __init__(self, flag=0):
+        &#34;&#34;&#34;
+        Parameters:
+            - **flag** - Represent argument type flag. (Default user given value)
+        &#34;&#34;&#34;
         self.__flag = flag
 
     def get_flag(self):
+        &#34;&#34;&#34;
+        Return:
+            - Return module arg flag.
+        &#34;&#34;&#34;
         return self.__flag
 
     def __repr__(self):
@@ -49,12 +74,35 @@ class ModuleArg:
 
 
 class Module(Atoms):
+    &#34;&#34;&#34;
+    Super class that represent basic Tungsteno Language modules.
+    &#34;&#34;&#34;
 
     def eval(self, arguments, context):
+        &#34;&#34;&#34;
+        Eval function with given arguments.
+
+        Parameters:
+            - **arguments** - Represent function arguments.
+            - **context** - Represent local context to execute function.
+
+        Return:
+            - Function execution result.
+        &#34;&#34;&#34;
         fargs = self.parse_arguments(arguments, context)
         return self.run(*fargs)
 
     def parse_arguments(self, arguments, context):
+        &#34;&#34;&#34;
+        Parse given arguments in given context.
+
+        Parameters:
+            - **arguments** - Represent function arguments.
+            - **context** - Represent local context to execute function.
+
+        Return:
+            - **list** - Python friendly function arguments.
+        &#34;&#34;&#34;
         fargs = []
         argssize = len(arguments)
         module_args = self.get_arguments()
@@ -89,6 +137,18 @@ class Module(Atoms):
         return fargs
 
     def parse_argument(self, module_arg, user_arg, context):
+        &#34;&#34;&#34;
+        Parse one argument by child class configuration, and user given argument.
+
+        Parameters:
+            - **module_arg** - Argument child class configuration
+            - **user_arg** - Argument from user input.
+            - **context** - Represent local context to execute function.
+
+        Return:
+            - Return one pythonic parsed argument.
+        &#34;&#34;&#34;
+
         eval = self.get_kernel().get_kext(&#39;eval&#39;)
 
         if module_arg.get_flag() &amp; ARG_FLAG_RETURN_VAR_NAME != 0:
@@ -121,6 +181,13 @@ class Module(Atoms):
         return result
 
     def configuration_list2dict(self, list_of_properties):
+        &#34;&#34;&#34;
+        Helper function that converts list of rules to dictionary.
+        Parameters:
+            - **list_of_properties** -  List of rules.
+        Return:
+            - **dict** - Result of convert list of properties to dict.
+        &#34;&#34;&#34;
         prop_dict = {}
 
         for prop in list_of_properties:
@@ -130,6 +197,11 @@ class Module(Atoms):
         return prop_dict
 
     def run(self, **arguments):
+        &#34;&#34;&#34;
+        Should be implemented by child class.
+        Parameters:
+            - **arguments** - List of arguments.
+        &#34;&#34;&#34;
         raise Exception(&#34;eval function should be defined&#34;)
 
     def run_parallel(self, **arguments):
@@ -152,6 +224,29 @@ class Module(Atoms):
 <section>
 </section>
 <section>
+<h2 class="section-title" id="header-variables">Global variables</h2>
+<dl>
+<dt id="tsteno.atoms.module.ARG_FLAG_ALL_NEXT"><code class="name">var <span class="ident">ARG_FLAG_ALL_NEXT</span></code></dt>
+<dd>
+<div class="desc"><p>Specify if you want to receive the rest of argument as list</p></div>
+</dd>
+<dt id="tsteno.atoms.module.ARG_FLAG_NO_AUTO_EVAL"><code class="name">var <span class="ident">ARG_FLAG_NO_AUTO_EVAL</span></code></dt>
+<dd>
+<div class="desc"><p>Specify if you want to read argument as executable lambda function</p></div>
+</dd>
+<dt id="tsteno.atoms.module.ARG_FLAG_OPTIONAL"><code class="name">var <span class="ident">ARG_FLAG_OPTIONAL</span></code></dt>
+<dd>
+<div class="desc"><p>Specify if given argument is optional</p></div>
+</dd>
+<dt id="tsteno.atoms.module.ARG_FLAG_RETURN_VAR_NAME"><code class="name">var <span class="ident">ARG_FLAG_RETURN_VAR_NAME</span></code></dt>
+<dd>
+<div class="desc"><p>Special argument that return var name</p></div>
+</dd>
+<dt id="tsteno.atoms.module.ARG_FLAG_SPECIAL_CONTEXT"><code class="name">var <span class="ident">ARG_FLAG_SPECIAL_CONTEXT</span></code></dt>
+<dd>
+<div class="desc"><p>Special argument used to receive execution context</p></div>
+</dd>
+</dl>
 </section>
 <section>
 </section>
@@ -163,21 +258,46 @@ class Module(Atoms):
 <span>(</span><span>kernel)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Atoms super class used to abstract atoms.</p>
+<div class="desc"><p>Super class that represent basic Tungsteno Language modules.</p>
 <p>Create a new atoms instance.</p>
 <h2 id="parameters">Parameters</h2>
-<p><strong>kernel</strong> - Represent a Tungsteno kernel instance</p></div>
+<ul>
+<li><strong>kernel</strong> - Represent a Tungsteno kernel instance</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Module(Atoms):
+    &#34;&#34;&#34;
+    Super class that represent basic Tungsteno Language modules.
+    &#34;&#34;&#34;
 
     def eval(self, arguments, context):
+        &#34;&#34;&#34;
+        Eval function with given arguments.
+
+        Parameters:
+            - **arguments** - Represent function arguments.
+            - **context** - Represent local context to execute function.
+
+        Return:
+            - Function execution result.
+        &#34;&#34;&#34;
         fargs = self.parse_arguments(arguments, context)
         return self.run(*fargs)
 
     def parse_arguments(self, arguments, context):
+        &#34;&#34;&#34;
+        Parse given arguments in given context.
+
+        Parameters:
+            - **arguments** - Represent function arguments.
+            - **context** - Represent local context to execute function.
+
+        Return:
+            - **list** - Python friendly function arguments.
+        &#34;&#34;&#34;
         fargs = []
         argssize = len(arguments)
         module_args = self.get_arguments()
@@ -212,6 +332,18 @@ class Module(Atoms):
         return fargs
 
     def parse_argument(self, module_arg, user_arg, context):
+        &#34;&#34;&#34;
+        Parse one argument by child class configuration, and user given argument.
+
+        Parameters:
+            - **module_arg** - Argument child class configuration
+            - **user_arg** - Argument from user input.
+            - **context** - Represent local context to execute function.
+
+        Return:
+            - Return one pythonic parsed argument.
+        &#34;&#34;&#34;
+
         eval = self.get_kernel().get_kext(&#39;eval&#39;)
 
         if module_arg.get_flag() &amp; ARG_FLAG_RETURN_VAR_NAME != 0:
@@ -244,6 +376,13 @@ class Module(Atoms):
         return result
 
     def configuration_list2dict(self, list_of_properties):
+        &#34;&#34;&#34;
+        Helper function that converts list of rules to dictionary.
+        Parameters:
+            - **list_of_properties** -  List of rules.
+        Return:
+            - **dict** - Result of convert list of properties to dict.
+        &#34;&#34;&#34;
         prop_dict = {}
 
         for prop in list_of_properties:
@@ -253,6 +392,11 @@ class Module(Atoms):
         return prop_dict
 
     def run(self, **arguments):
+        &#34;&#34;&#34;
+        Should be implemented by child class.
+        Parameters:
+            - **arguments** - List of arguments.
+        &#34;&#34;&#34;
         raise Exception(&#34;eval function should be defined&#34;)
 
     def run_parallel(self, **arguments):
@@ -327,12 +471,28 @@ class Module(Atoms):
 <span>def <span class="ident">configuration_list2dict</span></span>(<span>self, list_of_properties)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Helper function that converts list of rules to dictionary.</p>
+<h2 id="parameters">Parameters</h2>
+<ul>
+<li><strong>list_of_properties</strong> -
+List of rules.</li>
+</ul>
+<h2 id="return">Return</h2>
+<ul>
+<li><strong>dict</strong> - Result of convert list of properties to dict.</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def configuration_list2dict(self, list_of_properties):
+    &#34;&#34;&#34;
+    Helper function that converts list of rules to dictionary.
+    Parameters:
+        - **list_of_properties** -  List of rules.
+    Return:
+        - **dict** - Result of convert list of properties to dict.
+    &#34;&#34;&#34;
     prop_dict = {}
 
     for prop in list_of_properties:
@@ -346,12 +506,31 @@ class Module(Atoms):
 <span>def <span class="ident">eval</span></span>(<span>self, arguments, context)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Eval function with given arguments.</p>
+<h2 id="parameters">Parameters</h2>
+<ul>
+<li><strong>arguments</strong> - Represent function arguments.</li>
+<li><strong>context</strong> - Represent local context to execute function.</li>
+</ul>
+<h2 id="return">Return</h2>
+<ul>
+<li>Function execution result.</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def eval(self, arguments, context):
+    &#34;&#34;&#34;
+    Eval function with given arguments.
+
+    Parameters:
+        - **arguments** - Represent function arguments.
+        - **context** - Represent local context to execute function.
+
+    Return:
+        - Function execution result.
+    &#34;&#34;&#34;
     fargs = self.parse_arguments(arguments, context)
     return self.run(*fargs)</code></pre>
 </details>
@@ -373,12 +552,34 @@ class Module(Atoms):
 <span>def <span class="ident">parse_argument</span></span>(<span>self, module_arg, user_arg, context)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Parse one argument by child class configuration, and user given argument.</p>
+<h2 id="parameters">Parameters</h2>
+<ul>
+<li><strong>module_arg</strong> - Argument child class configuration</li>
+<li><strong>user_arg</strong> - Argument from user input.</li>
+<li><strong>context</strong> - Represent local context to execute function.</li>
+</ul>
+<h2 id="return">Return</h2>
+<ul>
+<li>Return one pythonic parsed argument.</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def parse_argument(self, module_arg, user_arg, context):
+    &#34;&#34;&#34;
+    Parse one argument by child class configuration, and user given argument.
+
+    Parameters:
+        - **module_arg** - Argument child class configuration
+        - **user_arg** - Argument from user input.
+        - **context** - Represent local context to execute function.
+
+    Return:
+        - Return one pythonic parsed argument.
+    &#34;&#34;&#34;
+
     eval = self.get_kernel().get_kext(&#39;eval&#39;)
 
     if module_arg.get_flag() &amp; ARG_FLAG_RETURN_VAR_NAME != 0:
@@ -415,12 +616,31 @@ class Module(Atoms):
 <span>def <span class="ident">parse_arguments</span></span>(<span>self, arguments, context)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Parse given arguments in given context.</p>
+<h2 id="parameters">Parameters</h2>
+<ul>
+<li><strong>arguments</strong> - Represent function arguments.</li>
+<li><strong>context</strong> - Represent local context to execute function.</li>
+</ul>
+<h2 id="return">Return</h2>
+<ul>
+<li><strong>list</strong> - Python friendly function arguments.</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def parse_arguments(self, arguments, context):
+    &#34;&#34;&#34;
+    Parse given arguments in given context.
+
+    Parameters:
+        - **arguments** - Represent function arguments.
+        - **context** - Represent local context to execute function.
+
+    Return:
+        - **list** - Python friendly function arguments.
+    &#34;&#34;&#34;
     fargs = []
     argssize = len(arguments)
     module_args = self.get_arguments()
@@ -459,12 +679,21 @@ class Module(Atoms):
 <span>def <span class="ident">run</span></span>(<span>self, **arguments)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Should be implemented by child class.</p>
+<h2 id="parameters">Parameters</h2>
+<ul>
+<li><strong>arguments</strong> - List of arguments.</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def run(self, **arguments):
+    &#34;&#34;&#34;
+    Should be implemented by child class.
+    Parameters:
+        - **arguments** - List of arguments.
+    &#34;&#34;&#34;
     raise Exception(&#34;eval function should be defined&#34;)</code></pre>
 </details>
 </dd>
@@ -513,18 +742,33 @@ class Module(Atoms):
 <span>(</span><span>flag=0)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Represent module argument type configuration</p>
+<h2 id="parameters">Parameters</h2>
+<ul>
+<li><strong>flag</strong> - Represent argument type flag. (Default user given value)</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class ModuleArg:
+    &#34;&#34;&#34;
+    Represent module argument type configuration
+    &#34;&#34;&#34;
     __slots__ = [&#39;__flag&#39;]
 
     def __init__(self, flag=0):
+        &#34;&#34;&#34;
+        Parameters:
+            - **flag** - Represent argument type flag. (Default user given value)
+        &#34;&#34;&#34;
         self.__flag = flag
 
     def get_flag(self):
+        &#34;&#34;&#34;
+        Return:
+            - Return module arg flag.
+        &#34;&#34;&#34;
         return self.__flag
 
     def __repr__(self):
@@ -536,12 +780,19 @@ class Module(Atoms):
 <span>def <span class="ident">get_flag</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><h2 id="return">Return</h2>
+<ul>
+<li>Return module arg flag.</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def get_flag(self):
+    &#34;&#34;&#34;
+    Return:
+        - Return module arg flag.
+    &#34;&#34;&#34;
     return self.__flag</code></pre>
 </details>
 </dd>
@@ -559,6 +810,15 @@ class Module(Atoms):
 <li><h3>Super-module</h3>
 <ul>
 <li><code><a title="tsteno.atoms" href="index.html">tsteno.atoms</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-variables">Global variables</a></h3>
+<ul class="">
+<li><code><a title="tsteno.atoms.module.ARG_FLAG_ALL_NEXT" href="#tsteno.atoms.module.ARG_FLAG_ALL_NEXT">ARG_FLAG_ALL_NEXT</a></code></li>
+<li><code><a title="tsteno.atoms.module.ARG_FLAG_NO_AUTO_EVAL" href="#tsteno.atoms.module.ARG_FLAG_NO_AUTO_EVAL">ARG_FLAG_NO_AUTO_EVAL</a></code></li>
+<li><code><a title="tsteno.atoms.module.ARG_FLAG_OPTIONAL" href="#tsteno.atoms.module.ARG_FLAG_OPTIONAL">ARG_FLAG_OPTIONAL</a></code></li>
+<li><code><a title="tsteno.atoms.module.ARG_FLAG_RETURN_VAR_NAME" href="#tsteno.atoms.module.ARG_FLAG_RETURN_VAR_NAME">ARG_FLAG_RETURN_VAR_NAME</a></code></li>
+<li><code><a title="tsteno.atoms.module.ARG_FLAG_SPECIAL_CONTEXT" href="#tsteno.atoms.module.ARG_FLAG_SPECIAL_CONTEXT">ARG_FLAG_SPECIAL_CONTEXT</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>

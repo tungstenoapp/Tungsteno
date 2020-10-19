@@ -10,6 +10,6 @@ WORKDIR /app
 EXPOSE 8000
 
 
-RUN sed -i -e "s#all_interfaces=False#all_interfaces=True#" ./tsteno/gui/ __init__.py
+RUN sed -i -e "s#all_interfaces=False#all_interfaces=True#" ./tsteno/gui/__init__.py
 
 CMD ["python3", "./app.py", "--gui"]

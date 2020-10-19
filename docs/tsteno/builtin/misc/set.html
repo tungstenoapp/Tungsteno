@@ -103,10 +103,12 @@ class Set(Module):
 <span>(</span><span>kernel)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Atoms super class used to abstract atoms.</p>
+<div class="desc"><p>Super class that represent basic Tungsteno Language modules.</p>
 <p>Create a new atoms instance.</p>
 <h2 id="parameters">Parameters</h2>
-<p><strong>kernel</strong> - Represent a Tungsteno kernel instance</p></div>
+<ul>
+<li><strong>kernel</strong> - Represent a Tungsteno kernel instance</li>
+</ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -224,32 +226,6 @@ class Set(Module):
     ]</code></pre>
 </details>
 </dd>
-<dt id="tsteno.builtin.misc.set.Set.run"><code class="name flex">
-<span>def <span class="ident">run</span></span>(<span>self, all_variables, all_values, context)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def run(self, all_variables, all_values, context):
-    evaluation = self.get_kernel().get_kext(&#39;eval&#39;)
-
-    if not isinstance(all_variables, list):
-        all_variables = [all_variables]
-
-    if not isinstance(all_values, list):
-        all_values = [all_values]
-
-    definers = zip(all_variables, all_values)
-
-    for definer in definers:
-        self.define_one(evaluation, definer[0], definer[1], context)
-
-    return all_values</code></pre>
-</details>
-</dd>
 <dt id="tsteno.builtin.misc.set.Set.run_test"><code class="name flex">
 <span>def <span class="ident">run_test</span></span>(<span>self, test)</span>
 </code></dt>
@@ -277,7 +253,12 @@ class Set(Module):
 <ul class="hlist">
 <li><code><b><a title="tsteno.atoms.module.Module" href="../../atoms/module.html#tsteno.atoms.module.Module">Module</a></b></code>:
 <ul class="hlist">
+<li><code><a title="tsteno.atoms.module.Module.configuration_list2dict" href="../../atoms/module.html#tsteno.atoms.module.Module.configuration_list2dict">configuration_list2dict</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.eval" href="../../atoms/module.html#tsteno.atoms.module.Module.eval">eval</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.get_kernel" href="../../atoms/atoms.html#tsteno.atoms.atoms.Atoms.get_kernel">get_kernel</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.parse_argument" href="../../atoms/module.html#tsteno.atoms.module.Module.parse_argument">parse_argument</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.parse_arguments" href="../../atoms/module.html#tsteno.atoms.module.Module.parse_arguments">parse_arguments</a></code></li>
+<li><code><a title="tsteno.atoms.module.Module.run" href="../../atoms/module.html#tsteno.atoms.module.Module.run">run</a></code></li>
 </ul>
 </li>
 </ul>
@@ -303,7 +284,6 @@ class Set(Module):
 <ul class="">
 <li><code><a title="tsteno.builtin.misc.set.Set.define_one" href="#tsteno.builtin.misc.set.Set.define_one">define_one</a></code></li>
 <li><code><a title="tsteno.builtin.misc.set.Set.get_arguments" href="#tsteno.builtin.misc.set.Set.get_arguments">get_arguments</a></code></li>
-<li><code><a title="tsteno.builtin.misc.set.Set.run" href="#tsteno.builtin.misc.set.Set.run">run</a></code></li>
 <li><code><a title="tsteno.builtin.misc.set.Set.run_test" href="#tsteno.builtin.misc.set.Set.run_test">run_test</a></code></li>
 </ul>
 </li>

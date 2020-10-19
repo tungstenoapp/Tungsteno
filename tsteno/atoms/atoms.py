@@ -15,7 +15,7 @@ class Atoms:
         Create a new atoms instance.
 
         Parameters:
-            **kernel** - Represent a Tungsteno kernel instance
+            - **kernel** - Represent a Tungsteno kernel instance
 
         """
         self.__kernel = kernel
