@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.1" />
 <title>tsteno.atoms.comparator API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="Contains comparator operator atom." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,26 +22,49 @@
 <h1 class="title">Module <code>tsteno.atoms.comparator</code></h1>
 </header>
 <section id="section-intro">
+<p>Contains comparator operator atom.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from .atoms import Atoms
+<pre><code class="python">&#34;&#34;&#34;
+Contains comparator operator atom.
+&#34;&#34;&#34;
+from .atoms import Atoms
 from functools import reduce
 
 
 class Comparator(Atoms):
+    &#34;&#34;&#34;
+    Comparator represent a binary operation that compare two values.
+    &#34;&#34;&#34;
     __slots__ = (&#39;left&#39;, &#39;right&#39;, &#39;op&#39;)
 
     def __init__(self, left, right, op):
+        &#34;&#34;&#34;
+        Parameters:
+            ** left ** - Left value to be compared.
+            ** right ** - Right value to be compared.
+            ** op ** -  Operator used to compare.
+        &#34;&#34;&#34;
         self.left = left
         self.right = right
         self.op = op
 
     def eval(self):
+        &#34;&#34;&#34;
+        Evaluate current comparator and generate an answer.
+
+        Return:
+            Return a boolean value if left &amp; right are numeric.
+            Return a symbol if left or right are symbols.
+        &#34;&#34;&#34;
         return reduce(self.op, (self.left, self.right))
 
     def __bool__(self):
+        &#34;&#34;&#34;
+        Shortcut to eval()
+        &#34;&#34;&#34;
         return self.eval()
 
     def __repr__(self):
@@ -62,26 +85,47 @@ class Comparator(Atoms):
 <span>(</span><span>left, right, op)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Atoms super class used to abstract atoms.</p>
-<p>Create a new atoms instance.</p>
+<div class="desc"><p>Comparator represent a binary operation that compare two values.</p>
 <h2 id="parameters">Parameters</h2>
-<p><em>kernel</em> - Represent a Tungsteno kernel instance</p></div>
+<p><strong> left </strong> - Left value to be compared.
+<strong> right </strong> - Right value to be compared.
+<strong> op </strong> -
+Operator used to compare.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Comparator(Atoms):
+    &#34;&#34;&#34;
+    Comparator represent a binary operation that compare two values.
+    &#34;&#34;&#34;
     __slots__ = (&#39;left&#39;, &#39;right&#39;, &#39;op&#39;)
 
     def __init__(self, left, right, op):
+        &#34;&#34;&#34;
+        Parameters:
+            ** left ** - Left value to be compared.
+            ** right ** - Right value to be compared.
+            ** op ** -  Operator used to compare.
+        &#34;&#34;&#34;
         self.left = left
         self.right = right
         self.op = op
 
     def eval(self):
+        &#34;&#34;&#34;
+        Evaluate current comparator and generate an answer.
+
+        Return:
+            Return a boolean value if left &amp; right are numeric.
+            Return a symbol if left or right are symbols.
+        &#34;&#34;&#34;
         return reduce(self.op, (self.left, self.right))
 
     def __bool__(self):
+        &#34;&#34;&#34;
+        Shortcut to eval()
+        &#34;&#34;&#34;
         return self.eval()
 
     def __repr__(self):
@@ -112,12 +156,22 @@ class Comparator(Atoms):
 <span>def <span class="ident">eval</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Evaluate current comparator and generate an answer.</p>
+<h2 id="return">Return</h2>
+<p>Return a boolean value if left &amp; right are numeric.
+Return a symbol if left or right are symbols.</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def eval(self):
+    &#34;&#34;&#34;
+    Evaluate current comparator and generate an answer.
+
+    Return:
+        Return a boolean value if left &amp; right are numeric.
+        Return a symbol if left or right are symbols.
+    &#34;&#34;&#34;
     return reduce(self.op, (self.left, self.right))</code></pre>
 </details>
 </dd>
