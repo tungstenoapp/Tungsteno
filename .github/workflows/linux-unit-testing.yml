@@ -35,7 +35,7 @@ jobs:
         flake8 . --count --max-complexity=10 --max-line-length=127 --statistics
     - name: Test commont typos
       run: |
-        grep -ri "Tungsteno" --exclude-dir .github && exit 1
+        grep -ri "Tugnsteno" --exclude-dir .github && exit 1
     - name: Test with unit test
       run: |
         python -m unittest discover -s tests/ -p "*_test.py"
