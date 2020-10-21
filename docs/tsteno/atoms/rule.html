@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.1" />
 <title>tsteno.atoms.rule API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="Represent a set of rules" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,17 +22,30 @@
 <h1 class="title">Module <code>tsteno.atoms.rule</code></h1>
 </header>
 <section id="section-intro">
+<p>Represent a set of rules</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from .atoms import Atoms
+<pre><code class="python">&#34;&#34;&#34;
+Represent a set of rules
+&#34;&#34;&#34;
+from .atoms import Atoms
 
 
 class RuleSet(Atoms):
+    &#34;&#34;&#34;
+    Represent a set of rules
+    &#34;&#34;&#34;
     __slots__ = [&#39;__kernel&#39;, &#39;rules_dict&#39;]
 
     def __init__(self, kernel, rules_dict):
+        &#34;&#34;&#34;
+        Initialize a new RuleSet from kernel and dict.
+        Parameters:
+            - **kernel** - Represent Tungsteno kernel.
+            - **rules_dict** - Represnet a dictionary with rules definition
+        &#34;&#34;&#34;
         super().__init__(kernel)
         self.rules_dict = rules_dict
 
@@ -70,20 +83,30 @@ class RuleSet(Atoms):
 <span>(</span><span>kernel, rules_dict)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Atoms super class used to abstract atoms.</p>
-<p>Create a new atoms instance.</p>
+<div class="desc"><p>Represent a set of rules</p>
+<p>Initialize a new RuleSet from kernel and dict.</p>
 <h2 id="parameters">Parameters</h2>
 <ul>
-<li><strong>kernel</strong> - Represent a Tungsteno kernel instance</li>
+<li><strong>kernel</strong> - Represent Tungsteno kernel.</li>
+<li><strong>rules_dict</strong> - Represnet a dictionary with rules definition</li>
 </ul></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class RuleSet(Atoms):
+    &#34;&#34;&#34;
+    Represent a set of rules
+    &#34;&#34;&#34;
     __slots__ = [&#39;__kernel&#39;, &#39;rules_dict&#39;]
 
     def __init__(self, kernel, rules_dict):
+        &#34;&#34;&#34;
+        Initialize a new RuleSet from kernel and dict.
+        Parameters:
+            - **kernel** - Represent Tungsteno kernel.
+            - **rules_dict** - Represnet a dictionary with rules definition
+        &#34;&#34;&#34;
         super().__init__(kernel)
         self.rules_dict = rules_dict
 
