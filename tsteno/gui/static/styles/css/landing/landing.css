@@ -1,56 +1,46 @@
 .landing {
-  height: 100%;
-}
-.landing .row-actions {
-  display: flex;
-  width: 100%;
-  height: 100%;
-}
-.landing .row-actions .files {
-  padding: 10px;
-  flex: 350px;
-  background: #9AC9C9;
-  border-right: 3px solid #7ba0a0;
-}
-.landing .row-actions .files .logo {
-  font-size: 20px;
-  font-weight: bolder;
-}
-.landing .row-actions .files .caption {
-  margin-top: 10px;
-  font-weight: bold;
-  color: #4D6464;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-}
-.landing .row-actions .files .actions li {
-  border-radius: 3px;
-  font-size: 17px !important;
-  background: #F4FB87;
-  border: 2px solid #4D6464;
-  color: #4D6464;
-  font-weight: bold;
-  padding: 3px;
-  margin-top: 4px;
-  cursor: pointer;
-  display: block;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  text-align: center;
-}
-.landing .row-actions .files .actions li:hover {
-  background: #eefa45;
-}
-.landing .row-actions .smart {
-  flex: 100%;
-}
-@media only screen and (max-width : 650px) {
+  height: 100%; }
   .landing .row-actions {
-    flex-direction: column;
-  }
-}
+    display: flex;
+    width: 100%;
+    height: 100%; }
+    .landing .row-actions .files {
+      padding: 10px;
+      flex: 350px;
+      background: #9AC9C9;
+      border-right: 3px solid #7ba0a0; }
+      .landing .row-actions .files .logo {
+        font-size: 20px;
+        font-weight: bolder; }
+      .landing .row-actions .files .caption {
+        margin-top: 10px;
+        font-weight: bold;
+        color: #4D6464;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none; }
+      .landing .row-actions .files .actions li {
+        border-radius: 3px;
+        font-size: 17px !important;
+        background: #F4FB87;
+        border: 2px solid #4D6464;
+        color: #4D6464;
+        font-weight: bold;
+        padding: 3px;
+        margin-top: 4px;
+        cursor: pointer;
+        display: block;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        text-align: center; }
+      .landing .row-actions .files .actions li:hover {
+        background: #eefa45; }
+    .landing .row-actions .smart {
+      flex: 100%; }
+  @media only screen and (max-width: 650px) {
+    .landing .row-actions {
+      flex-direction: column; } }
 
 /*# sourceMappingURL=landing.css.map */
