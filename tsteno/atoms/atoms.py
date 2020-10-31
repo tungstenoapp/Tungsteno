@@ -12,8 +12,6 @@ class Atoms:
 
     def __init__(self, kernel):
         """
-        Create a new atoms instance.
-
         Parameters:
             - **kernel** - Represent a Tungsteno kernel instance
 
