@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.9.1" />
 <title>tsteno.builtin.comparators.less_equal API documentation</title>
-<meta name="description" content="" />
+<meta name="description" content="This file contains class definition for creating a less or equal comparator." />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,17 +22,51 @@
 <h1 class="title">Module <code>tsteno.builtin.comparators.less_equal</code></h1>
 </header>
 <section id="section-intro">
+<p>This file contains class definition for creating a less or equal comparator.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">import operator as op
+<pre><code class="python">&#34;&#34;&#34;
+This file contains class definition for creating a less or equal comparator.
+&#34;&#34;&#34;
+
+import operator as op
 
 from tsteno.atoms.comparator import Comparator
 from tsteno.atoms.module import Module, ModuleArg
 
 
 class LessEqual(Module):
+    &#34;&#34;&#34;
+    Represent an greater or equal operator.
+    # Examples
+    Test equality.
+
+    **&lt;u&gt;Input:&lt;/u&gt;**
+    ```
+    # LessEqual[x+1, 1+x]
+    x + 1 &lt;= 1 + x
+    ```
+
+    **&lt;u&gt;Output:&lt;/u&gt;**
+    ```
+    True
+    ```
+    ---
+    Represent an inequation
+
+    **&lt;u&gt;Input:&lt;/u&gt;**
+    ```
+    # Reduce[LessEqual[x+1, 0, x]
+    Reduce[x+1&lt;=0, x]
+    ```
+
+    **&lt;u&gt;Output:&lt;/u&gt;**
+    ```
+    {{x&lt;=-1}}
+    ```
+    &#34;&#34;&#34;
 
     def run(self, left, right):
         return Comparator(left, right, op.le)
@@ -63,7 +97,25 @@ class LessEqual(Module):
 <span>(</span><span>kernel)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Super class that represent basic Tungsteno Language modules.</p>
+<div class="desc"><p>Represent an greater or equal operator.</p>
+<h1 id="examples">Examples</h1>
+<p>Test equality.</p>
+<p><strong><u>Input:</u></strong></p>
+<pre><code># LessEqual[x+1, 1+x]
+x + 1 &lt;= 1 + x
+</code></pre>
+<p><strong><u>Output:</u></strong></p>
+<pre><code>True
+</code></pre>
+<hr>
+<p>Represent an inequation</p>
+<p><strong><u>Input:</u></strong></p>
+<pre><code># Reduce[LessEqual[x+1, 0, x]
+Reduce[x+1&lt;=0, x]
+</code></pre>
+<p><strong><u>Output:</u></strong></p>
+<pre><code>{{x&lt;=-1}}
+</code></pre>
 <h2 id="parameters">Parameters</h2>
 <ul>
 <li><strong>kernel</strong> - Represent a Tungsteno kernel instance</li>
@@ -73,6 +125,35 @@ class LessEqual(Module):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class LessEqual(Module):
+    &#34;&#34;&#34;
+    Represent an greater or equal operator.
+    # Examples
+    Test equality.
+
+    **&lt;u&gt;Input:&lt;/u&gt;**
+    ```
+    # LessEqual[x+1, 1+x]
+    x + 1 &lt;= 1 + x
+    ```
+
+    **&lt;u&gt;Output:&lt;/u&gt;**
+    ```
+    True
+    ```
+    ---
+    Represent an inequation
+
+    **&lt;u&gt;Input:&lt;/u&gt;**
+    ```
+    # Reduce[LessEqual[x+1, 0, x]
+    Reduce[x+1&lt;=0, x]
+    ```
+
+    **&lt;u&gt;Output:&lt;/u&gt;**
+    ```
+    {{x&lt;=-1}}
+    ```
+    &#34;&#34;&#34;
 
     def run(self, left, right):
         return Comparator(left, right, op.le)
