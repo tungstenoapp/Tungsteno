@@ -37,10 +37,9 @@ class GreaterThan(Module):
     {{x>-1}}
     ```
     """
-
     def run(self, left, right):
         """
-        Represent an equal operator.
+        Represent an greater operator.
         Parameters:
             - **left**: Left element to be compared.
             - **right**: Right element to be compared.

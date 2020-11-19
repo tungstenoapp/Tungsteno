@@ -10,7 +10,7 @@ from tsteno.atoms.module import Module, ModuleArg
 
 class LessEqual(Module):
     """
-    Represent an greater or equal operator.
+    Represent an less or equal operator.
     # Examples
     Test equality.
 
@@ -40,6 +40,12 @@ class LessEqual(Module):
     """
 
     def run(self, left, right):
+        """
+        Represent an greater operator.
+        Parameters:
+            - **left**: Left element to be compared.
+            - **right**: Right element to be compared.
+        """
         return Comparator(left, right, op.le)
 
     def get_arguments(self):
