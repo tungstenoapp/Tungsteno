@@ -39,7 +39,7 @@ from tsteno.atoms.module import Module, ModuleArg
 
 class LessEqual(Module):
     &#34;&#34;&#34;
-    Represent an greater or equal operator.
+    Represent an less or equal operator.
     # Examples
     Test equality.
 
@@ -69,6 +69,12 @@ class LessEqual(Module):
     &#34;&#34;&#34;
 
     def run(self, left, right):
+        &#34;&#34;&#34;
+        Represent an greater operator.
+        Parameters:
+            - **left**: Left element to be compared.
+            - **right**: Right element to be compared.
+        &#34;&#34;&#34;
         return Comparator(left, right, op.le)
 
     def get_arguments(self):
@@ -97,7 +103,7 @@ class LessEqual(Module):
 <span>(</span><span>kernel)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Represent an greater or equal operator.</p>
+<div class="desc"><p>Represent an less or equal operator.</p>
 <h1 id="examples">Examples</h1>
 <p>Test equality.</p>
 <p><strong><u>Input:</u></strong></p>
@@ -126,7 +132,7 @@ Reduce[x+1&lt;=0, x]
 </summary>
 <pre><code class="python">class LessEqual(Module):
     &#34;&#34;&#34;
-    Represent an greater or equal operator.
+    Represent an less or equal operator.
     # Examples
     Test equality.
 
@@ -156,6 +162,12 @@ Reduce[x+1&lt;=0, x]
     &#34;&#34;&#34;
 
     def run(self, left, right):
+        &#34;&#34;&#34;
+        Represent an greater operator.
+        Parameters:
+            - **left**: Left element to be compared.
+            - **right**: Right element to be compared.
+        &#34;&#34;&#34;
         return Comparator(left, right, op.le)
 
     def get_arguments(self):
@@ -174,6 +186,33 @@ Reduce[x+1&lt;=0, x]
 <li><a title="tsteno.atoms.module.Module" href="../../atoms/module.html#tsteno.atoms.module.Module">Module</a></li>
 <li><a title="tsteno.atoms.atoms.Atoms" href="../../atoms/atoms.html#tsteno.atoms.atoms.Atoms">Atoms</a></li>
 </ul>
+<h3>Methods</h3>
+<dl>
+<dt id="tsteno.builtin.comparators.less_equal.LessEqual.run"><code class="name flex">
+<span>def <span class="ident">run</span></span>(<span>self, left, right)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Represent an greater operator.</p>
+<h2 id="parameters">Parameters</h2>
+<ul>
+<li><strong>left</strong>: Left element to be compared.</li>
+<li><strong>right</strong>: Right element to be compared.</li>
+</ul></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def run(self, left, right):
+    &#34;&#34;&#34;
+    Represent an greater operator.
+    Parameters:
+        - **left**: Left element to be compared.
+        - **right**: Right element to be compared.
+    &#34;&#34;&#34;
+    return Comparator(left, right, op.le)</code></pre>
+</details>
+</dd>
+</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="tsteno.atoms.module.Module" href="../../atoms/module.html#tsteno.atoms.module.Module">Module</a></b></code>:
@@ -184,7 +223,6 @@ Reduce[x+1&lt;=0, x]
 <li><code><a title="tsteno.atoms.module.Module.get_kernel" href="../../atoms/atoms.html#tsteno.atoms.atoms.Atoms.get_kernel">get_kernel</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.parse_argument" href="../../atoms/module.html#tsteno.atoms.module.Module.parse_argument">parse_argument</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.parse_arguments" href="../../atoms/module.html#tsteno.atoms.module.Module.parse_arguments">parse_arguments</a></code></li>
-<li><code><a title="tsteno.atoms.module.Module.run" href="../../atoms/module.html#tsteno.atoms.module.Module.run">run</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.run_parallel" href="../../atoms/module.html#tsteno.atoms.module.Module.run_parallel">run_parallel</a></code></li>
 <li><code><a title="tsteno.atoms.module.Module.run_test" href="../../atoms/module.html#tsteno.atoms.module.Module.run_test">run_test</a></code></li>
 </ul>
@@ -209,6 +247,9 @@ Reduce[x+1&lt;=0, x]
 <ul>
 <li>
 <h4><code><a title="tsteno.builtin.comparators.less_equal.LessEqual" href="#tsteno.builtin.comparators.less_equal.LessEqual">LessEqual</a></code></h4>
+<ul class="">
+<li><code><a title="tsteno.builtin.comparators.less_equal.LessEqual.run" href="#tsteno.builtin.comparators.less_equal.LessEqual.run">run</a></code></li>
+</ul>
 </li>
 </ul>
 </li>
