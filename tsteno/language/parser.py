@@ -35,34 +35,64 @@ class UnaryOpParser(BaseParser):
 
 
 class IdentifierTokenParser(BaseParser):
+
+    def parse_function(self, itok, tokens, toklen, pos, parser):
+        arg = []
+        arguments = []
+        while pos < toklen:
+            ntok = tokens[pos]
+
+            if ntok.get_type() == token_list.TOKEN_COMMA_SEPARATOR:
+                arguments.append(arg[0] if len(arg) == 1 else arg)
+                arg = []
+                pos = pos + 1
+                continue
+            elif ntok.get_type() == token_list.TOKEN_RIGHTSQUARE_BRACKETS:
+                arguments.append(arg[0] if len(arg) == 1 else arg)
+                pos = pos + 1
+                break
+
+            expr, pos = parser.compute_expr(tokens, toklen, pos)
+            arg.append(expr)
+
+        return Node(itok.get_value(), *arguments), pos
+
+    def parse_access_list(self, itok, tokens, toklen, pos, parser):
+        arg = []
+        expr, _ = parser.compute_expr([itok], 1, 0)
+
+        arguments = [expr]
+        while pos < toklen:
+            ntok = tokens[pos]
+
+            if ntok.get_type() == token_list.TOKEN_COMMA_SEPARATOR:
+                arguments.append(arg[0] if len(arg) == 1 else arg)
+                arg = []
+                pos = pos + 1
+                continue
+            elif ntok.get_type() == token_list.TOKEN_RIGHTSQUARE_BRACKETS:
+                arguments.append(arg[0] if len(arg) == 1 else arg)
+                pos = pos + 1
+                break
+
+            expr, pos = parser.compute_expr(tokens, toklen, pos)
+            arg.append(expr)
+
+        return Node('Part', *arguments), pos
+
+
     def read(self, tokens, toklen, pos, parser):
         itok = tokens[pos]
 
         if pos + 1 < toklen:
             ntok = tokens[pos + 1]
-            if ntok.get_type() == token_list.TOKEN_LEFTFUNC:
+            if ntok.get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
                 pos = pos + 2
+                if tokens[pos].get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
+                    pos = pos + 1
+                    return self.parse_access_list(itok, tokens, toklen, pos, parser)
 
-                arg = []
-                arguments = []
-                while pos < toklen:
-                    ntok = tokens[pos]
-
-                    if ntok.get_type() == token_list.TOKEN_COMMA_SEPARATOR:
-                        arguments.append(arg[0] if len(arg) == 1 else arg)
-                        arg = []
-
-                        pos = pos + 1
-                        continue
-                    elif ntok.get_type() == token_list.TOKEN_RIGHTFUNC:
-                        arguments.append(arg[0] if len(arg) == 1 else arg)
-                        pos = pos + 1
-                        break
-                    expr, pos = parser.compute_expr(tokens, toklen, pos)
-
-                    arg.append(expr)
-
-                return Node(itok.get_value(), *arguments), pos
+                return self.parse_function(itok, tokens, toklen, pos, parser)
 
         return IdentifierToken(itok.get_value()), pos + 1
 
@@ -137,7 +167,7 @@ UNARY_OPINFO_MAP = {
 
 CLOSURE_TOKENS = [
     token_list.TOKEN_CLOSE_EXPR, token_list.TOKEN_NEWLINE,
-    token_list.TOKEN_COMMA_SEPARATOR, token_list.TOKEN_RIGHTFUNC,
+    token_list.TOKEN_COMMA_SEPARATOR, token_list.TOKEN_RIGHTSQUARE_BRACKETS,
     token_list.TOKEN_RIGHTLIST, token_list.TOKEN_RIGHTPAREN
 ]
 
@@ -210,10 +240,40 @@ class Parser:
                 )
 
                 atom_lhs = self.compute_binop(node, atom_lhs, atom_rhs)
+            elif token.get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS and\
+                pos + 1 < toklen and \
+                tokens[pos + 1].get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
+
+                pos = pos + 2
+                atom_lhs, pos = self.compute_access_list(
+                    atom_lhs, tokens, toklen, pos
+                )
             else:
                 raise Exception(str(token))
 
         return atom_lhs, pos
+
+    def compute_access_list(self, atom_lhs, tokens, toklen, pos):
+        arg = []
+        arguments = [atom_lhs]
+
+        while pos < toklen:
+            ntok = tokens[pos]
+
+            if ntok.get_type() == token_list.TOKEN_COMMA_SEPARATOR:
+                arguments.append(arg[0] if len(arg) == 1 else arg)
+                arg = []
+                pos = pos + 1
+                continue
+            elif ntok.get_type() == token_list.TOKEN_RIGHTSQUARE_BRACKETS:
+                arguments.append(arg[0] if len(arg) == 1 else arg)
+                pos = pos + 1
+                break
+
+            expr, pos = self.compute_expr(tokens, toklen, pos)
+            arg.append(expr)
+
+        return Node('Part', *arguments), pos
 
     def compute_binop(self, node, lhs, rhs):
         return Node(node, lhs, rhs)
