@@ -80,7 +80,6 @@ class IdentifierTokenParser(BaseParser):
 
         return Node('Part', *arguments), pos
 
-
     def read(self, tokens, toklen, pos, parser):
         itok = tokens[pos]
 
@@ -241,8 +240,8 @@ class Parser:
 
                 atom_lhs = self.compute_binop(node, atom_lhs, atom_rhs)
             elif token.get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS and\
-                pos + 1 < toklen and \
-                tokens[pos + 1].get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
+                    pos + 1 < toklen and \
+                    tokens[pos + 1].get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
 
                 pos = pos + 2
                 atom_lhs, pos = self.compute_access_list(

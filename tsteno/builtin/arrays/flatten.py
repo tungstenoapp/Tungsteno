@@ -1,8 +1,6 @@
 """
 This file contains class definition for working with List.
 """
-import itertools as it
-
 from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_OPTIONAL
 
 
