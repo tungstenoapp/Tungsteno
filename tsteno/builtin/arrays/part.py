@@ -23,6 +23,7 @@ class Part(Module):
     a
     ```
     """
+
     def run(self, expr, *indexes):
         """
         Gives the i^(th) part of expr.
@@ -75,5 +76,6 @@ class Part(Module):
         )
 
         test.assertEqual(
-            evaluation.evaluate_code('part_list_test[[3]]'), sympy.parse_expr('g')
+            evaluation.evaluate_code(
+                'part_list_test[[3]]'), sympy.parse_expr('g')
         )

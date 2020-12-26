@@ -4,15 +4,15 @@ This file contains class definition for working with List.
 from tsteno.atoms.module import Module, ModuleArg
 
 
-class First(Module):
+class Last(Module):
     """
-    **First[list]**
-    Return the first item of list
+    **Last[list]**
+    Return the last item of list
 
     """
 
     def run(self, list):
-        return list[0]
+        return list[len(list) - 1]
 
     def get_arguments(self):
         return [
@@ -25,5 +25,5 @@ class First(Module):
         evaluation.evaluate_code('lista_prueba={1,2,3};')
 
         test.assertEqual(
-            evaluation.evaluate_code('First[lista_prueba]'), 1
+            evaluation.evaluate_code('Last[lista_prueba]'), 3
         )
