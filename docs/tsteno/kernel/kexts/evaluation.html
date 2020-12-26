@@ -181,7 +181,12 @@ class Evaluation(KextBase):
                 return context.get_last_result()
 
         if tokens[-1].get_type() != token_list.TOKEN_CLOSE_EXPR:
-            self.run_function(&#39;Print&#39;, [context.get_last_result()], context)
+            if len(tokens) == 1:
+                self.run_function(
+                    &#39;Print&#39;, [[context.get_last_result()]], context)
+            else:
+                self.run_function(
+                    &#39;Print&#39;, [context.get_last_result()], context)
         return context.get_last_result()
 
     def evaluate_node(self, node, context):
@@ -221,12 +226,17 @@ class Evaluation(KextBase):
     def run_builtin_tests(self, test):
         modules = self.get_all_modules()
         for module in modules:
+            self.clear()
             module.run_test(test)
 
     def run_function(self, fname, arguments, context={}):
         module_definition = self.get_module_definition(
             fname, arguments, context)
         return module_definition.eval(arguments, context)
+
+    def clear(self):
+        self.user_modules.clear()
+        self.user_variables.clear()
 
     def __load_builtin_module(self, path, module_def, log_kext=None):
         if log_kext is None:
@@ -609,7 +619,12 @@ class Evaluation(KextBase):
                 return context.get_last_result()
 
         if tokens[-1].get_type() != token_list.TOKEN_CLOSE_EXPR:
-            self.run_function(&#39;Print&#39;, [context.get_last_result()], context)
+            if len(tokens) == 1:
+                self.run_function(
+                    &#39;Print&#39;, [[context.get_last_result()]], context)
+            else:
+                self.run_function(
+                    &#39;Print&#39;, [context.get_last_result()], context)
         return context.get_last_result()
 
     def evaluate_node(self, node, context):
@@ -649,12 +664,17 @@ class Evaluation(KextBase):
     def run_builtin_tests(self, test):
         modules = self.get_all_modules()
         for module in modules:
+            self.clear()
             module.run_test(test)
 
     def run_function(self, fname, arguments, context={}):
         module_definition = self.get_module_definition(
             fname, arguments, context)
         return module_definition.eval(arguments, context)
+
+    def clear(self):
+        self.user_modules.clear()
+        self.user_variables.clear()
 
     def __load_builtin_module(self, path, module_def, log_kext=None):
         if log_kext is None:
@@ -783,6 +803,20 @@ class Evaluation(KextBase):
 </dl>
 <h3>Methods</h3>
 <dl>
+<dt id="tsteno.kernel.kexts.evaluation.Evaluation.clear"><code class="name flex">
+<span>def <span class="ident">clear</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def clear(self):
+    self.user_modules.clear()
+    self.user_variables.clear()</code></pre>
+</details>
+</dd>
 <dt id="tsteno.kernel.kexts.evaluation.Evaluation.evaluate_code"><code class="name flex">
 <span>def <span class="ident">evaluate_code</span></span>(<span>self, code)</span>
 </code></dt>
@@ -804,7 +838,12 @@ class Evaluation(KextBase):
             return context.get_last_result()
 
     if tokens[-1].get_type() != token_list.TOKEN_CLOSE_EXPR:
-        self.run_function(&#39;Print&#39;, [context.get_last_result()], context)
+        if len(tokens) == 1:
+            self.run_function(
+                &#39;Print&#39;, [[context.get_last_result()]], context)
+        else:
+            self.run_function(
+                &#39;Print&#39;, [context.get_last_result()], context)
     return context.get_last_result()</code></pre>
 </details>
 </dd>
@@ -943,6 +982,7 @@ class Evaluation(KextBase):
 <pre><code class="python">def run_builtin_tests(self, test):
     modules = self.get_all_modules()
     for module in modules:
+        self.clear()
         module.run_test(test)</code></pre>
 </details>
 </dd>
@@ -1026,6 +1066,7 @@ class Evaluation(KextBase):
 <li><code><a title="tsteno.kernel.kexts.evaluation.Evaluation.auto_symbols" href="#tsteno.kernel.kexts.evaluation.Evaluation.auto_symbols">auto_symbols</a></code></li>
 <li><code><a title="tsteno.kernel.kexts.evaluation.Evaluation.builtin_modules" href="#tsteno.kernel.kexts.evaluation.Evaluation.builtin_modules">builtin_modules</a></code></li>
 <li><code><a title="tsteno.kernel.kexts.evaluation.Evaluation.builtin_variables" href="#tsteno.kernel.kexts.evaluation.Evaluation.builtin_variables">builtin_variables</a></code></li>
+<li><code><a title="tsteno.kernel.kexts.evaluation.Evaluation.clear" href="#tsteno.kernel.kexts.evaluation.Evaluation.clear">clear</a></code></li>
 <li><code><a title="tsteno.kernel.kexts.evaluation.Evaluation.evaluate_code" href="#tsteno.kernel.kexts.evaluation.Evaluation.evaluate_code">evaluate_code</a></code></li>
 <li><code><a title="tsteno.kernel.kexts.evaluation.Evaluation.evaluate_node" href="#tsteno.kernel.kexts.evaluation.Evaluation.evaluate_node">evaluate_node</a></code></li>
 <li><code><a title="tsteno.kernel.kexts.evaluation.Evaluation.get_all_definitions" href="#tsteno.kernel.kexts.evaluation.Evaluation.get_all_definitions">get_all_definitions</a></code></li>

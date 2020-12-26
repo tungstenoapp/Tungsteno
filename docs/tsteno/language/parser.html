@@ -63,34 +63,63 @@ class UnaryOpParser(BaseParser):
 
 
 class IdentifierTokenParser(BaseParser):
+
+    def parse_function(self, itok, tokens, toklen, pos, parser):
+        arg = []
+        arguments = []
+        while pos &lt; toklen:
+            ntok = tokens[pos]
+
+            if ntok.get_type() == token_list.TOKEN_COMMA_SEPARATOR:
+                arguments.append(arg[0] if len(arg) == 1 else arg)
+                arg = []
+                pos = pos + 1
+                continue
+            elif ntok.get_type() == token_list.TOKEN_RIGHTSQUARE_BRACKETS:
+                arguments.append(arg[0] if len(arg) == 1 else arg)
+                pos = pos + 1
+                break
+
+            expr, pos = parser.compute_expr(tokens, toklen, pos)
+            arg.append(expr)
+
+        return Node(itok.get_value(), *arguments), pos
+
+    def parse_access_list(self, itok, tokens, toklen, pos, parser):
+        arg = []
+        expr, _ = parser.compute_expr([itok], 1, 0)
+
+        arguments = [expr]
+        while pos &lt; toklen:
+            ntok = tokens[pos]
+
+            if ntok.get_type() == token_list.TOKEN_COMMA_SEPARATOR:
+                arguments.append(arg[0] if len(arg) == 1 else arg)
+                arg = []
+                pos = pos + 1
+                continue
+            elif ntok.get_type() == token_list.TOKEN_RIGHTSQUARE_BRACKETS:
+                arguments.append(arg[0] if len(arg) == 1 else arg)
+                pos = pos + 1
+                break
+
+            expr, pos = parser.compute_expr(tokens, toklen, pos)
+            arg.append(expr)
+
+        return Node(&#39;Part&#39;, *arguments), pos
+
     def read(self, tokens, toklen, pos, parser):
         itok = tokens[pos]
 
         if pos + 1 &lt; toklen:
             ntok = tokens[pos + 1]
-            if ntok.get_type() == token_list.TOKEN_LEFTFUNC:
+            if ntok.get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
                 pos = pos + 2
+                if tokens[pos].get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
+                    pos = pos + 1
+                    return self.parse_access_list(itok, tokens, toklen, pos, parser)
 
-                arg = []
-                arguments = []
-                while pos &lt; toklen:
-                    ntok = tokens[pos]
-
-                    if ntok.get_type() == token_list.TOKEN_COMMA_SEPARATOR:
-                        arguments.append(arg[0] if len(arg) == 1 else arg)
-                        arg = []
-
-                        pos = pos + 1
-                        continue
-                    elif ntok.get_type() == token_list.TOKEN_RIGHTFUNC:
-                        arguments.append(arg[0] if len(arg) == 1 else arg)
-                        pos = pos + 1
-                        break
-                    expr, pos = parser.compute_expr(tokens, toklen, pos)
-
-                    arg.append(expr)
-
-                return Node(itok.get_value(), *arguments), pos
+                return self.parse_function(itok, tokens, toklen, pos, parser)
 
         return IdentifierToken(itok.get_value()), pos + 1
 
@@ -165,7 +194,7 @@ UNARY_OPINFO_MAP = {
 
 CLOSURE_TOKENS = [
     token_list.TOKEN_CLOSE_EXPR, token_list.TOKEN_NEWLINE,
-    token_list.TOKEN_COMMA_SEPARATOR, token_list.TOKEN_RIGHTFUNC,
+    token_list.TOKEN_COMMA_SEPARATOR, token_list.TOKEN_RIGHTSQUARE_BRACKETS,
     token_list.TOKEN_RIGHTLIST, token_list.TOKEN_RIGHTPAREN
 ]
 
@@ -238,10 +267,40 @@ class Parser:
                 )
 
                 atom_lhs = self.compute_binop(node, atom_lhs, atom_rhs)
+            elif token.get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS and\
+                    pos + 1 &lt; toklen and \
+                    tokens[pos + 1].get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
+
+                pos = pos + 2
+                atom_lhs, pos = self.compute_access_list(
+                    atom_lhs, tokens, toklen, pos
+                )
             else:
                 raise Exception(str(token))
 
         return atom_lhs, pos
+
+    def compute_access_list(self, atom_lhs, tokens, toklen, pos):
+        arg = []
+        arguments = [atom_lhs]
+
+        while pos &lt; toklen:
+            ntok = tokens[pos]
+
+            if ntok.get_type() == token_list.TOKEN_COMMA_SEPARATOR:
+                arguments.append(arg[0] if len(arg) == 1 else arg)
+                arg = []
+                pos = pos + 1
+                continue
+            elif ntok.get_type() == token_list.TOKEN_RIGHTSQUARE_BRACKETS:
+                arguments.append(arg[0] if len(arg) == 1 else arg)
+                pos = pos + 1
+                break
+
+            expr, pos = self.compute_expr(tokens, toklen, pos)
+            arg.append(expr)
+
+        return Node(&#39;Part&#39;, *arguments), pos
 
     def compute_binop(self, node, lhs, rhs):
         return Node(node, lhs, rhs)
@@ -369,34 +428,63 @@ class Parser:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class IdentifierTokenParser(BaseParser):
+
+    def parse_function(self, itok, tokens, toklen, pos, parser):
+        arg = []
+        arguments = []
+        while pos &lt; toklen:
+            ntok = tokens[pos]
+
+            if ntok.get_type() == token_list.TOKEN_COMMA_SEPARATOR:
+                arguments.append(arg[0] if len(arg) == 1 else arg)
+                arg = []
+                pos = pos + 1
+                continue
+            elif ntok.get_type() == token_list.TOKEN_RIGHTSQUARE_BRACKETS:
+                arguments.append(arg[0] if len(arg) == 1 else arg)
+                pos = pos + 1
+                break
+
+            expr, pos = parser.compute_expr(tokens, toklen, pos)
+            arg.append(expr)
+
+        return Node(itok.get_value(), *arguments), pos
+
+    def parse_access_list(self, itok, tokens, toklen, pos, parser):
+        arg = []
+        expr, _ = parser.compute_expr([itok], 1, 0)
+
+        arguments = [expr]
+        while pos &lt; toklen:
+            ntok = tokens[pos]
+
+            if ntok.get_type() == token_list.TOKEN_COMMA_SEPARATOR:
+                arguments.append(arg[0] if len(arg) == 1 else arg)
+                arg = []
+                pos = pos + 1
+                continue
+            elif ntok.get_type() == token_list.TOKEN_RIGHTSQUARE_BRACKETS:
+                arguments.append(arg[0] if len(arg) == 1 else arg)
+                pos = pos + 1
+                break
+
+            expr, pos = parser.compute_expr(tokens, toklen, pos)
+            arg.append(expr)
+
+        return Node(&#39;Part&#39;, *arguments), pos
+
     def read(self, tokens, toklen, pos, parser):
         itok = tokens[pos]
 
         if pos + 1 &lt; toklen:
             ntok = tokens[pos + 1]
-            if ntok.get_type() == token_list.TOKEN_LEFTFUNC:
+            if ntok.get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
                 pos = pos + 2
+                if tokens[pos].get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
+                    pos = pos + 1
+                    return self.parse_access_list(itok, tokens, toklen, pos, parser)
 
-                arg = []
-                arguments = []
-                while pos &lt; toklen:
-                    ntok = tokens[pos]
-
-                    if ntok.get_type() == token_list.TOKEN_COMMA_SEPARATOR:
-                        arguments.append(arg[0] if len(arg) == 1 else arg)
-                        arg = []
-
-                        pos = pos + 1
-                        continue
-                    elif ntok.get_type() == token_list.TOKEN_RIGHTFUNC:
-                        arguments.append(arg[0] if len(arg) == 1 else arg)
-                        pos = pos + 1
-                        break
-                    expr, pos = parser.compute_expr(tokens, toklen, pos)
-
-                    arg.append(expr)
-
-                return Node(itok.get_value(), *arguments), pos
+                return self.parse_function(itok, tokens, toklen, pos, parser)
 
         return IdentifierToken(itok.get_value()), pos + 1</code></pre>
 </details>
@@ -406,6 +494,70 @@ class Parser:
 </ul>
 <h3>Methods</h3>
 <dl>
+<dt id="tsteno.language.parser.IdentifierTokenParser.parse_access_list"><code class="name flex">
+<span>def <span class="ident">parse_access_list</span></span>(<span>self, itok, tokens, toklen, pos, parser)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parse_access_list(self, itok, tokens, toklen, pos, parser):
+    arg = []
+    expr, _ = parser.compute_expr([itok], 1, 0)
+
+    arguments = [expr]
+    while pos &lt; toklen:
+        ntok = tokens[pos]
+
+        if ntok.get_type() == token_list.TOKEN_COMMA_SEPARATOR:
+            arguments.append(arg[0] if len(arg) == 1 else arg)
+            arg = []
+            pos = pos + 1
+            continue
+        elif ntok.get_type() == token_list.TOKEN_RIGHTSQUARE_BRACKETS:
+            arguments.append(arg[0] if len(arg) == 1 else arg)
+            pos = pos + 1
+            break
+
+        expr, pos = parser.compute_expr(tokens, toklen, pos)
+        arg.append(expr)
+
+    return Node(&#39;Part&#39;, *arguments), pos</code></pre>
+</details>
+</dd>
+<dt id="tsteno.language.parser.IdentifierTokenParser.parse_function"><code class="name flex">
+<span>def <span class="ident">parse_function</span></span>(<span>self, itok, tokens, toklen, pos, parser)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def parse_function(self, itok, tokens, toklen, pos, parser):
+    arg = []
+    arguments = []
+    while pos &lt; toklen:
+        ntok = tokens[pos]
+
+        if ntok.get_type() == token_list.TOKEN_COMMA_SEPARATOR:
+            arguments.append(arg[0] if len(arg) == 1 else arg)
+            arg = []
+            pos = pos + 1
+            continue
+        elif ntok.get_type() == token_list.TOKEN_RIGHTSQUARE_BRACKETS:
+            arguments.append(arg[0] if len(arg) == 1 else arg)
+            pos = pos + 1
+            break
+
+        expr, pos = parser.compute_expr(tokens, toklen, pos)
+        arg.append(expr)
+
+    return Node(itok.get_value(), *arguments), pos</code></pre>
+</details>
+</dd>
 <dt id="tsteno.language.parser.IdentifierTokenParser.read"><code class="name flex">
 <span>def <span class="ident">read</span></span>(<span>self, tokens, toklen, pos, parser)</span>
 </code></dt>
@@ -420,29 +572,13 @@ class Parser:
 
     if pos + 1 &lt; toklen:
         ntok = tokens[pos + 1]
-        if ntok.get_type() == token_list.TOKEN_LEFTFUNC:
+        if ntok.get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
             pos = pos + 2
+            if tokens[pos].get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
+                pos = pos + 1
+                return self.parse_access_list(itok, tokens, toklen, pos, parser)
 
-            arg = []
-            arguments = []
-            while pos &lt; toklen:
-                ntok = tokens[pos]
-
-                if ntok.get_type() == token_list.TOKEN_COMMA_SEPARATOR:
-                    arguments.append(arg[0] if len(arg) == 1 else arg)
-                    arg = []
-
-                    pos = pos + 1
-                    continue
-                elif ntok.get_type() == token_list.TOKEN_RIGHTFUNC:
-                    arguments.append(arg[0] if len(arg) == 1 else arg)
-                    pos = pos + 1
-                    break
-                expr, pos = parser.compute_expr(tokens, toklen, pos)
-
-                arg.append(expr)
-
-            return Node(itok.get_value(), *arguments), pos
+            return self.parse_function(itok, tokens, toklen, pos, parser)
 
     return IdentifierToken(itok.get_value()), pos + 1</code></pre>
 </details>
@@ -674,10 +810,40 @@ class Parser:
                 )
 
                 atom_lhs = self.compute_binop(node, atom_lhs, atom_rhs)
+            elif token.get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS and\
+                    pos + 1 &lt; toklen and \
+                    tokens[pos + 1].get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
+
+                pos = pos + 2
+                atom_lhs, pos = self.compute_access_list(
+                    atom_lhs, tokens, toklen, pos
+                )
             else:
                 raise Exception(str(token))
 
         return atom_lhs, pos
+
+    def compute_access_list(self, atom_lhs, tokens, toklen, pos):
+        arg = []
+        arguments = [atom_lhs]
+
+        while pos &lt; toklen:
+            ntok = tokens[pos]
+
+            if ntok.get_type() == token_list.TOKEN_COMMA_SEPARATOR:
+                arguments.append(arg[0] if len(arg) == 1 else arg)
+                arg = []
+                pos = pos + 1
+                continue
+            elif ntok.get_type() == token_list.TOKEN_RIGHTSQUARE_BRACKETS:
+                arguments.append(arg[0] if len(arg) == 1 else arg)
+                pos = pos + 1
+                break
+
+            expr, pos = self.compute_expr(tokens, toklen, pos)
+            arg.append(expr)
+
+        return Node(&#39;Part&#39;, *arguments), pos
 
     def compute_binop(self, node, lhs, rhs):
         return Node(node, lhs, rhs)
@@ -726,6 +892,38 @@ class Parser:
 </dl>
 <h3>Methods</h3>
 <dl>
+<dt id="tsteno.language.parser.Parser.compute_access_list"><code class="name flex">
+<span>def <span class="ident">compute_access_list</span></span>(<span>self, atom_lhs, tokens, toklen, pos)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def compute_access_list(self, atom_lhs, tokens, toklen, pos):
+    arg = []
+    arguments = [atom_lhs]
+
+    while pos &lt; toklen:
+        ntok = tokens[pos]
+
+        if ntok.get_type() == token_list.TOKEN_COMMA_SEPARATOR:
+            arguments.append(arg[0] if len(arg) == 1 else arg)
+            arg = []
+            pos = pos + 1
+            continue
+        elif ntok.get_type() == token_list.TOKEN_RIGHTSQUARE_BRACKETS:
+            arguments.append(arg[0] if len(arg) == 1 else arg)
+            pos = pos + 1
+            break
+
+        expr, pos = self.compute_expr(tokens, toklen, pos)
+        arg.append(expr)
+
+    return Node(&#39;Part&#39;, *arguments), pos</code></pre>
+</details>
+</dd>
 <dt id="tsteno.language.parser.Parser.compute_atom"><code class="name flex">
 <span>def <span class="ident">compute_atom</span></span>(<span>self, tokens, toklen, pos)</span>
 </code></dt>
@@ -829,6 +1027,14 @@ class Parser:
             )
 
             atom_lhs = self.compute_binop(node, atom_lhs, atom_rhs)
+        elif token.get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS and\
+                pos + 1 &lt; toklen and \
+                tokens[pos + 1].get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
+
+            pos = pos + 2
+            atom_lhs, pos = self.compute_access_list(
+                atom_lhs, tokens, toklen, pos
+            )
         else:
             raise Exception(str(token))
 
@@ -965,6 +1171,8 @@ class Parser:
 <li>
 <h4><code><a title="tsteno.language.parser.IdentifierTokenParser" href="#tsteno.language.parser.IdentifierTokenParser">IdentifierTokenParser</a></code></h4>
 <ul class="">
+<li><code><a title="tsteno.language.parser.IdentifierTokenParser.parse_access_list" href="#tsteno.language.parser.IdentifierTokenParser.parse_access_list">parse_access_list</a></code></li>
+<li><code><a title="tsteno.language.parser.IdentifierTokenParser.parse_function" href="#tsteno.language.parser.IdentifierTokenParser.parse_function">parse_function</a></code></li>
 <li><code><a title="tsteno.language.parser.IdentifierTokenParser.read" href="#tsteno.language.parser.IdentifierTokenParser.read">read</a></code></li>
 </ul>
 </li>
@@ -992,6 +1200,7 @@ class Parser:
 <h4><code><a title="tsteno.language.parser.Parser" href="#tsteno.language.parser.Parser">Parser</a></code></h4>
 <ul class="two-column">
 <li><code><a title="tsteno.language.parser.Parser.binary_ops" href="#tsteno.language.parser.Parser.binary_ops">binary_ops</a></code></li>
+<li><code><a title="tsteno.language.parser.Parser.compute_access_list" href="#tsteno.language.parser.Parser.compute_access_list">compute_access_list</a></code></li>
 <li><code><a title="tsteno.language.parser.Parser.compute_atom" href="#tsteno.language.parser.Parser.compute_atom">compute_atom</a></code></li>
 <li><code><a title="tsteno.language.parser.Parser.compute_binop" href="#tsteno.language.parser.Parser.compute_binop">compute_binop</a></code></li>
 <li><code><a title="tsteno.language.parser.Parser.compute_expr" href="#tsteno.language.parser.Parser.compute_expr">compute_expr</a></code></li>

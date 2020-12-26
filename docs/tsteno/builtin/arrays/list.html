@@ -65,7 +65,13 @@ class List(Module):
         ]
 
     def run_test(self, test):
-        pass</code></pre>
+        evaluation = self.get_kernel().get_kext(&#39;eval&#39;)
+
+        evaluation.evaluate_code(&#39;lista_prueba={1,2,3};&#39;)
+
+        test.assertEqual(
+            evaluation.evaluate_code(&#39;lista_prueba&#39;), [1, 2, 3]
+        )</code></pre>
 </details>
 </section>
 <section>
@@ -131,7 +137,13 @@ class List(Module):
         ]
 
     def run_test(self, test):
-        pass</code></pre>
+        evaluation = self.get_kernel().get_kext(&#39;eval&#39;)
+
+        evaluation.evaluate_code(&#39;lista_prueba={1,2,3};&#39;)
+
+        test.assertEqual(
+            evaluation.evaluate_code(&#39;lista_prueba&#39;), [1, 2, 3]
+        )</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">

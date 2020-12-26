@@ -106,6 +106,7 @@ class Module(Atoms):
         fargs = []
         argssize = len(arguments)
         module_args = self.get_arguments()
+        users_args_counter = 0
 
         for i in range(0, len(module_args)):
             module_arg = module_args[i]
@@ -120,7 +121,7 @@ class Module(Atoms):
 
             if module_arg.get_flag() &amp; ARG_FLAG_ALL_NEXT != 0:
                 return fargs + list(map(lambda arg: self.parse_argument(
-                    module_arg, arg, context), arguments[i:]
+                    module_arg, arg, context), arguments[users_args_counter:]
                 ))
 
             if i &gt;= argssize:
@@ -128,7 +129,8 @@ class Module(Atoms):
                     &#34;Expected but {} arguments but {} given&#34;.format(
                         len(module_args), argssize
                     ))
-            user_arg = arguments[i]
+            user_arg = arguments[users_args_counter]
+            users_args_counter = users_args_counter + 1
 
             farg = self.parse_argument(module_arg, user_arg, context)
             if farg is not None:
@@ -314,6 +316,7 @@ class Module(Atoms):
         fargs = []
         argssize = len(arguments)
         module_args = self.get_arguments()
+        users_args_counter = 0
 
         for i in range(0, len(module_args)):
             module_arg = module_args[i]
@@ -328,7 +331,7 @@ class Module(Atoms):
 
             if module_arg.get_flag() &amp; ARG_FLAG_ALL_NEXT != 0:
                 return fargs + list(map(lambda arg: self.parse_argument(
-                    module_arg, arg, context), arguments[i:]
+                    module_arg, arg, context), arguments[users_args_counter:]
                 ))
 
             if i &gt;= argssize:
@@ -336,7 +339,8 @@ class Module(Atoms):
                     &#34;Expected but {} arguments but {} given&#34;.format(
                         len(module_args), argssize
                     ))
-            user_arg = arguments[i]
+            user_arg = arguments[users_args_counter]
+            users_args_counter = users_args_counter + 1
 
             farg = self.parse_argument(module_arg, user_arg, context)
             if farg is not None:
@@ -448,7 +452,19 @@ class Module(Atoms):
 </ul>
 <h3>Subclasses</h3>
 <ul class="hlist">
+<li><a title="tsteno.builtin.arrays.append.Append" href="../builtin/arrays/append.html#tsteno.builtin.arrays.append.Append">Append</a></li>
+<li><a title="tsteno.builtin.arrays.drop.Drop" href="../builtin/arrays/drop.html#tsteno.builtin.arrays.drop.Drop">Drop</a></li>
+<li><a title="tsteno.builtin.arrays.first.First" href="../builtin/arrays/first.html#tsteno.builtin.arrays.first.First">First</a></li>
+<li><a title="tsteno.builtin.arrays.flatten.Flatten" href="../builtin/arrays/flatten.html#tsteno.builtin.arrays.flatten.Flatten">Flatten</a></li>
+<li><a title="tsteno.builtin.arrays.last.Last" href="../builtin/arrays/last.html#tsteno.builtin.arrays.last.Last">Last</a></li>
+<li><a title="tsteno.builtin.arrays.length.Length" href="../builtin/arrays/length.html#tsteno.builtin.arrays.length.Length">Length</a></li>
 <li><a title="tsteno.builtin.arrays.list.List" href="../builtin/arrays/list.html#tsteno.builtin.arrays.list.List">List</a></li>
+<li><a title="tsteno.builtin.arrays.member_q.MemberQ" href="../builtin/arrays/member_q.html#tsteno.builtin.arrays.member_q.MemberQ">MemberQ</a></li>
+<li><a title="tsteno.builtin.arrays.part.Part" href="../builtin/arrays/part.html#tsteno.builtin.arrays.part.Part">Part</a></li>
+<li><a title="tsteno.builtin.arrays.range.Range" href="../builtin/arrays/range.html#tsteno.builtin.arrays.range.Range">Range</a></li>
+<li><a title="tsteno.builtin.arrays.subdivide.Subdivide" href="../builtin/arrays/subdivide.html#tsteno.builtin.arrays.subdivide.Subdivide">Subdivide</a></li>
+<li><a title="tsteno.builtin.arrays.table.Table" href="../builtin/arrays/table.html#tsteno.builtin.arrays.table.Table">Table</a></li>
+<li><a title="tsteno.builtin.arrays.take.Take" href="../builtin/arrays/take.html#tsteno.builtin.arrays.take.Take">Take</a></li>
 <li><a title="tsteno.builtin.comparators.equal.Equal" href="../builtin/comparators/equal.html#tsteno.builtin.comparators.equal.Equal">Equal</a></li>
 <li><a title="tsteno.builtin.comparators.greater_equal.GreaterEqual" href="../builtin/comparators/greater_equal.html#tsteno.builtin.comparators.greater_equal.GreaterEqual">GreaterEqual</a></li>
 <li><a title="tsteno.builtin.comparators.greater_than.GreaterThan" href="../builtin/comparators/greater_than.html#tsteno.builtin.comparators.greater_than.GreaterThan">GreaterThan</a></li>
@@ -486,7 +502,6 @@ class Module(Atoms):
 <li><a title="tsteno.builtin.misc.custom_module.CustomModule" href="../builtin/misc/custom_module.html#tsteno.builtin.misc.custom_module.CustomModule">CustomModule</a></li>
 <li><a title="tsteno.builtin.misc.custom_module.UserDefinedModule" href="../builtin/misc/custom_module.html#tsteno.builtin.misc.custom_module.UserDefinedModule">UserDefinedModule</a></li>
 <li><a title="tsteno.builtin.misc.print.Print" href="../builtin/misc/print.html#tsteno.builtin.misc.print.Print">Print</a></li>
-<li><a title="tsteno.builtin.misc.range.Range" href="../builtin/misc/range.html#tsteno.builtin.misc.range.Range">Range</a></li>
 <li><a title="tsteno.builtin.misc.return.Return" href="../builtin/misc/return.html#tsteno.builtin.misc.return.Return">Return</a></li>
 <li><a title="tsteno.builtin.misc.rule.Rule" href="../builtin/misc/rule.html#tsteno.builtin.misc.rule.Rule">Rule</a></li>
 <li><a title="tsteno.builtin.misc.set.Set" href="../builtin/misc/set.html#tsteno.builtin.misc.set.Set">Set</a></li>
@@ -682,6 +697,7 @@ class.</p>
     fargs = []
     argssize = len(arguments)
     module_args = self.get_arguments()
+    users_args_counter = 0
 
     for i in range(0, len(module_args)):
         module_arg = module_args[i]
@@ -696,7 +712,7 @@ class.</p>
 
         if module_arg.get_flag() &amp; ARG_FLAG_ALL_NEXT != 0:
             return fargs + list(map(lambda arg: self.parse_argument(
-                module_arg, arg, context), arguments[i:]
+                module_arg, arg, context), arguments[users_args_counter:]
             ))
 
         if i &gt;= argssize:
@@ -704,7 +720,8 @@ class.</p>
                 &#34;Expected but {} arguments but {} given&#34;.format(
                     len(module_args), argssize
                 ))
-        user_arg = arguments[i]
+        user_arg = arguments[users_args_counter]
+        users_args_counter = users_args_counter + 1
 
         farg = self.parse_argument(module_arg, user_arg, context)
         if farg is not None:
