@@ -1,5 +1,5 @@
 """
-This file contains class definition for working with List.
+This file contains class definition for accessing list elements
 """
 import sympy
 from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_ALL_NEXT
@@ -69,6 +69,7 @@ class Part(Module):
         test.assertEqual(
             evaluation.evaluate_code('{ {1, 2, 3, 4} }[[1]]'), [1, 2, 3, 4]
         )
+
         test.assertEqual(
             evaluation.evaluate_code('Part[Sin[x] + x^2+5+x, 1]'), 5
         )

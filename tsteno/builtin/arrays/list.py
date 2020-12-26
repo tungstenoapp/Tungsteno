@@ -1,3 +1,4 @@
+import numpy as np
 from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_ALL_NEXT
 
 

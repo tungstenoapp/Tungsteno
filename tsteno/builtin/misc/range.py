@@ -6,8 +6,8 @@ class Range(Module):
 
     def run(self, a, b=None, di=1):
         if b is None:
-            return np.arange(1, a + di, di)
-        return np.arange(a, b + di, di)
+            return list(np.arange(1, a + di, di))
+        return list(np.arange(a, b + di, di))
 
     def get_arguments(self):
         return [
