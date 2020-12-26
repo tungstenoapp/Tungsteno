@@ -77,6 +77,7 @@ class Module(Atoms):
         fargs = []
         argssize = len(arguments)
         module_args = self.get_arguments()
+        users_args_counter = 0
 
         for i in range(0, len(module_args)):
             module_arg = module_args[i]
@@ -91,7 +92,7 @@ class Module(Atoms):
 
             if module_arg.get_flag() & ARG_FLAG_ALL_NEXT != 0:
                 return fargs + list(map(lambda arg: self.parse_argument(
-                    module_arg, arg, context), arguments[i:]
+                    module_arg, arg, context), arguments[users_args_counter:]
                 ))
 
             if i >= argssize:
@@ -99,7 +100,8 @@ class Module(Atoms):
                     "Expected but {} arguments but {} given".format(
                         len(module_args), argssize
                     ))
-            user_arg = arguments[i]
+            user_arg = arguments[users_args_counter]
+            users_args_counter = users_args_counter + 1
 
             farg = self.parse_argument(module_arg, user_arg, context)
             if farg is not None:

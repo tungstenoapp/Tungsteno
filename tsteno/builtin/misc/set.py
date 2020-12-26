@@ -34,6 +34,9 @@ class Set(Module):
         if not isinstance(all_values, list):
             all_values = [all_values]
 
+        if len(all_variables) == 1 and len(all_values) > 1:
+            all_values = [all_values]
+
         definers = zip(all_variables, all_values)
 
         for definer in definers:

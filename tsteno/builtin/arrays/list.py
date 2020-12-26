@@ -36,4 +36,10 @@ class List(Module):
         ]
 
     def run_test(self, test):
-        pass
+        evaluation = self.get_kernel().get_kext('eval')
+
+        evaluation.evaluate_code('lista_prueba={1,2,3};')
+
+        test.assertEqual(
+            evaluation.evaluate_code('lista_prueba'), [1, 2, 3]
+        )
