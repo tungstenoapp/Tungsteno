@@ -41,7 +41,7 @@ class Table(Module):
 
     def run(self, context, fn, *var_values_sets):
         """
-        Gives the i^(th) part of expr.
+        gives a nested list. The list associated with i is outermost.
         Parameters:
             - **expr**: One expression
             - **indexes**: A list of indexes
