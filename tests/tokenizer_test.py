@@ -49,12 +49,14 @@ class TestTokenizer(unittest.TestCase):
         self.assertEqual(tokens[0].get_type(), token_list.TOKEN_IDENTIFIER)
         self.assertEqual(tokens[0].get_value(), 'a')
 
-        self.assertEqual(tokens[1].get_type(), token_list.TOKEN_LEFTFUNC)
+        self.assertEqual(
+            tokens[1].get_type(), token_list.TOKEN_LEFTSQUARE_BRACKETS)
 
         self.assertEqual(tokens[2].get_type(), token_list.TOKEN_IDENTIFIER)
         self.assertEqual(tokens[2].get_value(), 'x_')
 
-        self.assertEqual(tokens[3].get_type(), token_list.TOKEN_RIGHTFUNC)
+        self.assertEqual(
+            tokens[3].get_type(), token_list.TOKEN_RIGHTSQUARE_BRACKETS)
 
         self.assertEqual(tokens[4].get_type(), token_list.TOKEN_OP)
         self.assertEqual(tokens[4].get_value(), '=')
@@ -62,12 +64,14 @@ class TestTokenizer(unittest.TestCase):
         self.assertEqual(tokens[5].get_type(), token_list.TOKEN_IDENTIFIER)
         self.assertEqual(tokens[5].get_value(), 'Print')
 
-        self.assertEqual(tokens[6].get_type(), token_list.TOKEN_LEFTFUNC)
+        self.assertEqual(
+            tokens[6].get_type(), token_list.TOKEN_LEFTSQUARE_BRACKETS)
 
         self.assertEqual(tokens[7].get_type(), token_list.TOKEN_IDENTIFIER)
         self.assertEqual(tokens[7].get_value(), 'x')
 
-        self.assertEqual(tokens[8].get_type(), token_list.TOKEN_RIGHTFUNC)
+        self.assertEqual(
+            tokens[8].get_type(), token_list.TOKEN_RIGHTSQUARE_BRACKETS)
 
     def test_parseString(self):
         tokens = list(tokenizer.get_tokens('"Hola mundo, \\"Como estais\\""'))

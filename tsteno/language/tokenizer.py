@@ -128,8 +128,8 @@ class MiscTokenReader(BaseTokenReader):
         ')': token_list.TOKEN_RIGHTPAREN,
 
         # Functions
-        '[': token_list.TOKEN_LEFTFUNC,
-        ']': token_list.TOKEN_RIGHTFUNC,
+        '[': token_list.TOKEN_LEFTSQUARE_BRACKETS,
+        ']': token_list.TOKEN_RIGHTSQUARE_BRACKETS,
         ',': token_list.TOKEN_COMMA_SEPARATOR,
 
         '{': token_list.TOKEN_LEFTLIST,

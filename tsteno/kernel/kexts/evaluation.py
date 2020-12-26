@@ -153,7 +153,12 @@ class Evaluation(KextBase):
                 return context.get_last_result()
 
         if tokens[-1].get_type() != token_list.TOKEN_CLOSE_EXPR:
-            self.run_function('Print', [context.get_last_result()], context)
+            if len(tokens) == 1:
+                self.run_function(
+                    'Print', [[context.get_last_result()]], context)
+            else:
+                self.run_function(
+                    'Print', [context.get_last_result()], context)
         return context.get_last_result()
 
     def evaluate_node(self, node, context):
@@ -193,12 +198,17 @@ class Evaluation(KextBase):
     def run_builtin_tests(self, test):
         modules = self.get_all_modules()
         for module in modules:
+            self.clear()
             module.run_test(test)
 
     def run_function(self, fname, arguments, context={}):
         module_definition = self.get_module_definition(
             fname, arguments, context)
         return module_definition.eval(arguments, context)
+
+    def clear(self):
+        self.user_modules.clear()
+        self.user_variables.clear()
 
     def __load_builtin_module(self, path, module_def, log_kext=None):
         if log_kext is None:
