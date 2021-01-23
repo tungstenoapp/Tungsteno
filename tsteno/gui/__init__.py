@@ -7,6 +7,8 @@ import difflib
 from sympy import mathematica_code as mcode
 from tsteno.notebook import Notebook
 
+from tsteno.atoms.plot import Plot
+
 evaluation = None
 output = None
 eel_configuration = {}
@@ -24,7 +26,7 @@ def evaluate(code):
 
         to_print = obj
 
-        if not isinstance(to_print, str):
+        if not isinstance(to_print, str) and not isinstance(to_print, Plot):
             to_print = mcode(to_print)
 
         output_result.append(to_print)
@@ -42,10 +44,29 @@ def evaluate(code):
     if isinstance(eval_result, sympy.Expr):
         return {
             'processor': 'default',
-            'output': "\n".join(output_result)
+            'result': "\n".join(output_result)
+        }
+    elif isinstance(eval_result, Plot):
+        plot_data = [{
+            'x': eval_result.x,
+            'y': eval_result.y,
+            'type': 'scatter',
+            'mode': 'lines',
+            'marker': {
+                    'color': 'red'
+            }
+        }]
+
+        if eval_result.z is not None:
+            plot_data[0]['z'] = eval_result.z
+            plot_data[0]['type'] = 'surface'
+
+        return {
+            'processor': 'plot',
+            'plot_data': plot_data
         }
 
-    return {'processor': 'default', 'output': "\n".join(output_result)}
+    return {'processor': 'default', 'result': "\n".join(output_result)}
 
 
 @eel.expose
