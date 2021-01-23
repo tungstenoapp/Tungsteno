@@ -12,7 +12,7 @@ eel_configuration = {}
 
 
 @eel.expose
-def tsteno_eval(code):
+def evaluate(code):
     global output
 
     output_result = []
@@ -75,13 +75,13 @@ def suggestions(input):
 
         if definition.startswith(input) and definition_len - input_len > 0:
             options.append({
-                'caption': definition,
-                'append': definition[input_len + 1:],
-                'distance': definition_len - input_len
+                'name': definition,
+                'value': definition,
+                'score': definition_len - input_len
             })
 
-    options.sort(key=lambda op: op['distance'])
-    options = options[:3]
+    options.sort(key=lambda op: op['score'])
+    options = options[:10]
 
     return options
 
@@ -104,4 +104,4 @@ def init_gui(kernel, input_file):
     evaluation = kernel.get_kext('eval')
 
     eel.init(os.path.join(os.path.dirname(__file__), 'static'))
-    eel.start('notebook.html', mode='web', all_interfaces=False)
+    eel.start('', mode='web', all_interfaces=False)
