@@ -2,6 +2,7 @@ import os
 import eel
 import sympy
 import traceback
+import difflib
 
 from sympy import mathematica_code as mcode
 from tsteno.notebook import Notebook
@@ -71,16 +72,15 @@ def suggestions(input):
     definitions = evaluation.get_all_definitions()
 
     for definition in definitions:
-        definition_len = len(definition)
+        seq = difflib.SequenceMatcher(None, input, definition)
 
-        if definition.startswith(input) and definition_len - input_len > 0:
-            options.append({
-                'name': definition,
-                'value': definition,
-                'score': definition_len - input_len
-            })
+        options.append({
+            'name': definition,
+            'value': definition,
+            'score': seq.ratio()
+        })
 
-    options.sort(key=lambda op: op['score'])
+    options.sort(key=lambda op: op['score'], reverse=True)
     options = options[:10]
 
     return options
