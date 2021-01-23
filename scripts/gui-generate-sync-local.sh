@@ -7,13 +7,13 @@ GUI_PATH="$BASEDIR/../tsteno/gui/static"
 
 OLDPWD=$PWD
 
-cd "$SUBMODULE_PATH"
+cd "$SUBMODULE_PATH/app"
 
-if [[ ! -d "$SUBMODULE_PATH/node_modules/" ]]; then
+if [[ ! -d "$SUBMODULE_PATH/app/node_modules/" ]]; then
     npm install
 fi
-grunt
+npm run build
 
 cd "$OLDPWD"
 
-rsync -av --delete "$SUBMODULE_PATH/public/" "$GUI_PATH"
+rsync -av --delete "$SUBMODULE_PATH/app/build/" "$GUI_PATH"
