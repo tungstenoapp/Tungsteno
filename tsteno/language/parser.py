@@ -186,6 +186,43 @@ class Parser:
             token_list.TOKEN_LEFTLIST: ListTokenParser(),
         }
 
+    def compute_op(self, token, pos, toklen, tokens, minprec, atom_lhs):
+        op = token.get_value()
+
+        if pos + 1 < toklen and \
+                tokens[pos + 1].get_type() == token_list.TOKEN_OP:
+            double_op = "".join([op, tokens[pos + 1].get_value()])
+            if double_op in BIN_OPINFO_MAP:
+                op = double_op
+
+        prec, assoc, node = BIN_OPINFO_MAP[op]
+        if prec < minprec:
+            return atom_lhs, False, pos
+
+        next_min_prec = prec + 1 if assoc == 'LEFT' else prec
+
+        pos = pos + len(op)
+
+        atom_rhs, pos = self.compute_expr(
+            tokens, toklen, pos, next_min_prec
+        )
+
+        atom_lhs = self.compute_binop(node, atom_lhs, atom_rhs)
+
+        return atom_lhs, atom_rhs, pos
+
+    def compute_number(self, tokens, toklen, pos, atom_lhs):
+        prec, assoc, node = BIN_OPINFO_MAP['*']
+
+        next_min_prec = prec + 1 if assoc == 'LEFT' else prec
+
+        atom_rhs, pos = self.compute_expr(
+            tokens, toklen, pos, next_min_prec
+        )
+
+        atom_lhs = self.compute_binop(node, atom_lhs, atom_rhs)
+        return atom_lhs, atom_rhs, pos
+
     def compute_expr(self, tokens, toklen, pos, minprec=-1):
         atom_lhs, pos = self.compute_atom(tokens, toklen, pos)
 
@@ -208,37 +245,15 @@ class Parser:
                     continue
 
             if token.get_type() == token_list.TOKEN_OP:
-                op = token.get_value()
+                atom_lhs, atom_rhs, pos = self.compute_op(
+                    token, pos, toklen, tokens, minprec, atom_lhs
+                )
 
-                if pos + 1 < toklen and \
-                        tokens[pos + 1].get_type() == token_list.TOKEN_OP:
-                    double_op = "".join([op, tokens[pos + 1].get_value()])
-                    if double_op in BIN_OPINFO_MAP:
-                        op = double_op
-
-                prec, assoc, node = BIN_OPINFO_MAP[op]
-                if prec < minprec:
+                if not atom_rhs:
                     break
-
-                next_min_prec = prec + 1 if assoc == 'LEFT' else prec
-
-                pos = pos + len(op)
-
-                atom_rhs, pos = self.compute_expr(
-                    tokens, toklen, pos, next_min_prec
-                )
-
-                atom_lhs = self.compute_binop(node, atom_lhs, atom_rhs)
             elif isinstance(atom_lhs, numbers.Number):
-                prec, assoc, node = BIN_OPINFO_MAP['*']
-
-                next_min_prec = prec + 1 if assoc == 'LEFT' else prec
-
-                atom_rhs, pos = self.compute_expr(
-                    tokens, toklen, pos, next_min_prec
-                )
-
-                atom_lhs = self.compute_binop(node, atom_lhs, atom_rhs)
+                atom_lhs, atom_rhs, pos = self.compute_number(
+                    tokens, toklen, pos, atom_lhs)
             elif token.get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS and\
                     pos + 1 < toklen and \
                     tokens[pos + 1].get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
