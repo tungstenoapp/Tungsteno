@@ -87,6 +87,29 @@ def suggestions(input):
 
 
 @eel.expose
+def searchFunction(search):
+    global evaluation
+
+    search_results = []
+    search_results_tmp = suggestions(search)
+
+    for search_result in search_results_tmp:
+        module_def = evaluation.builtin_modules[search_result['name']]
+
+        description = ''
+
+        if module_def.__doc__ is not None:
+            description = module_def.__doc__.replace('    ', '')
+
+        search_results.append({
+            'functionName': search_result['name'],
+            'description': description
+        })
+
+    return search_results
+
+
+@eel.expose
 def get_eel_configuration():
     global eel_configuration
     return eel_configuration
