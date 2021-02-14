@@ -10,7 +10,7 @@ class While(Module):
     """
 
     def run(self, test, body):
-        while bool(test()):
+        while test().eval():
             body()
 
     def get_arguments(self):
@@ -23,3 +23,9 @@ class While(Module):
 
         test.assertEqual(evaluation.evaluate_code(
             'j = 0; While[j < 10, j++]; Return[j]'), 10)
+
+        test.assertEqual(
+            evaluation.evaluate_code(
+                'x0 = 2.0; x=x0; While[x > 0, x=Log[x]]; Return[x]'),
+            -0.36651292058166435
+        )
