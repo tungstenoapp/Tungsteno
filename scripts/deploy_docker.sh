@@ -25,6 +25,6 @@ sudo docker build -t $IMAGETAG_DOCS ./docs
 sudo docker push $IMAGETAG_DOCS
 
 if [[ "$BRANCH" == "master" ]]; then
-    sudo docker tag $IMAGETAG josecarlosme/tungsteno-docs:latest
+    sudo docker tag $IMAGETAG_DOCS josecarlosme/tungsteno-docs:latest
     sudo docker push josecarlosme/tungsteno-docs:latest
 fi
