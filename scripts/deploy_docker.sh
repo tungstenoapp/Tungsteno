@@ -18,3 +18,14 @@ if [[ "$BRANCH" == "master" ]]; then
     sudo docker tag $IMAGETAG josecarlosme/tungsteno:latest
     sudo docker push josecarlosme/tungsteno:latest
 fi
+
+
+IMAGETAG_DOCS="josecarlosme/tungsteno-docs:$TAGNAME"
+
+sudo docker build -t $IMAGETAG_DOCS ./docs
+sudo docker push $IMAGETAG_DOCS
+
+if [[ "$BRANCH" == "master" ]]; then
+    sudo docker tag $IMAGETAG josecarlosme/tungsteno-docs:latest
+    sudo docker push josecarlosme/tungsteno-docs:latest
+fi

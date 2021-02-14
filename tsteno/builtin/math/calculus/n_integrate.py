@@ -5,6 +5,13 @@ from sympy import integrate
 
 class NIntegrate(Module):
 
+    """
+    Gives the definite integral numerically
+    ```
+    NIntegrate[f, x]
+    ```
+    """
+
     def run(self, f, *variables):
         return integrate(f, *variables).evalf()
 

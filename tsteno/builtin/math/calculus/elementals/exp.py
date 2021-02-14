@@ -4,6 +4,12 @@ from tsteno.atoms.module import ModuleArg, Module
 
 
 class Exp(Module):
+    """
+    Gives the exponential of z.
+    ```
+    Exp[z]
+    ```
+    """
 
     def run(self, x):
         if isinstance(x, float):

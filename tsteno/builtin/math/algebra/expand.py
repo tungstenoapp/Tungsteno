@@ -3,6 +3,22 @@ from tsteno.atoms.module import ModuleArg, Module
 
 
 class Expand(Module):
+    """
+    Expands out products and positive integer powers in expr.
+    ```
+    Expand[expr]
+    ```
+
+    # Examples
+    **Input:**
+    ```
+    Expand[(x + 3)*(x + 2)]
+    ```
+    **Output:**
+    ```
+    x^2 + 5*x + 6
+    ```
+    """
 
     def run(self, f):
         return sp.expand(f)

@@ -12,13 +12,13 @@ class Part(Module):
     ## Examples
     Basic list of 4 elements.
 
-    **<u>Input:</u>**
+    **Input:**
     ```
     list1 = List[a, b, c, d];
     Part[list1, 1]
     ```
 
-    **<u>Output:</u>**
+    **Output:**
     ```
     a
     ```

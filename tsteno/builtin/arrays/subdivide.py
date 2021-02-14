@@ -13,15 +13,15 @@ class Subdivide(Module):
     # Examples
     Basic list of 4 elements.
 
-    **<u>Input:</u>**
+    **Input:**
     ```
     Subdivide[10]
     ```
 
-    **<u>Output:</u>**
+    **Output:**
     ```
     [0, 1/10, 1/5, 3/10, 2/5, 1/2, 3/5, 7/10, 4/5, 9/10, 1]
-
+    ```
     ---
     **Subdivide[xmax, n]**
     generates the list of values obtained by subdividing the interval 0 to xmax into n equal parts.
@@ -29,15 +29,15 @@ class Subdivide(Module):
     # Examples
     Basic list of 4 elements.
 
-    **<u>Input:</u>**
+    **Input:**
     ```
     Subdivide[10, 5]
     ```
 
-    **<u>Output:</u>**
+    **Output:**
     ```
     {0, 2, 4, 6, 8, 10}
-
+    ```
     """
 
     def run(self, *arguments):

@@ -7,6 +7,13 @@ SIMPLIFY_FUNCTIONS = [
 
 
 class Simplify(Module):
+    """
+    Performs a sequence of algebraic and other transformations on expr and returns the simplest form it finds.
+    ```
+    Simplify[expr]
+    ```
+
+    """
 
     def run(self, f):
         for fn in SIMPLIFY_FUNCTIONS:

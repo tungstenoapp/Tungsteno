@@ -6,6 +6,18 @@ from tsteno.atoms.plot import Plot as Plt
 
 
 class Plot3D(Module):
+    """
+    Generates a three-dimensional plot of f as a function of x and y.
+    ```
+    Plot3D[f,{x,xmin,xmax},{y,ymin,ymax}]
+    ```
+
+    # Examples
+    ```
+    Plot3D[Sin[x + y^2], {x, -3, 3}, {y, -2, 2}]
+    ```
+    """
+
     def run(self, f, variables1, variables2, context):
         x = variables1[0]
         x0 = variables1[1]

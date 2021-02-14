@@ -4,6 +4,12 @@ from tsteno.atoms.module import ModuleArg, Module
 
 
 class Cos(Module):
+    """
+    Gives the cosine of z.
+    ```
+    Cos[z]
+    ```
+    """
 
     def run(self, x):
         if isinstance(x, float):

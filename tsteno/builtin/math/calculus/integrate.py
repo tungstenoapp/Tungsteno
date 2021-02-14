@@ -4,6 +4,12 @@ from tsteno.atoms.module import ARG_FLAG_OPTIONAL, ARG_FLAG_ALL_NEXT
 
 
 class Integrate(Module):
+    """
+    Gives the indefinite integral.
+    ```
+    Integrate[f, x]
+    ```
+    """
 
     def run(self, f, *variables):
         return integrate(f, *variables)

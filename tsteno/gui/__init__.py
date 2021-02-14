@@ -108,6 +108,49 @@ def suggestions(input):
 
 
 @eel.expose
+def searchFunction(search):
+    global evaluation
+
+    search_results = []
+
+    for definition in evaluation.builtin_modules.keys():
+        module_def = evaluation.builtin_modules[definition]
+        seq = difflib.SequenceMatcher(None, search, definition)
+
+        description = ''
+
+        if module_def.__doc__ is not None:
+            description = module_def.__doc__.replace('    ', '')
+
+        mult = 1
+        if search in definition:
+            mult = 2
+        if seq.ratio() > 0:
+            search_results.append({
+                'functionName': definition,
+                'description': description,
+                'score': mult * seq.ratio()
+            })
+
+        if len(description) > 0:
+            abstract = description.strip().split("\n")[0]
+            seq = difflib.SequenceMatcher(None, search, abstract)
+            mult = 1
+            if search in abstract:
+                mult = 2
+            if seq.ratio() > 0:
+                search_results.append({
+                    'functionName': definition,
+                    'description': description,
+                    'score': seq.ratio() * mult
+                })
+
+    search_results.sort(key=lambda op: op['score'], reverse=True)
+
+    return search_results[:3]
+
+
+@eel.expose
 def get_eel_configuration():
     global eel_configuration
     return eel_configuration

@@ -4,6 +4,12 @@ from tsteno.atoms.module import ARG_FLAG_ALL_NEXT
 
 
 class D(Module):
+    """
+    Gives the partial derivative of df/dx
+    ```
+    D[f, x]
+    ```
+    """
 
     def run(self, f, *variables):
         return f.diff(*variables)
