@@ -5,7 +5,8 @@ from tsteno.atoms.module import ModuleArg, Module
 
 class NSolve(Module):
     """
-    Attempts to find numerical approximations to the solutions of the system expr of equations or inequalities for the variables vars.
+    Attempts to find numerical approximations to the solutions of the system
+    expr of equations or inequalities for the variables vars.
 
     ```
     NSolve[expr,vars]
