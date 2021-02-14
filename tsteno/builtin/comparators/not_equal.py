@@ -13,17 +13,18 @@ class NotEqual(Module):
     # Examples
     Test equality.
 
-    **<u>Input:</u>**
+    **Input:**
     ```
     # NotEqual[x+1, 1+x]
     x + 1 != 1 + x
     ```
 
-    **<u>Output:</u>**
+    **Output:**
     ```
     False
     ```
     """
+
     def run(self, left, right):
         """
         Represent a not equal operator.

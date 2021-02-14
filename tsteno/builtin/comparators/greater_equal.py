@@ -14,26 +14,26 @@ class GreaterEqual(Module):
     # Examples
     Test equality.
 
-    **<u>Input:</u>**
+    **Input:**
     ```
-    # GretarEqual[x+1, 1+x]
+    # GreaterEqual[x+1, 1+x]
     x + 1 >= 1 + x
     ```
 
-    **<u>Output:</u>**
+    **Output:**
     ```
     True
     ```
     ---
     Represent an inequation
 
-    **<u>Input:</u>**
+    **Input:**
     ```
-    # Reduce[GretarEqual[x+1, 0, x]
+    # Reduce[GreaterEqual[x+1, 0, x]
     Reduce[x+1>=0, x]
     ```
 
-    **<u>Output:</u>**
+    **Output:**
     ```
     {{x>=-1}}
     ```

@@ -4,6 +4,12 @@ from tsteno.atoms.module import ModuleArg, Module
 
 
 class Log(Module):
+    """
+    Gives the natural logarithm of z (logarithm to base ).
+    ```
+    Log[z]
+    ```
+    """
 
     def run(self, x):
         if isinstance(x, float):

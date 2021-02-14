@@ -5,6 +5,12 @@ from tsteno.atoms.rule import RuleSet
 
 
 class Solve(Module):
+    """
+    Attempts to solve the system expr of equations or inequalities for the variables vars.
+    ```
+    Solve[expr,vars]
+    ```
+    """
 
     def run(self, expressions, variables):
         if not isinstance(expressions, list):

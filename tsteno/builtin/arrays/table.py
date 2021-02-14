@@ -16,21 +16,22 @@ class Table(Module):
     # Examples
     Basic list of 4 elements.
 
-    **<u>Input:</u>**
+    **Input:**
     ```
     Table[i^2, {i, 10}]
     ```
 
-    **<u>Output:</u>**
+    **Output:**
     ```
     [1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+    ```
 
-    **<u>Input:</u>**
+    **Input:**
     ```
     Table[10 i + j, {i, 4}, {j, 3}]
     ```
 
-    **<u>Output:</u>**
+    **Output:**
     ```
      [[11, 12, 13],
              [21, 22, 23],

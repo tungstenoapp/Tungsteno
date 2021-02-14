@@ -13,26 +13,26 @@ class Equal(Module):
     ## Examples
     Test equality.
 
-    **<u>Input:</u>**
+    **Input:**
     ```
     # Equal[x+1, 1+x]
     x + 1 == 1 + x
     ```
 
-    **<u>Output:</u>**
+    **Output:**
     ```
     True
     ```
     ---
     Represent an equation
 
-    **<u>Input:</u>**
+    **Input:**
     ```
     # Solve[Equal[x+1, 0, x]
     Solve[x+1==0, x]
     ```
 
-    **<u>Output:</u>**
+    **Output:**
     ```
     {{x->-1}}
     ```

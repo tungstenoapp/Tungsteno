@@ -14,26 +14,26 @@ class LessEqual(Module):
     # Examples
     Test equality.
 
-    **<u>Input:</u>**
+    **Input:**
     ```
     # LessEqual[x+1, 1+x]
     x + 1 <= 1 + x
     ```
 
-    **<u>Output:</u>**
+    **Output:**
     ```
     True
     ```
     ---
     Represent an inequation
 
-    **<u>Input:</u>**
+    **Input:**
     ```
     # Reduce[LessEqual[x+1, 0, x]
     Reduce[x+1<=0, x]
     ```
 
-    **<u>Output:</u>**
+    **Output:**
     ```
     {{x<=-1}}
     ```

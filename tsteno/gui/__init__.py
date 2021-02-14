@@ -112,22 +112,42 @@ def searchFunction(search):
     global evaluation
 
     search_results = []
-    search_results_tmp = suggestions(search)
 
-    for search_result in search_results_tmp:
-        module_def = evaluation.builtin_modules[search_result['name']]
+    for definition in evaluation.builtin_modules.keys():
+        module_def = evaluation.builtin_modules[definition]
+        seq = difflib.SequenceMatcher(None, search, definition)
 
         description = ''
 
         if module_def.__doc__ is not None:
             description = module_def.__doc__.replace('    ', '')
 
-        search_results.append({
-            'functionName': search_result['name'],
-            'description': description
-        })
+        mult = 1
+        if search in definition:
+            mult = 2
+        if seq.ratio() > 0:
+            search_results.append({
+                'functionName': definition,
+                'description': description,
+                'score': mult * seq.ratio()
+            })
 
-    return search_results
+        if len(description) > 0:
+            abstract = description.strip().split("\n")[0]
+            seq = difflib.SequenceMatcher(None, search, abstract)
+            mult = 1
+            if search in abstract:
+                mult = 2
+            if seq.ratio() > 0:
+                search_results.append({
+                    'functionName': definition,
+                    'description': description,
+                    'score': seq.ratio() * mult
+                })
+
+    search_results.sort(key=lambda op: op['score'], reverse=True)
+
+    return search_results[:3]
 
 
 @eel.expose

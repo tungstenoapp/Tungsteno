@@ -2,6 +2,13 @@ from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_NO_AUTO_EVAL
 
 
 class While(Module):
+    """
+    Evaluates test, then body, repetitively, until test first fails to give True.
+    ```
+    While[test,body]
+    ```
+    """
+
     def run(self, test, body):
         while bool(test()):
             body()

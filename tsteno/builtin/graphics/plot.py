@@ -6,6 +6,18 @@ from tsteno.atoms.plot import Plot as Plt
 
 
 class Plot(Module):
+    """
+    Generates a plot of f as a function of x from xmin to xmax.
+    ```
+    Plot[f,{x,xmin,xmax}]
+    ```
+
+    # Examples
+    ```
+    Plot[Sin[x], {x, 0, 6 Pi}]
+    ```
+    """
+
     def run(self, f, variables, context):
         x = variables[0]
         x0 = variables[1]

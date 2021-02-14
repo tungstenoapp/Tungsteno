@@ -4,6 +4,12 @@ from tsteno.atoms.module import ModuleArg, Module
 
 
 class Sqrt(Module):
+    """
+    Gives the square root of z.
+    ```
+    Sqrt[z]
+    ```
+    """
 
     def run(self, x):
         if isinstance(x, float):

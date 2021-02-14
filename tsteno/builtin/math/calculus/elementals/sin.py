@@ -4,6 +4,12 @@ from tsteno.atoms.module import ModuleArg, Module
 
 
 class Sin(Module):
+    """
+    Gives the sine of z.
+    ```
+    Sin[z]
+    ```
+    """
 
     def run(self, x):
         if isinstance(x, float):

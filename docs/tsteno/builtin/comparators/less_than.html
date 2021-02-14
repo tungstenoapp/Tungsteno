@@ -42,30 +42,31 @@ class LessThan(Module):
     # Examples
     Test equality.
 
-    **&lt;u&gt;Input:&lt;/u&gt;**
+    **Input:**
     ```
     # Less[x+1, 1+x]
     x + 1 &lt; 1 + x
     ```
 
-    **&lt;u&gt;Output:&lt;/u&gt;**
+    **Output:**
     ```
     True
     ```
     ---
     Represent an inequation
 
-    **&lt;u&gt;Input:&lt;/u&gt;**
+    **Input:**
     ```
     # Reduce[Less[x+1, 0, x]
     Reduce[x+1&lt;0, x]
     ```
 
-    **&lt;u&gt;Output:&lt;/u&gt;**
+    **Output:**
     ```
     {{x&lt;-1}}
     ```
     &#34;&#34;&#34;
+
     def run(self, left, right):
         &#34;&#34;&#34;
         Represent a less operator.
@@ -104,20 +105,20 @@ class LessThan(Module):
 <div class="desc"><p>Represent an less operator.</p>
 <h1 id="examples">Examples</h1>
 <p>Test equality.</p>
-<p><strong><u>Input:</u></strong></p>
+<p><strong>Input:</strong></p>
 <pre><code># Less[x+1, 1+x]
 x + 1 &lt; 1 + x
 </code></pre>
-<p><strong><u>Output:</u></strong></p>
+<p><strong>Output:</strong></p>
 <pre><code>True
 </code></pre>
 <hr>
 <p>Represent an inequation</p>
-<p><strong><u>Input:</u></strong></p>
+<p><strong>Input:</strong></p>
 <pre><code># Reduce[Less[x+1, 0, x]
 Reduce[x+1&lt;0, x]
 </code></pre>
-<p><strong><u>Output:</u></strong></p>
+<p><strong>Output:</strong></p>
 <pre><code>{{x&lt;-1}}
 </code></pre>
 <h2 id="parameters">Parameters</h2>
@@ -134,30 +135,31 @@ Reduce[x+1&lt;0, x]
     # Examples
     Test equality.
 
-    **&lt;u&gt;Input:&lt;/u&gt;**
+    **Input:**
     ```
     # Less[x+1, 1+x]
     x + 1 &lt; 1 + x
     ```
 
-    **&lt;u&gt;Output:&lt;/u&gt;**
+    **Output:**
     ```
     True
     ```
     ---
     Represent an inequation
 
-    **&lt;u&gt;Input:&lt;/u&gt;**
+    **Input:**
     ```
     # Reduce[Less[x+1, 0, x]
     Reduce[x+1&lt;0, x]
     ```
 
-    **&lt;u&gt;Output:&lt;/u&gt;**
+    **Output:**
     ```
     {{x&lt;-1}}
     ```
     &#34;&#34;&#34;
+
     def run(self, left, right):
         &#34;&#34;&#34;
         Represent a less operator.

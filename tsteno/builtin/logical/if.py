@@ -2,6 +2,13 @@ from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_NO_AUTO_EVAL
 
 
 class If(Module):
+    """
+    Gives t if condition evaluates to True, and f if it evaluates to False.
+    ```
+    If[condition,t,f]
+    ```
+    """
+
     def run(self, condition, t, f):
         if condition:
             return t()

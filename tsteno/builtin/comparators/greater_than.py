@@ -13,30 +13,31 @@ class GreaterThan(Module):
     # Examples
     Test equality.
 
-    **<u>Input:</u>**
+    **Input:**
     ```
-    # GretarThan[x+1, 1+x]
+    # GreaterThan[x+1, 1+x]
     x + 1 > 1 + x
     ```
 
-    **<u>Output:</u>**
+    **Output:**
     ```
     False
     ```
     ---
     Represent an inequation
 
-    **<u>Input:</u>**
+    **Input:**
     ```
     # Reduce[GreaterThan[x+1, 0, x]
     Reduce[x+1>0, x]
     ```
 
-    **<u>Output:</u>**
+    **Output:**
     ```
     {{x>-1}}
     ```
     """
+
     def run(self, left, right):
         """
         Represent an greater operator.

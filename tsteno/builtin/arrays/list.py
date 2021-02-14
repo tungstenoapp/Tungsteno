@@ -11,12 +11,12 @@ class List(Module):
     ## Examples
     Basic list of 4 elements.
 
-    **<u>Input:</u>**
+    **Input:**
     ```
     List[a, b, c, d]
     ```
 
-    **<u>Output:</u>**
+    **Output:**
     ```
     {a, b, c, d}
     ```

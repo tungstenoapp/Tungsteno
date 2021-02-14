@@ -13,30 +13,31 @@ class LessThan(Module):
     # Examples
     Test equality.
 
-    **<u>Input:</u>**
+    **Input:**
     ```
     # Less[x+1, 1+x]
     x + 1 < 1 + x
     ```
 
-    **<u>Output:</u>**
+    **Output:**
     ```
     True
     ```
     ---
     Represent an inequation
 
-    **<u>Input:</u>**
+    **Input:**
     ```
     # Reduce[Less[x+1, 0, x]
     Reduce[x+1<0, x]
     ```
 
-    **<u>Output:</u>**
+    **Output:**
     ```
     {{x<-1}}
     ```
     """
+
     def run(self, left, right):
         """
         Represent a less operator.

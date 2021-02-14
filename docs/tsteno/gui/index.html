@@ -30,9 +30,12 @@
 import eel
 import sympy
 import traceback
+import difflib
 
 from sympy import mathematica_code as mcode
 from tsteno.notebook import Notebook
+
+from tsteno.atoms.plot import Plot
 
 evaluation = None
 output = None
@@ -40,7 +43,7 @@ eel_configuration = {}
 
 
 @eel.expose
-def tsteno_eval(code):
+def evaluate(code):
     global output
 
     output_result = []
@@ -51,7 +54,7 @@ def tsteno_eval(code):
 
         to_print = obj
 
-        if not isinstance(to_print, str):
+        if not isinstance(to_print, str) and not isinstance(to_print, Plot):
             to_print = mcode(to_print)
 
         output_result.append(to_print)
@@ -69,10 +72,29 @@ def tsteno_eval(code):
     if isinstance(eval_result, sympy.Expr):
         return {
             &#39;processor&#39;: &#39;default&#39;,
-            &#39;output&#39;: &#34;\n&#34;.join(output_result)
+            &#39;result&#39;: &#34;\n&#34;.join(output_result)
+        }
+    elif isinstance(eval_result, Plot):
+        plot_data = [{
+            &#39;x&#39;: eval_result.x,
+            &#39;y&#39;: eval_result.y,
+            &#39;type&#39;: &#39;scatter&#39;,
+            &#39;mode&#39;: &#39;lines&#39;,
+            &#39;marker&#39;: {
+                    &#39;color&#39;: &#39;red&#39;
+            }
+        }]
+
+        if eval_result.z is not None:
+            plot_data[0][&#39;z&#39;] = eval_result.z
+            plot_data[0][&#39;type&#39;] = &#39;surface&#39;
+
+        return {
+            &#39;processor&#39;: &#39;plot&#39;,
+            &#39;plot_data&#39;: plot_data
         }
 
-    return {&#39;processor&#39;: &#39;default&#39;, &#39;output&#39;: &#34;\n&#34;.join(output_result)}
+    return {&#39;processor&#39;: &#39;default&#39;, &#39;result&#39;: &#34;\n&#34;.join(output_result)}
 
 
 @eel.expose
@@ -99,19 +121,43 @@ def suggestions(input):
     definitions = evaluation.get_all_definitions()
 
     for definition in definitions:
-        definition_len = len(definition)
+        seq = difflib.SequenceMatcher(None, input, definition)
 
-        if definition.startswith(input) and definition_len - input_len &gt; 0:
-            options.append({
-                &#39;caption&#39;: definition,
-                &#39;append&#39;: definition[input_len + 1:],
-                &#39;distance&#39;: definition_len - input_len
-            })
+        options.append({
+            &#39;name&#39;: definition,
+            &#39;value&#39;: definition,
+            &#39;score&#39;: seq.ratio()
+        })
 
-    options.sort(key=lambda op: op[&#39;distance&#39;])
-    options = options[:3]
+    options.sort(key=lambda op: op[&#39;score&#39;], reverse=True)
+    options = options[:10]
 
     return options
+
+
+@eel.expose
+def searchFunction(search):
+    global evaluation
+
+    search_results = []
+    search_results_tmp = suggestions(search)
+
+    for search_result in search_results_tmp:
+        if search_result[&#39;name&#39;] not in evaluation.builtin_modules:
+            continue
+        module_def = evaluation.builtin_modules[search_result[&#39;name&#39;]]
+
+        description = &#39;&#39;
+
+        if module_def.__doc__ is not None:
+            description = module_def.__doc__.replace(&#39;    &#39;, &#39;&#39;)
+
+        search_results.append({
+            &#39;functionName&#39;: search_result[&#39;name&#39;],
+            &#39;description&#39;: description
+        })
+
+    return search_results[:3]
 
 
 @eel.expose
@@ -132,7 +178,7 @@ def init_gui(kernel, input_file):
     evaluation = kernel.get_kext(&#39;eval&#39;)
 
     eel.init(os.path.join(os.path.dirname(__file__), &#39;static&#39;))
-    eel.start(&#39;notebook.html&#39;, mode=&#39;web&#39;, all_interfaces=False)</code></pre>
+    eel.start(&#39;&#39;, mode=&#39;web&#39;, all_interfaces=False)</code></pre>
 </details>
 </section>
 <section>
@@ -142,6 +188,70 @@ def init_gui(kernel, input_file):
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="tsteno.gui.evaluate"><code class="name flex">
+<span>def <span class="ident">evaluate</span></span>(<span>code)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@eel.expose
+def evaluate(code):
+    global output
+
+    output_result = []
+
+    def gui_printer(obj):
+        if obj is None or isinstance(obj, Notebook):
+            return
+
+        to_print = obj
+
+        if not isinstance(to_print, str) and not isinstance(to_print, Plot):
+            to_print = mcode(to_print)
+
+        output_result.append(to_print)
+
+    output.deregister_output_handlers()
+    output.register_output_handler(gui_printer)
+
+    try:
+        eval_result = evaluation.evaluate_code(code)
+    except Exception as err:
+        print(traceback.format_exc())
+        print(err)
+        return {&#39;processor&#39;: &#39;error&#39;, &#39;error&#39;: str(err)}
+
+    if isinstance(eval_result, sympy.Expr):
+        return {
+            &#39;processor&#39;: &#39;default&#39;,
+            &#39;result&#39;: &#34;\n&#34;.join(output_result)
+        }
+    elif isinstance(eval_result, Plot):
+        plot_data = [{
+            &#39;x&#39;: eval_result.x,
+            &#39;y&#39;: eval_result.y,
+            &#39;type&#39;: &#39;scatter&#39;,
+            &#39;mode&#39;: &#39;lines&#39;,
+            &#39;marker&#39;: {
+                    &#39;color&#39;: &#39;red&#39;
+            }
+        }]
+
+        if eval_result.z is not None:
+            plot_data[0][&#39;z&#39;] = eval_result.z
+            plot_data[0][&#39;type&#39;] = &#39;surface&#39;
+
+        return {
+            &#39;processor&#39;: &#39;plot&#39;,
+            &#39;plot_data&#39;: plot_data
+        }
+
+    return {&#39;processor&#39;: &#39;default&#39;, &#39;result&#39;: &#34;\n&#34;.join(output_result)}</code></pre>
+</details>
+</dd>
 <dt id="tsteno.gui.get_eel_configuration"><code class="name flex">
 <span>def <span class="ident">get_eel_configuration</span></span>(<span>)</span>
 </code></dt>
@@ -178,7 +288,7 @@ def get_eel_configuration():
     evaluation = kernel.get_kext(&#39;eval&#39;)
 
     eel.init(os.path.join(os.path.dirname(__file__), &#39;static&#39;))
-    eel.start(&#39;notebook.html&#39;, mode=&#39;web&#39;, all_interfaces=False)</code></pre>
+    eel.start(&#39;&#39;, mode=&#39;web&#39;, all_interfaces=False)</code></pre>
 </details>
 </dd>
 <dt id="tsteno.gui.read_file"><code class="name flex">
@@ -199,6 +309,40 @@ def read_file(input_file):
         raise Exception(&#34;Expected notebook&#34;)
 
     return eval_result.dump()</code></pre>
+</details>
+</dd>
+<dt id="tsteno.gui.searchFunction"><code class="name flex">
+<span>def <span class="ident">searchFunction</span></span>(<span>search)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">@eel.expose
+def searchFunction(search):
+    global evaluation
+
+    search_results = []
+    search_results_tmp = suggestions(search)
+
+    for search_result in search_results_tmp:
+        if search_result[&#39;name&#39;] not in evaluation.builtin_modules:
+            continue
+        module_def = evaluation.builtin_modules[search_result[&#39;name&#39;]]
+
+        description = &#39;&#39;
+
+        if module_def.__doc__ is not None:
+            description = module_def.__doc__.replace(&#39;    &#39;, &#39;&#39;)
+
+        search_results.append({
+            &#39;functionName&#39;: search_result[&#39;name&#39;],
+            &#39;description&#39;: description
+        })
+
+    return search_results[:3]</code></pre>
 </details>
 </dd>
 <dt id="tsteno.gui.suggestions"><code class="name flex">
@@ -223,64 +367,18 @@ def suggestions(input):
     definitions = evaluation.get_all_definitions()
 
     for definition in definitions:
-        definition_len = len(definition)
+        seq = difflib.SequenceMatcher(None, input, definition)
 
-        if definition.startswith(input) and definition_len - input_len &gt; 0:
-            options.append({
-                &#39;caption&#39;: definition,
-                &#39;append&#39;: definition[input_len + 1:],
-                &#39;distance&#39;: definition_len - input_len
-            })
+        options.append({
+            &#39;name&#39;: definition,
+            &#39;value&#39;: definition,
+            &#39;score&#39;: seq.ratio()
+        })
 
-    options.sort(key=lambda op: op[&#39;distance&#39;])
-    options = options[:3]
+    options.sort(key=lambda op: op[&#39;score&#39;], reverse=True)
+    options = options[:10]
 
     return options</code></pre>
-</details>
-</dd>
-<dt id="tsteno.gui.tsteno_eval"><code class="name flex">
-<span>def <span class="ident">tsteno_eval</span></span>(<span>code)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">@eel.expose
-def tsteno_eval(code):
-    global output
-
-    output_result = []
-
-    def gui_printer(obj):
-        if obj is None or isinstance(obj, Notebook):
-            return
-
-        to_print = obj
-
-        if not isinstance(to_print, str):
-            to_print = mcode(to_print)
-
-        output_result.append(to_print)
-
-    output.deregister_output_handlers()
-    output.register_output_handler(gui_printer)
-
-    try:
-        eval_result = evaluation.evaluate_code(code)
-    except Exception as err:
-        print(traceback.format_exc())
-        print(err)
-        return {&#39;processor&#39;: &#39;error&#39;, &#39;error&#39;: str(err)}
-
-    if isinstance(eval_result, sympy.Expr):
-        return {
-            &#39;processor&#39;: &#39;default&#39;,
-            &#39;output&#39;: &#34;\n&#34;.join(output_result)
-        }
-
-    return {&#39;processor&#39;: &#39;default&#39;, &#39;output&#39;: &#34;\n&#34;.join(output_result)}</code></pre>
 </details>
 </dd>
 </dl>
@@ -301,11 +399,12 @@ def tsteno_eval(code):
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
+<li><code><a title="tsteno.gui.evaluate" href="#tsteno.gui.evaluate">evaluate</a></code></li>
 <li><code><a title="tsteno.gui.get_eel_configuration" href="#tsteno.gui.get_eel_configuration">get_eel_configuration</a></code></li>
 <li><code><a title="tsteno.gui.init_gui" href="#tsteno.gui.init_gui">init_gui</a></code></li>
 <li><code><a title="tsteno.gui.read_file" href="#tsteno.gui.read_file">read_file</a></code></li>
+<li><code><a title="tsteno.gui.searchFunction" href="#tsteno.gui.searchFunction">searchFunction</a></code></li>
 <li><code><a title="tsteno.gui.suggestions" href="#tsteno.gui.suggestions">suggestions</a></code></li>
-<li><code><a title="tsteno.gui.tsteno_eval" href="#tsteno.gui.tsteno_eval">tsteno_eval</a></code></li>
 </ul>
 </li>
 </ul>
