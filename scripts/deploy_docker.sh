@@ -1,5 +1,4 @@
 #!/bin/bash
-#!/bin/bash
 BRANCH=$(git symbolic-ref --short -q HEAD)
 COMMIT_ID=$(git rev-parse --short HEAD)
 
