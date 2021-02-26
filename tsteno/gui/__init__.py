@@ -1,15 +1,16 @@
-import os
+from tsteno.gui.modern_ui import ModernUI
 import eel
+import os
 import sympy
 import traceback
 import difflib
 
 from sympy import mathematica_code as mcode
-from tsteno.notebook import Notebook
 
 from tsteno.atoms.plot import Plot
 
 evaluation = None
+user_interface = None
 output = None
 eel_configuration = {}
 
@@ -156,16 +157,25 @@ def get_eel_configuration():
     return eel_configuration
 
 
+@eel.expose
+def load_modern_ui():
+    user_interface.get_ui().load()
+
+
 def init_gui(kernel, input_file):
     global evaluation
     global output
     global eel_configuration
+    global user_interface
 
     if input_file is not None:
         eel_configuration['input_file'] = input_file
 
     output = kernel.get_kext('output')
     evaluation = kernel.get_kext('eval')
+    user_interface = kernel.get_kext('user_interface')
+
+    user_interface.load_user_interface(ModernUI)
 
     eel.init(os.path.join(os.path.dirname(__file__), 'static'))
     eel.start('', mode='web', all_interfaces=False)

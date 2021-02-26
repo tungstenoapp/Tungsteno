@@ -8,7 +8,6 @@ from tsteno import VERSION, CODENAME, COPYRIGHT
 from tsteno.kernel.kernel import Kernel
 from tsteno.kernel.kexts.log import LogLevel
 from tsteno.gui import init_gui
-from tsteno.notebook import Notebook
 
 
 @click.command()
@@ -40,9 +39,6 @@ def main(debug, gui, input_):
 
         output.register_output_handler(cli_printer)
 
-        if isinstance(eval_result, Notebook):
-            eval_result.cli(evaluation)
-
         nb_file.close()
     else:
         cli(kernel)
@@ -52,7 +48,7 @@ k = 0
 
 
 def cli_printer(obj):
-    if obj is None or isinstance(obj, Notebook):
+    if obj is None:
         return
 
     to_print = obj

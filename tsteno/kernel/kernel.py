@@ -1,4 +1,5 @@
 """ Kernel represent basic evaluation environment """
+from tsteno.kernel.kexts.user_interface import UserInterface
 import uuid
 import datetime
 from .kexts.log import Log, LogLevel
@@ -70,6 +71,7 @@ class Kernel:
         self.register_kext('log', Log, log_kext=log_kext)
         self.register_kext('eval', Evaluation)
         self.register_kext('output', Output)
+        self.register_kext('user_interface', UserInterface)
 
         log_kext.write(
             'Kernel ({}) loaded succesfully!'.format(self.kid),
