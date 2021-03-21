@@ -14,9 +14,9 @@ from tsteno.notebook import Notebook
 @click.command()
 @click.option('--debug', '-d', is_flag=True,
               help='Initialize tsteno kernel in debug mode')
-@click.option('--gui', '-g', is_flag=True, help='GUI mode (BETA)')
+@click.option('--cli', '-c', is_flag=True, help='CLI mode')
 @click.option('--input', '-i', 'input_', help="*.nb file for input")
-def main(debug, gui, input_):
+def main(debug, cli, input_):
     kernel_opts = {}
     if debug:
         kernel_opts = {
@@ -30,8 +30,8 @@ def main(debug, gui, input_):
     kernel = Kernel(options=kernel_opts)
     evaluation = kernel.get_kext('eval')
 
-    if gui:
-        init_gui(kernel, input_)
+    if cli:
+        run_cli(kernel)
     elif input_ is not None:
         nb_file = open(input_, 'r')
         eval_result = evaluation.evaluate_code(nb_file.read())
@@ -45,7 +45,7 @@ def main(debug, gui, input_):
 
         nb_file.close()
     else:
-        cli(kernel)
+        init_gui(kernel, input_)
 
 
 k = 0
@@ -64,7 +64,7 @@ def cli_printer(obj):
     # click.echo()
 
 
-def cli(kernel):
+def run_cli(kernel):
     global k
     # Print header
     click.echo("Tungsteno Language {} ({})".format(VERSION, CODENAME))

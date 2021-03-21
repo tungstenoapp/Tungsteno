@@ -1,7 +1,7 @@
 sympy >= 1.6.1
 pdoc3==0.9.1
 colorama >= 0.4.3
-pyinstaller >= 3.6
+pyinstaller >= 4.2
 click >= 7.1.2
 readline >= 6.2; platform_system == "Linux"
 numpy >= 1.19
