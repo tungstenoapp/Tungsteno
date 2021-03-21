@@ -5,6 +5,7 @@ pipeline {
         MINOR_RELEASE = "$BUILD_ID"
         MAJOR_RELEASE = "1"
         RELEASE_CAPTION = "v$MAJOR_RELEASE.$MINOR_RELEASE (ALPHA)"
+        GIT_LOCAL_BRANCH = "master"
     }
 
     stages {
