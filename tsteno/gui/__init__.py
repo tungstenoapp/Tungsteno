@@ -22,7 +22,7 @@ def evaluate(code):
     output_result = []
 
     def gui_printer(obj):
-        if obj is None or isinstance(obj, Notebook):
+        if obj is None:
             return
 
         to_print = obj
@@ -72,13 +72,7 @@ def evaluate(code):
 
 @eel.expose
 def read_file(input_file):
-    nb_file = open(input_file, 'r')
-    eval_result = evaluation.evaluate_code(nb_file.read())
-
-    if not isinstance(eval_result, Notebook):
-        raise Exception("Expected notebook")
-
-    return eval_result.dump()
+    pass
 
 
 @eel.expose
