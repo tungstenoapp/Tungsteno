@@ -1,30 +1,26 @@
 #!/bin/bash
-BRANCH=$(git symbolic-ref --short -q HEAD)
-COMMIT_ID=$(git rev-parse --short HEAD)
+BRANCH="$GIT_LOCAL_BRANCH"
+COMMIT_ID="$GIT_COMMIT"
 
-if [[ "$BRANCH" == "master" ]]; then
-    TAGNAME="${COMMIT_ID}"
-else
-    TAGNAME="$BRANCH"
-fi
+TAGNAME="${COMMIT_ID}"
+
 
 IMAGETAG="josecarlosme/tungsteno:$TAGNAME"
 
-sudo docker build -t $IMAGETAG ./
-sudo docker push $IMAGETAG
+docker build -t $IMAGETAG ./
+docker push $IMAGETAG
 
 if [[ "$BRANCH" == "master" ]]; then
-    sudo docker tag $IMAGETAG josecarlosme/tungsteno:latest
-    sudo docker push josecarlosme/tungsteno:latest
+    docker tag $IMAGETAG josecarlosme/tungsteno:latest
+    docker push josecarlosme/tungsteno:latest
 fi
-
 
 IMAGETAG_DOCS="josecarlosme/tungsteno-docs:$TAGNAME"
 
-sudo docker build -t $IMAGETAG_DOCS ./docs
-sudo docker push $IMAGETAG_DOCS
+docker build -t $IMAGETAG_DOCS ./docs
+docker push $IMAGETAG_DOCS
 
 if [[ "$BRANCH" == "master" ]]; then
-    sudo docker tag $IMAGETAG_DOCS josecarlosme/tungsteno-docs:latest
-    sudo docker push josecarlosme/tungsteno-docs:latest
+    docker tag $IMAGETAG_DOCS josecarlosme/tungsteno-docs:latest
+    docker push josecarlosme/tungsteno-docs:latest
 fi
