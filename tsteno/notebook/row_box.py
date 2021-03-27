@@ -2,11 +2,22 @@ import re
 
 
 class RowBox:
-    def __init__(self, boxes):
+    def __init__(self, tmp):
+        boxes = []
+
+        for i in tmp:
+            if isinstance(i, str):
+                boxes.append(i)
+            else:
+                els = i.boxes
+                boxes.extend(els)
+
         self.boxes = boxes
 
     def parse_box_el(self, el):
-        return re.sub(r"\"<(.*)>\"", "\"\\1\"", el, 0, re.MULTILINE)
+        if isinstance(el, str):
+            return re.sub(r"\"<(.*)>\"", "\"\\1\"", el, 0, re.MULTILINE)
+        return el
 
     def cli(self):
         box_elements = []

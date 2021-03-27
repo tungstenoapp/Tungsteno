@@ -143,6 +143,7 @@ class Evaluation(KextBase):
 
     def evaluate_code(self, code):
         tokens = list(self.tokenizer.get_tokens(code))
+
         nodes = self.parser.get_nodes(tokens)
         context = Context()
 

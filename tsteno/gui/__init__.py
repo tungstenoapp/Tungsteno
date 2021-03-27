@@ -81,6 +81,16 @@ def read_file(input_file):
 
 
 @eel.expose
+def read_notebook(file_data):
+    eval_result = evaluation.evaluate_code(file_data)
+
+    if not isinstance(eval_result, Notebook):
+        raise Exception("Expected notebook")
+
+    return eval_result.dump()
+
+
+@eel.expose
 def suggestions(input):
     global evaluation
 
