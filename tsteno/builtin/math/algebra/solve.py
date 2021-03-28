@@ -51,6 +51,7 @@ class Solve(Module):
         sols = evaluation.evaluate_code(
             'Solve[x+1==0, x]'
         )
+
         test.assertEqual(sols['x'], -1)
 
         eq_sols = evaluation.evaluate_code(

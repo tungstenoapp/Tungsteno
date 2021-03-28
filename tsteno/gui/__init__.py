@@ -8,6 +8,7 @@ from sympy import mathematica_code as mcode
 from tsteno.notebook import Notebook
 
 from tsteno.atoms.plot import Plot
+from tsteno.atoms.rule import RuleSet
 
 evaluation = None
 output = None
@@ -26,7 +27,9 @@ def evaluate(code):
 
         to_print = obj
 
-        if not isinstance(to_print, str) and not isinstance(to_print, Plot):
+        if isinstance(to_print, RuleSet):
+            to_print = str(to_print)
+        elif not isinstance(to_print, str) and not isinstance(to_print, Plot):
             to_print = mcode(to_print)
 
         output_result.append(to_print)
