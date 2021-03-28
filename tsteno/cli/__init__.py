@@ -9,6 +9,7 @@ from tsteno.kernel.kernel import Kernel
 from tsteno.kernel.kexts.log import LogLevel
 from tsteno.gui import init_gui
 from tsteno.notebook import Notebook
+from tsteno.atoms.rule import RuleSet
 
 
 @click.command()
