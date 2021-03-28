@@ -60,7 +60,7 @@ def cli_printer(obj):
 
     if isinstance(to_print, RuleSet):
         to_print = str(to_print)
-    elif not isinstance(to_print, str) and not isinstance(to_print, Plot):
+    elif not isinstance(to_print, str):
         to_print = mcode(to_print)
 
     click.echo("Out[{}]= {}".format(k, to_print))
