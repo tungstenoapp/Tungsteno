@@ -72,6 +72,12 @@ class TestTokenizer(unittest.TestCase):
         self.assertEqual(node_list.childrens[1], 2)
         self.assertEqual(node_list.childrens[2], 3)
 
+    def test_doubleFn(self):
+        global tokenizer, parser
+
+        tokens = list(tokenizer.get_tokens("Print[1]Print[2]"))
+        nodes = list(parser.get_nodes(tokens))
+
     def test_moduleDefinition(self):
         return
         global tokenizer, parser
