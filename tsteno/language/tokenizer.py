@@ -204,7 +204,7 @@ class Tokenizer:
         return pos, False
 
     def skip_blankspaces(self, code, pos, max_len):
-        while pos < max_len and (code[pos] == "\n" or code[pos] == ' '):
+        while pos < max_len and code[pos] == ' ':
             pos = pos + 1
 
         return pos

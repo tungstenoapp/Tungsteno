@@ -263,10 +263,8 @@ class Parser:
                     atom_lhs, tokens, toklen, pos
                 )
             else:
-                raise Exception(
-                    "Syntax error unexpected #{} ({}) at {}".format(
-                        token.get_type(), token.get_value(), token.pos + 1)
-                )
+                # nothing to do here, continue please
+                break
 
         return atom_lhs, pos
 
