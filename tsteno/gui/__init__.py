@@ -3,10 +3,10 @@ import eel
 import sympy
 import traceback
 import difflib
+import tsteno.notebook.export
 
 from sympy import mathematica_code as mcode
 from tsteno.notebook import Notebook
-
 from tsteno.atoms.plot import Plot
 from tsteno.atoms.rule import RuleSet
 
@@ -167,6 +167,11 @@ def searchFunction(search):
 def get_eel_configuration():
     global eel_configuration
     return eel_configuration
+
+
+@eel.expose
+def export_nb(cells):
+    return tsteno.notebook.export.export_nb(cells)
 
 
 def init_gui(kernel, input_file):
