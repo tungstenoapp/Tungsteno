@@ -2,9 +2,10 @@ pipeline {
     agent any
 
     environment {
-        MINOR_RELEASE = "$BUILD_ID"
         MAJOR_RELEASE = "1"
-        RELEASE_CAPTION = "v$MAJOR_RELEASE.$MINOR_RELEASE (ALPHA)"
+        MINOR_RELEASE = "4"
+        RELEASE_TYPE = "stable"
+        RELEASE_CAPTION = "v$MAJOR_RELEASE.$MINOR_RELEASE.$BUILD_ID ($RELEASE_TYPE)"
         GIT_LOCAL_BRANCH = "master"
     }
 
@@ -30,7 +31,7 @@ pipeline {
         stage('Generate build (Linux Binary)') {
             steps {
                 sh "python3 -m eel app.py tsteno/gui/static --add-data tsteno:tsteno --onefile -n tungsteno"
-                sh "mcli cp dist/tungsteno s3/tungsteno-releases/linux/stable/tungsteno-amd64-$MAJOR_RELEASE.$MINOR_RELEASE"
+                sh "mcli cp dist/tungsteno s3/tungsteno-releases/linux/$RELEASE_TYPE/tungsteno-amd64-$MAJOR_RELEASE.$MINOR_RELEASE.$BUILD_ID"
             }
         }
 
@@ -41,7 +42,7 @@ pipeline {
 
                 bat "pip install --user -r requirements.txt"
                 bat "python -m eel app.py tsteno/gui/static --add-data tsteno;tsteno --onefile -n tungsteno"
-                bat "C:\\mc.exe cp dist/tungsteno.exe s3/tungsteno-releases/windows/stable/tungsteno-amd64-%MAJOR_RELEASE%.%MINOR_RELEASE%.exe"
+                bat "C:\\mc.exe cp dist/tungsteno.exe s3/tungsteno-releases/windows/%RELEASE_TYPE%/tungsteno-amd64-%MAJOR_RELEASE%.%MINOR_RELEASE%.%BUILD_ID%.exe"
 
                 deleteDir()
             }
