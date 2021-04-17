@@ -16,6 +16,11 @@ eel_configuration = {}
 
 
 @eel.expose
+def ping():
+    return 'pong'
+
+
+@eel.expose
 def evaluate(code):
     global output
 
