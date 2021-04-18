@@ -16,8 +16,9 @@ from tsteno.atoms.rule import RuleSet
 @click.option('--debug', '-d', is_flag=True,
               help='Initialize tsteno kernel in debug mode')
 @click.option('--cli', '-c', is_flag=True, help='CLI mode')
+@click.option('--launcher', '-l', is_flag=True, help='Launcher mode')
 @click.option('--input', '-i', 'input_', help="*.nb file for input")
-def main(debug, cli, input_):
+def main(debug, cli, launcher, input_):
     kernel_opts = {}
     if debug:
         kernel_opts = {
@@ -46,7 +47,7 @@ def main(debug, cli, input_):
 
         nb_file.close()
     else:
-        init_gui(kernel, input_)
+        init_gui(kernel, input_, launcher)
 
 
 k = 0

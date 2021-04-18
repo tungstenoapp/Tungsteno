@@ -179,7 +179,7 @@ def export_nb(cells):
     return tsteno.notebook.export.export_nb(cells)
 
 
-def init_gui(kernel, input_file):
+def init_gui(kernel, input_file, launcher):
     global evaluation
     global output
     global eel_configuration
@@ -191,4 +191,10 @@ def init_gui(kernel, input_file):
     evaluation = kernel.get_kext('eval')
 
     eel.init(os.path.join(os.path.dirname(__file__), 'static'))
-    eel.start('', mode='web', all_interfaces=False)
+
+    eel_mode = 'web'
+
+    if launcher:
+        eel_mode = False
+
+    eel.start('', mode=eel_mode, all_interfaces=False)
