@@ -30,6 +30,7 @@ pipeline {
 
         stage('Generate build (Linux Binary)') {
             steps {
+                sh "python3 scripts/prepare_release.py $MAJOR_RELEASE.$MINOR_RELEASE.$BUILD_ID"
                 sh "python3 -m eel app.py tsteno/gui/static --add-data tsteno:tsteno --onefile -n tungsteno"
                 sh "mcli cp dist/tungsteno s3/tungsteno-releases/linux/$RELEASE_TYPE/tungsteno-amd64-$MAJOR_RELEASE.$MINOR_RELEASE.$BUILD_ID"
             }
@@ -41,6 +42,7 @@ pipeline {
                 checkout scm
 
                 bat "pip install --user -r requirements.txt"
+                bat "python scripts/prepare_release.py $MAJOR_RELEASE.$MINOR_RELEASE.$BUILD_ID"
                 bat "python -m eel app.py tsteno/gui/static --add-data tsteno;tsteno --onefile -n tungsteno"
                 bat "C:\\mc.exe cp dist/tungsteno.exe s3/tungsteno-releases/windows/%RELEASE_TYPE%/tungsteno-amd64-%MAJOR_RELEASE%.%MINOR_RELEASE%.%BUILD_ID%.exe"
 

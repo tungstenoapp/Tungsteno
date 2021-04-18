@@ -26,7 +26,7 @@ Contact with any contact form on [https://josecarlos.me](https://josecarlos.me)
 
 """
 
-VERSION = 0.1
+VERSION = "prebuild"
 """ Specify the current version of Tungsteno core """
 
 CODENAME = "Sophie"

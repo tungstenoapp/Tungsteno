@@ -179,6 +179,11 @@ def export_nb(cells):
     return tsteno.notebook.export.export_nb(cells)
 
 
+@eel.expose
+def getVersion():
+    return tsteno.VERSION
+
+
 def init_gui(kernel, input_file, launcher):
     global evaluation
     global output
