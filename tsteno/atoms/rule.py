@@ -2,6 +2,7 @@
 Represent a set of rules
 """
 from .atoms import Atoms
+from sympy import mathematica_code as mcode
 
 
 class RuleSet(Atoms):
@@ -32,7 +33,7 @@ class RuleSet(Atoms):
         for key, val in self.rules_dict.items():
             output.append(str(key))
             output.append('->')
-            output.append(str(val))
+            output.append(str(mcode(val)))
             output.append(',')
 
         del output[len(output) - 1]
