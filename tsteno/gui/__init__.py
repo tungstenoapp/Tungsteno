@@ -68,6 +68,7 @@ def evaluate(code):
         if eval_result.z is not None:
             plot_data[0]['z'] = eval_result.z
             plot_data[0]['type'] = 'surface'
+            plot_data[0]['showscale'] = False
 
         return {
             'processor': 'plot',
