@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         MAJOR_RELEASE = "1"
-        MINOR_RELEASE = "4"
+        MINOR_RELEASE = "5"
         RELEASE_TYPE = "stable"
         RELEASE_CAPTION = "v$MAJOR_RELEASE.$MINOR_RELEASE.$BUILD_ID ($RELEASE_TYPE)"
         GIT_LOCAL_BRANCH = "master"
