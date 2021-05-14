@@ -156,12 +156,13 @@ BIN_OPINFO_MAP = {
     '/': OpInfo(2, 'LEFT', 'Div'),
 
     '^': OpInfo(3, 'RIGHT', 'Pow'),
+
 }
 
 UNARY_OPINFO_MAP = {
     '++': OpInfo(None, None, 'Increment'),
-    '--': OpInfo(None, None, 'Decrement')
-
+    '--': OpInfo(None, None, 'Decrement'),
+    "'": OpInfo(None, None, 'D'),
 }
 
 CLOSURE_TOKENS = [
@@ -235,7 +236,7 @@ class Parser:
                 next_token = tokens[pos + 1]
 
             if token.get_type() == token_list.TOKEN_OP and \
-                    next_token.get_type() == token.get_type():
+                    next_token is not None and next_token.get_type() == token.get_type():
                 double_op = token.get_value() + next_token.get_value()
                 if double_op in UNARY_OPINFO_MAP:
                     prec, assoc, node = UNARY_OPINFO_MAP[double_op]
@@ -245,12 +246,18 @@ class Parser:
                     continue
 
             if token.get_type() == token_list.TOKEN_OP:
-                atom_lhs, atom_rhs, pos = self.compute_op(
-                    token, pos, toklen, tokens, minprec, atom_lhs
-                )
+                if token.get_value() in UNARY_OPINFO_MAP:
+                    prec, assoc, node = UNARY_OPINFO_MAP[token.get_value()]
+                    pos = pos + 2
 
-                if not atom_rhs:
-                    break
+                    atom_lhs = self.compute_unary(node, atom_lhs)
+                else:
+                    atom_lhs, atom_rhs, pos = self.compute_op(
+                        token, pos, toklen, tokens, minprec, atom_lhs
+                    )
+
+                    if not atom_rhs:
+                        break
             elif isinstance(atom_lhs, numbers.Number):
                 atom_lhs, atom_rhs, pos = self.compute_number(
                     tokens, toklen, pos, atom_lhs)

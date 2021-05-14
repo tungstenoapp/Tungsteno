@@ -60,6 +60,23 @@ class TestTokenizer(unittest.TestCase):
         self.assertEqual(product.childrens[0], 2)
         self.assertEqual(product.childrens[1], 3)
 
+    def test_parsePow(self):
+        global tokenizer, parser
+        tokens = tokenizer.get_tokens("1^2")
+        nodes = list(parser.get_nodes(list(tokens)))
+        one_node = nodes[0]
+        self.assertEqual(one_node.head, 'Pow')
+        self.assertEqual(one_node.childrens[0], 1)
+        self.assertEqual(one_node.childrens[1], 2)
+
+    def test_parseDeriv(self):
+        global tokenizer, parser
+        tokens = tokenizer.get_tokens("a'")
+        nodes = list(parser.get_nodes(list(tokens)))
+        one_node = nodes[0]
+
+        self.assertEqual(one_node.head, 'D')
+
     def test_listDefinition(self):
         global tokenizer, parser
 
