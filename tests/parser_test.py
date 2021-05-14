@@ -74,8 +74,17 @@ class TestTokenizer(unittest.TestCase):
         tokens = tokenizer.get_tokens("a'")
         nodes = list(parser.get_nodes(list(tokens)))
         one_node = nodes[0]
+        self.assertEqual(one_node.head, 'D')
+
+    def test_parseDoubleDeriv(self):
+        global tokenizer, parser
+        tokens = tokenizer.get_tokens("a''")
+        nodes = list(parser.get_nodes(list(tokens)))
+
+        one_node = nodes[0]
 
         self.assertEqual(one_node.head, 'D')
+        self.assertEqual(one_node.childrens[0].head, 'D')
 
     def test_listDefinition(self):
         global tokenizer, parser

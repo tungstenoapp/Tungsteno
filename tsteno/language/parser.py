@@ -248,7 +248,7 @@ class Parser:
             if token.get_type() == token_list.TOKEN_OP:
                 if token.get_value() in UNARY_OPINFO_MAP:
                     prec, assoc, node = UNARY_OPINFO_MAP[token.get_value()]
-                    pos = pos + 2
+                    pos = pos + 1
 
                     atom_lhs = self.compute_unary(node, atom_lhs)
                 else:
