@@ -47,8 +47,7 @@ jobs:
           python scripts/prepare_release.py ${{ env.release_id }}.${{ env.sha_short }}
 
       - name: Generate build
-        run: |
-          python -m eel app.py tsteno/gui/static --add-data tsteno;tsteno --onefile -n tungsteno
+        run: 'python -m eel app.py tsteno/gui/static --add-data tsteno;tsteno --onefile -n tungsteno'
 
       - run: aws s3 cp dist/tungsteno.exe s3://tungsteno-releases/windows/stable/tungsteno-amd64-${{ env.release_id }}.${{ env.sha_short }}.exe --endpoint-url https://s3.josecarlos.me
         env:
