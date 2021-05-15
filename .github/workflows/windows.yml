@@ -22,7 +22,7 @@ jobs:
         id: vars
         shell: bash
         run: |
-          echo "sha_short=$(date +%-d%-H%-M )" >> $GITHUB_ENV
+          echo "sha_short=$(date +%d%H%M )" >> $GITHUB_ENV
           echo "release_id=1.$(date +%-m)" >> $GITHUB_ENV
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
