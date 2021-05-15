@@ -1,7 +1,4 @@
-# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
-
-name: release status linux
+name: run unitary test and build
 
 on:
   push:
@@ -14,10 +11,17 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: [3.9]
 
     steps:
       - uses: actions/checkout@v2
+      - name: Declare some variables
+        id: vars
+        shell: bash
+        run: |
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+          echo "::set-output name=release_id::$(git describe --abbrev=0 --tags | sed '/^$/d') "
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
@@ -35,3 +39,20 @@ jobs:
       - name: Test with unit test
         run: |
           python -m unittest discover -s tests/ -p "*_test.py"
+
+      - name: Prepare release
+        run: |
+          python scripts/prepare_release.py $release_id.$sha_short
+
+      - name: Generate build
+        run: |
+          python -m eel app.py tsteno/gui/static --add-data tsteno:tsteno --onefile -n tungsteno
+
+      - uses: prewk/s3-cp-action@master
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_S3_ENDPOINT: 'https://s3.josecarlos.me'
+          AWS_REGION: 'eu-west-1'
+          SOURCE: 'dist/tungsteno'
+          DEST: 's3://tungsteno-releases/linux/demo/tungsteno-amd64-$release_id.$sha_short'
