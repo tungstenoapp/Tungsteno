@@ -22,8 +22,8 @@ jobs:
         id: vars
         shell: pwsh
         run: |
-          echo "sha_short=$(date -UFormat %d )" >> $GITHUB_ENV
-          echo "release_id=1.$((Get-Date).Month)" >> $GITHUB_ENV
+          echo "sha_short=$(date +%-d )" >> $GITHUB_ENV
+          echo "release_id=1.$(date +%-m)" >> $GITHUB_ENV
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
