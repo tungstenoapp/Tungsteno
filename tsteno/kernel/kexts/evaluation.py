@@ -1,7 +1,7 @@
 import os
 import sys
 
-from sympy import Symbol
+from sympy import Symbol, Function
 from .log import LogLevel
 from .kext_base import KextBase
 from tsteno.language.ast import Node

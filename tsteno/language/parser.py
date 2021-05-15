@@ -36,7 +36,7 @@ class UnaryOpParser(BaseParser):
 
 class IdentifierTokenParser(BaseParser):
 
-    def parse_function(self, itok, tokens, toklen, pos, parser):
+    def parse_function(self, itok, tokens, toklen, pos, parser, deriv_times):
         arg = []
         arguments = []
         while pos < toklen:
@@ -55,7 +55,12 @@ class IdentifierTokenParser(BaseParser):
             expr, pos = parser.compute_expr(tokens, toklen, pos)
             arg.append(expr)
 
-        return Node(itok.get_value(), *arguments), pos
+        deriv_0 = Node(itok.get_value(), *arguments)
+
+        for i in range(0, deriv_times):
+            deriv_0 = Node('D', deriv_0)
+
+        return deriv_0, pos
 
     def parse_access_list(self, itok, tokens, toklen, pos, parser):
         arg = []
@@ -83,15 +88,24 @@ class IdentifierTokenParser(BaseParser):
     def read(self, tokens, toklen, pos, parser):
         itok = tokens[pos]
 
+        deriv_times = 0
         if pos + 1 < toklen:
             ntok = tokens[pos + 1]
-            if ntok.get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
+            while ntok.get_value() == "'":
+                deriv_times += 1
+                pos = pos + 1
+                if len(tokens) > pos + 1:
+                    ntok = tokens[pos + 1]
+                    continue
+                break
+
+            if deriv_times > 0 or ntok.get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
                 pos = pos + 2
-                if tokens[pos].get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
+                if toklen > pos and tokens[pos].get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
                     pos = pos + 1
                     return self.parse_access_list(itok, tokens, toklen, pos, parser)
 
-                return self.parse_function(itok, tokens, toklen, pos, parser)
+                return self.parse_function(itok, tokens, toklen, pos, parser, deriv_times)
 
         return IdentifierToken(itok.get_value()), pos + 1
 

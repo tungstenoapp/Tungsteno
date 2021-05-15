@@ -1,3 +1,5 @@
+from sympy.core.function import Derivative, Function
+from sympy.ntheory.primetest import _test
 from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_ALL_NEXT
 
 
@@ -15,7 +17,12 @@ class Unknown(Module):
         ]
 
     def run_test(self, test):
-        pass
+        evaluation = self.get_kernel().get_kext('eval')
+
+        t = evaluation.evaluate_code(
+            "chachi'[x]")
+
+        test.assertIsInstance(t, Derivative)
 
 
 class UnknownProxy(Unknown):
@@ -27,3 +34,11 @@ class UnknownProxy(Unknown):
     def __repr__(self):
         argument_repr = ", ".join(list(map(lambda x: str(x), self.childrens)))
         return "{}[{}]".format(self.head, argument_repr)
+
+    def get_sympy(self):
+        args = []
+
+        for child in self.childrens:
+            args.append(child.get_sympy())
+
+        return Function(self.head)(*args)
