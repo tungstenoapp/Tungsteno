@@ -55,4 +55,4 @@ jobs:
           AWS_S3_ENDPOINT: 'https://s3.josecarlos.me'
           AWS_REGION: 'eu-west-1'
           SOURCE: 'dist/tungsteno'
-          DEST: 's3://tungsteno-releases/linux/demo/tungsteno-amd64-$release_id.$sha_short'
+          DEST: 's3://tungsteno-releases/linux/demo/tungsteno-amd64-${{ release_id }}.${{ sha_short }}'
