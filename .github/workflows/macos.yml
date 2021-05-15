@@ -20,7 +20,7 @@ jobs:
         shell: bash
         run: |
           echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
-          echo "release_id=$(git describe --abbrev=0 --tags | sed '/^$/d')" >> $GITHUB_ENV
+          echo "release_id=$(git describe --abbrev=0 --tags)" >> $GITHUB_ENV
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
