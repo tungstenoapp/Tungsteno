@@ -8,7 +8,7 @@ class DSolve(Module):
     """
     Gives the indefinite integral.
     ```
-    Integrate[f, x]
+    DSolve[f, x]
     ```
     """
 
@@ -29,6 +29,3 @@ class DSolve(Module):
 
     def run_test(self, test):
         evaluation = self.get_kernel().get_kext('eval')
-
-        print(evaluation.evaluate_code(
-            "DSolve[y'[x] + y[x] == 5 * Sin[x], y[x], x]"))
