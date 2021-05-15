@@ -142,6 +142,10 @@ class Evaluation(KextBase):
         return modules
 
     def evaluate_code(self, code):
+        log_kext = self.get_kernel().get_kext('log')
+
+        log_kext.write(
+            '>' + code, LogLevel.DEBUG)
         tokens = list(self.tokenizer.get_tokens(code))
 
         nodes = self.parser.get_nodes(tokens)
