@@ -46,7 +46,7 @@ jobs:
         run: |
           python -m eel app.py tsteno/gui/static --add-data tsteno:tsteno --onefile -n tungsteno
 
-      - run: aws s3 cp dist/tungsteno s3://tungsteno-releases/linux/demo/tungsteno-amd64-${{ env.release_id }}.${{ env.sha_short }} --endpoint-url https://s3.josecarlos.me
+      - run: aws s3 cp dist/tungsteno s3://tungsteno-releases/macos/stable/tungsteno-amd64-${{ env.release_id }}.${{ env.sha_short }} --endpoint-url https://s3.josecarlos.me
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
