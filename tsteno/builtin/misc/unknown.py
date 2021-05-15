@@ -42,3 +42,15 @@ class UnknownProxy(Unknown):
             args.append(child.get_sympy())
 
         return Function(self.head)(*args)
+
+    def __radd__(self, other):
+        return self.get_sympy() + other
+
+    def __rmul__(self, other):
+        return self.get_sympy() * other
+
+    def __rsub__(self, other):
+        return self.get_sympy() - other
+
+    def __rdiv__(self, other):
+        return self.get_sympy() / other
