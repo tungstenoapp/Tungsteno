@@ -19,7 +19,7 @@ jobs:
         id: vars
         shell: bash
         run: |
-          echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          echo "sha_short=$(date +"%T")" >> $GITHUB_ENV
           echo "release_id=1.$(date +%-m)" >> $GITHUB_ENV
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
