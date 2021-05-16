@@ -18,7 +18,8 @@ from tsteno.atoms.rule import RuleSet
 @click.option('--cli', '-c', is_flag=True, help='CLI mode')
 @click.option('--launcher', '-l', is_flag=True, help='Launcher mode')
 @click.option('--input', '-i', 'input_', help="*.nb file for input")
-def main(debug, cli, launcher, input_):
+@click.option('--http-port', '-p', 'http_port', help='HTTP port', default=8000)
+def main(debug, cli, launcher, input_, http_port):
     kernel_opts = {}
     if debug:
         kernel_opts = {
@@ -47,7 +48,7 @@ def main(debug, cli, launcher, input_):
 
         nb_file.close()
     else:
-        init_gui(kernel, input_, launcher)
+        init_gui(kernel, input_, launcher, http_port)
 
 
 k = 0
