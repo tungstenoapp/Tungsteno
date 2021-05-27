@@ -185,7 +185,7 @@ def getVersion():
     return tsteno.VERSION
 
 
-def init_gui(kernel, input_file, launcher):
+def init_gui(kernel, input_file, launcher, http_port):
     global evaluation
     global output
     global eel_configuration
@@ -203,4 +203,4 @@ def init_gui(kernel, input_file, launcher):
     if launcher:
         eel_mode = False
 
-    eel.start('', mode=eel_mode, all_interfaces=False)
+    eel.start('', mode=eel_mode, all_interfaces=False, port=int(http_port))

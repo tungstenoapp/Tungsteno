@@ -1,0 +1,60 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: release status windows
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Declare some variables
+        id: vars
+        shell: bash
+        run: |
+          echo "sha_short=$(date +%d%H%M )" >> $GITHUB_ENV
+          echo "release_id=1.$(date +%-m)" >> $GITHUB_ENV
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          pip install flake8 pdoc3
+          pip install -r requirements.txt
+      - name: Lint with flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      - name: Test with unit test
+        run: |
+          python -m unittest discover -s tests/ -p "*_test.py"
+
+      - name: Prepare release
+        run: |
+          python scripts/prepare_release.py ${{ env.release_id }}.${{ env.sha_short }}
+
+      - name: Generate build
+        run: |
+          python -m eel app.py tsteno/gui/static --add-data "tsteno;tsteno" --onefile -n tungsteno
+
+      - uses: chrislennon/action-aws-cli@v1.1
+
+      - run: aws s3 cp dist/tungsteno.exe s3://tungsteno-releases/windows/stable/tungsteno-amd64-${{ env.release_id }}.${{ env.sha_short }}.exe --endpoint-url ${{ secrets.S3_ENDPOINT }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'GRA'
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
