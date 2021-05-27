@@ -46,7 +46,7 @@ jobs:
         run: |
           python -m eel app.py tsteno/gui/static --add-data tsteno:tsteno --onefile -n tungsteno
 
-      - uses: hannut91/aws-cli@1.18.43
+      - uses: ItsKarma/aws-cli@v1.70.0
         with:
           args: s3 cp dist/tungsteno s3://tungsteno-releases/macos/stable/tungsteno-amd64-${{ env.release_id }}.${{ env.sha_short }} --endpoint-url ${{ secrets.S3_ENDPOINT }}
         env:
