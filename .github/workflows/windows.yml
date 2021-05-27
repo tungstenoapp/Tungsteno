@@ -50,9 +50,10 @@ jobs:
         run: |
           python -m eel app.py tsteno/gui/static --add-data "tsteno;tsteno" --onefile -n tungsteno
 
-      - uses: ItsKarma/aws-cli@v1.70.0
-        with:
-          args: s3 cp dist/tungsteno.exe s3://tungsteno-releases/windows/stable/tungsteno-amd64-${{ env.release_id }}.${{ env.sha_short }}.exe --endpoint-url ${{ secrets.S3_ENDPOINT }}
+      - uses: chrislennon/action-aws-cli@v1.1
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      - run: aws s3 cp dist/tungsteno.exe s3://tungsteno-releases/windows/stable/tungsteno-amd64-${{ env.release_id }}.${{ env.sha_short }}.exe --endpoint-url ${{ secrets.S3_ENDPOINT }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
