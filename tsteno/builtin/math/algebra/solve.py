@@ -60,3 +60,7 @@ class Solve(Module):
 
         test.assertEqual(eq_sols[Symbol('x')], 1)
         test.assertEqual(eq_sols[Symbol('y')], 3)
+
+        test.assertEqual(evaluation.evaluate_code(
+            'zzz = Solve[x+1==0, x]; x /. zzz'
+        ), -1)
