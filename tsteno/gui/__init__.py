@@ -105,7 +105,6 @@ def evaluate(code):
                 plot_data[0]['type'] = 'surface'
                 plot_data[0]['showscale'] = False
 
-        print(plot_data)
         return {
             'processor': 'plot',
             'plot_data': plot_data
