@@ -4,6 +4,7 @@ from tsteno.atoms.module import ARG_FLAG_NO_AUTO_EVAL
 from tsteno.atoms.module import ARG_FLAG_SPECIAL_CONTEXT
 from tsteno.atoms.plot import Plot as Plt
 
+PLOT_ACCURACY = 200
 
 class Plot(Module):
     """
@@ -23,7 +24,7 @@ class Plot(Module):
         x0 = variables[1]
         xmax = variables[2]
 
-        x_points = np.linspace(x0, xmax)
+        x_points = np.linspace(x0, xmax, PLOT_ACCURACY)
         y_points = np.array([self.evaluate_f(f, x, xi, context)
                              for xi in x_points])
 

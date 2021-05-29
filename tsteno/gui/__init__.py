@@ -3,11 +3,13 @@ import eel
 import sympy
 import traceback
 import difflib
+import math
+import numpy
 import tsteno.notebook.export
 
 from sympy import mathematica_code as mcode
 from tsteno.notebook import Notebook
-from tsteno.atoms.plot import Plot
+from tsteno.atoms.plot import Plot, PlotArray
 from tsteno.atoms.rule import RuleSet
 
 evaluation = None
@@ -19,6 +21,14 @@ eel_configuration = {}
 def ping():
     return 'pong'
 
+def int2rgb(value):
+    rng = numpy.random.RandomState(value)
+
+    blue = rng.randint(0, 256)
+    green = rng.randint(0, 256)
+    red = rng.randint(0, 256)
+    
+    return "#%02x%02x%02x" % (red, green, blue)
 
 @eel.expose
 def evaluate(code):
@@ -34,7 +44,10 @@ def evaluate(code):
 
         if isinstance(to_print, RuleSet):
             to_print = str(to_print)
-        elif not isinstance(to_print, str) and not isinstance(to_print, Plot):
+        elif not isinstance(to_print, str) and not (
+            isinstance(to_print, Plot) or
+            isinstance(to_print, PlotArray)
+            ):
             to_print = mcode(to_print)
 
         output_result.append(to_print)
@@ -54,22 +67,45 @@ def evaluate(code):
             'processor': 'default',
             'result': "\n".join(output_result)
         }
-    elif isinstance(eval_result, Plot):
-        plot_data = [{
-            'x': eval_result.x,
-            'y': eval_result.y,
-            'type': 'scatter',
-            'mode': 'lines',
-            'marker': {
-                    'color': 'red'
-            }
-        }]
+    elif isinstance(eval_result, Plot) or isinstance(eval_result, PlotArray):
+        plot_data = []
+        k = 0
 
-        if eval_result.z is not None:
-            plot_data[0]['z'] = eval_result.z
-            plot_data[0]['type'] = 'surface'
-            plot_data[0]['showscale'] = False
+        if isinstance(eval_result, PlotArray):
+            for plot in eval_result.plots:
+                new_plot = {}
 
+                new_plot['x'] = plot.x
+                new_plot['y'] = plot.y
+
+                if plot.z is not None:
+                    new_plot['z'] = plot.z
+
+                new_plot['type'] = 'scatter'
+                new_plot['modes'] = 'lines'
+                new_plot['marker'] = {
+                    'color': int2rgb(k)
+                }
+
+                plot_data.append(new_plot)
+                k = k +1
+        else:
+            plot_data = [{
+                'x': eval_result.x,
+                'y': eval_result.y,
+                'type': 'scatter',
+                'mode': 'lines',
+                'marker': {
+                        'color': int2rgb(k)
+                }
+            }]
+
+            if eval_result.z is not None:
+                plot_data[0]['z'] = eval_result.z
+                plot_data[0]['type'] = 'surface'
+                plot_data[0]['showscale'] = False
+
+        print(plot_data)
         return {
             'processor': 'plot',
             'plot_data': plot_data
