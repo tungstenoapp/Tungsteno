@@ -150,9 +150,6 @@ class ParensParser(BaseParser):
 OpInfo = namedtuple('OpInfo', 'prec assoc function')
 
 BIN_OPINFO_MAP = {
-    '/.': OpInfo(-1, 'LEFT', 'ReplaceAll'),
-
-    '->': OpInfo(0, 'LEFT', 'Rule'),
     '=': OpInfo(0, 'LEFT', 'Set'),
     ':=': OpInfo(0, 'LEFT', 'Set'),
     '<': OpInfo(0, 'LEFT', 'LessThan'),
@@ -163,9 +160,12 @@ BIN_OPINFO_MAP = {
     '!=': OpInfo(0, 'LEFT', 'NotEqual'),
     '*^': OpInfo(0, 'LEFT', 'ScientificForm'),
 
+
+    '/.': OpInfo(1, 'LEFT', 'ReplaceAll'),
     '+': OpInfo(1, 'LEFT', 'Plus'),
     '-': OpInfo(1, 'LEFT', 'Minus'),
 
+    '->': OpInfo(2, 'LEFT', 'Rule'),
     '*': OpInfo(2, 'LEFT', 'Product'),
     '/': OpInfo(2, 'LEFT', 'Div'),
 

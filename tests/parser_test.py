@@ -98,6 +98,15 @@ class TestTokenizer(unittest.TestCase):
         self.assertEqual(node_list.childrens[1], 2)
         self.assertEqual(node_list.childrens[2], 3)
 
+    def test_replaceAllPriorities(self):
+        global tokenizer, parser
+
+        tokens = list(tokenizer.get_tokens("t = {x, x^2, y, z} /. x -> 1"))
+        nodes = list(parser.get_nodes(tokens))
+        
+        node_list = nodes[0]
+        self.assertEqual(node_list.head, 'Set')
+
     def test_doubleFn(self):
         global tokenizer, parser
 
