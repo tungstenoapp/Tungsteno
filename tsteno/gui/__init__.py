@@ -10,8 +10,10 @@ import tsteno.notebook.export
 from sympy import mathematica_code as mcode
 from tsteno.notebook import Notebook
 from tsteno.atoms.plot import Plot, PlotArray
+from tsteno.atoms.manipulate import Manipulate
 from tsteno.atoms.rule import RuleSet
 
+from tsteno.kernel.kexts.evaluation import Context
 evaluation = None
 output = None
 eel_configuration = {}
@@ -30,42 +32,34 @@ def int2rgb(value):
     
     return "#%02x%02x%02x" % (red, green, blue)
 
-@eel.expose
-def evaluate(code):
+
+@eel.expose 
+def evaluate_manipulate(expr_pointer, variables):
     global output
+    
+    expr, context = evaluation.get_expr_pointer(int(expr_pointer))
+    for varname, varvalue in variables.items():
+        evaluation.set_global_user_variable(varname, varvalue)
+    eval_result = expr(context)
 
-    output_result = []
+    for varname, varvalue in variables.items():
+        evaluation.unset_global_user_variable(varname)
+    
+    return prepropcess_output(eval_result, [parse_output(eval_result)])
 
-    def gui_printer(obj):
-        if obj is None or isinstance(obj, Notebook):
-            return
 
-        to_print = obj
-
-        if isinstance(to_print, RuleSet):
-            to_print = str(to_print)
-        elif not isinstance(to_print, str) and not (
-            isinstance(to_print, Plot) or
-            isinstance(to_print, PlotArray)
-            ):
-            to_print = mcode(to_print)
-
-        output_result.append(to_print)
-
-    output.deregister_output_handlers()
-    output.register_output_handler(gui_printer)
-
-    try:
-        eval_result = evaluation.evaluate_code(code)
-    except Exception as err:
-        print(traceback.format_exc())
-        print(err)
-        return {'processor': 'error', 'error': str(err)}
+def prepropcess_output(eval_result, output_result):
 
     if isinstance(eval_result, sympy.Expr):
         return {
             'processor': 'default',
             'result': "\n".join(output_result)
+        }
+    elif isinstance(eval_result, Manipulate):
+        return {
+            'processor': 'manipulate',
+            'ranges': eval_result.variables,
+            'expr': eval_result.expr_pointer
         }
     elif isinstance(eval_result, Plot) or isinstance(eval_result, PlotArray):
         plot_data = []
@@ -88,7 +82,7 @@ def evaluate(code):
                 }
 
                 plot_data.append(new_plot)
-                k = k +1
+                k = k + 1
         else:
             plot_data = [{
                 'x': eval_result.x,
@@ -111,6 +105,45 @@ def evaluate(code):
         }
 
     return {'processor': 'default', 'result': "\n".join(output_result)}
+
+
+def parse_output(obj):
+    to_print = obj
+
+    if isinstance(to_print, RuleSet):
+        to_print = str(to_print)
+    elif not isinstance(to_print, str) and not (
+            isinstance(to_print, Plot) or
+            isinstance(to_print, PlotArray) or
+            isinstance(to_print, Manipulate)
+        ):
+        to_print = mcode(to_print)
+
+    return to_print
+
+@eel.expose
+def evaluate(code):
+    global output
+
+    output_result = []
+
+    def gui_printer(obj):
+        if obj is None or isinstance(obj, Notebook):
+            return
+
+        output_result.append(parse_output(obj))
+
+    output.deregister_output_handlers()
+    output.register_output_handler(gui_printer)
+
+    try:
+        eval_result = evaluation.evaluate_code(code)
+    except Exception as err:
+        print(traceback.format_exc())
+        print(err)
+        return {'processor': 'error', 'error': str(err)}
+
+    return prepropcess_output(eval_result, output_result)
 
 
 @eel.expose
