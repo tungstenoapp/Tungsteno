@@ -1,6 +1,6 @@
 import sympy as sp
 import numpy as np
-from tsteno.atoms.module import ModuleArg, Module
+from tsteno.atoms.module import ModuleArg, Module, ARG_FLAG_ALLOW_APPLY
 
 
 class Cos(Module):
@@ -19,7 +19,7 @@ class Cos(Module):
 
     def get_arguments(self):
         return [
-            ModuleArg(),
+            ModuleArg(ARG_FLAG_ALLOW_APPLY),
         ]
 
     def run_test(self, test):
@@ -36,3 +36,6 @@ class Cos(Module):
 
         test.assertEqual(evaluation.evaluate_code(
             'Cos[1.0]^2 + Sin[1.0]^2'), 1.0)
+
+        test.assertEqual(evaluation.evaluate_code(
+            'Cos[{ 2*Pi, Pi, Pi/2 }]'), [1, -1, 0])

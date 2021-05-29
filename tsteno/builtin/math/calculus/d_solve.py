@@ -6,9 +6,9 @@ from tsteno.atoms.rule import RuleSet
 
 class DSolve(Module):
     """
-    Gives the indefinite integral.
+    solves a differential equation for the function u, with independent variable x.
     ```
-    DSolve[f, x]
+    DSolve[eqn,u,x]
     ```
     """
 

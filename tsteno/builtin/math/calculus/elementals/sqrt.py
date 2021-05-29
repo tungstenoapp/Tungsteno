@@ -1,6 +1,6 @@
 import sympy as sp
 import numpy as np
-from tsteno.atoms.module import ModuleArg, Module
+from tsteno.atoms.module import ModuleArg, Module, ARG_FLAG_ALLOW_APPLY
 
 
 class Sqrt(Module):
@@ -19,7 +19,7 @@ class Sqrt(Module):
 
     def get_arguments(self):
         return [
-            ModuleArg(),
+            ModuleArg(ARG_FLAG_ALLOW_APPLY),
         ]
 
     def run_test(self, test):
