@@ -3,8 +3,8 @@ from tsteno.atoms.module import Module, ModuleArg
 from tsteno.atoms.module import ARG_FLAG_NO_AUTO_EVAL
 from tsteno.atoms.module import ARG_FLAG_SPECIAL_CONTEXT
 from tsteno.atoms.plot import Plot as Plt
+import math
 
-PLOT_ACCURACY = 200
 
 class Plot(Module):
     """
@@ -21,10 +21,13 @@ class Plot(Module):
 
     def run(self, f, variables, context):
         x = variables[0]
-        x0 = variables[1]
-        xmax = variables[2]
+        x0 = float(variables[1])
+        xmax = float(variables[2])
 
-        x_points = np.linspace(x0, xmax, PLOT_ACCURACY)
+        plot_accuracy = max(
+            100, min(1000, math.ceil(2 * 100 * abs(xmax - x0))))
+
+        x_points = np.linspace(x0, xmax, plot_accuracy)
         y_points = np.array([self.evaluate_f(f, x, xi, context)
                              for xi in x_points])
 

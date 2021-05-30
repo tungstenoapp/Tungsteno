@@ -3,8 +3,7 @@ from tsteno.atoms.module import Module, ModuleArg
 from tsteno.atoms.module import ARG_FLAG_NO_AUTO_EVAL
 from tsteno.atoms.module import ARG_FLAG_SPECIAL_CONTEXT
 from tsteno.atoms.plot import Plot as Plt
-
-PLOT_ACCURACY = 200
+import math
 
 
 class Plot3D(Module):
@@ -29,8 +28,13 @@ class Plot3D(Module):
         y0 = variables2[1]
         ymax = variables2[2]
 
-        x_points = np.linspace(x0, xmax)
-        y_points = np.linspace(y0, ymax)
+        plot_accuracy_1 = max(
+            100, min(1000, math.ceil(2 * 100 * abs(xmax - x0))))
+        plot_accuracy_2 = max(
+            100, min(1000, math.ceil(2 * 100 * abs(ymax - y0))))
+
+        x_points = np.linspace(x0, xmax, plot_accuracy_1)
+        y_points = np.linspace(y0, ymax, plot_accuracy_2)
 
         z_points = []
 
