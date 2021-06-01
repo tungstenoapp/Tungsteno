@@ -1,6 +1,7 @@
 import os
 import sys
 from numpy import delete
+import time
 
 from sympy import Symbol, Function
 from .log import LogLevel
@@ -130,7 +131,6 @@ class Evaluation(KextBase):
     def get_expr_pointer(self, pointer):
         return self.expr_pointer[pointer], self.expr_pointer_context[pointer]
 
-
     def __search_builtin(self, path=os.path.join(
         os.path.dirname(__file__), '..', '..', 'builtin')
     ):
@@ -217,8 +217,12 @@ class Evaluation(KextBase):
     def run_builtin_tests(self, test):
         modules = self.get_all_modules()
         for module in modules:
+            print(module)
+            t0 = time.time()
+
             self.clear()
             module.run_test(test)
+            print(time.time() - t0, "seconds wall time")
 
     def run_function(self, fname, arguments, context={}):
         module_definition = self.get_module_definition(

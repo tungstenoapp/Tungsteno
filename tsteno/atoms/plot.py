@@ -5,7 +5,10 @@ class Plot:
         self.x = x
         self.y = y
         self.z = z
+
+
 class PlotArray:
     __slots__ = ('plots')
+
     def __init__(self, plots):
         self.plots = plots

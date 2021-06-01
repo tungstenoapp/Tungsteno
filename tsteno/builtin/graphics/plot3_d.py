@@ -28,13 +28,8 @@ class Plot3D(Module):
         y0 = variables2[1]
         ymax = variables2[2]
 
-        plot_accuracy_1 = max(
-            100, min(1000, math.ceil(2 * 100 * abs(xmax - x0))))
-        plot_accuracy_2 = max(
-            100, min(1000, math.ceil(2 * 100 * abs(ymax - y0))))
-
-        x_points = np.linspace(x0, xmax, plot_accuracy_1)
-        y_points = np.linspace(y0, ymax, plot_accuracy_2)
+        x_points = np.linspace(x0, xmax)
+        y_points = np.linspace(y0, ymax)
 
         z_points = []
 

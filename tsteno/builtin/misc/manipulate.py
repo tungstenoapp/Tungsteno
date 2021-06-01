@@ -2,6 +2,7 @@ from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_ALL_NEXT, ARG_FLAG_N
 
 from tsteno.atoms.manipulate import Manipulate as Mpl
 
+
 class Manipulate(Module):
 
     def run(self, context, expr, *variables):

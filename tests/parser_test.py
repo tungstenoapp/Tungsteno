@@ -103,7 +103,7 @@ class TestTokenizer(unittest.TestCase):
 
         tokens = list(tokenizer.get_tokens("t = {x, x^2, y, z} /. x -> 1"))
         nodes = list(parser.get_nodes(tokens))
-        
+
         node_list = nodes[0]
         self.assertEqual(node_list.head, 'Set')
 

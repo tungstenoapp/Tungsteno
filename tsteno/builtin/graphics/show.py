@@ -1,6 +1,7 @@
 from tsteno.atoms.module import Module, ModuleArg
 from tsteno.atoms.plot import PlotArray
 
+
 class Show(Module):
     """
     Generates a plot of f as a function of x from xmin to xmax.
@@ -24,6 +25,3 @@ class Show(Module):
 
     def run_test(self, test):
         evaluation = self.get_kernel().get_kext('eval')
-
-        print(evaluation.evaluate_code(
-            'pl1 = Plot[Sin[xx], {xx, 0, 10}]; pl2 = Plot[Cos[yy], {yy, 0, 10}]; Show[{pl1, pl2}]'))

@@ -22,6 +22,7 @@ ARG_FLAG_RETURN_VAR_NAME = 1 << 5
 ARG_FLAG_ALLOW_APPLY = 1 << 6
 """ If variable is a list, apply to all elements individually """
 
+
 class ModuleArg:
     """
     Represent module argument type configuration
@@ -45,6 +46,7 @@ class ModuleArg:
     def __repr__(self):
         return 'ModuleArg: {}'.format(self.__flag)
 
+
 class UserArgMultiValue:
     __slots__ = ['__multival']
 
@@ -57,6 +59,7 @@ class UserArgMultiValue:
 
     def get_multival(self):
         return self.__multival
+
 
 class Module(Atoms):
     """
@@ -76,15 +79,15 @@ class Module(Atoms):
         """
         properties = {}
         fargs = self.parse_arguments(arguments, context, properties)
-        
+
         if 'MultiValueFun' in properties:
-            k = 0 
+            k = 0
             for arg in fargs:
                 if isinstance(arg, UserArgMultiValue):
                     return self.run_multivalue(k, fargs)
         return self.run(*fargs)
 
-    def parse_arguments(self, arguments, context, properties = None):
+    def parse_arguments(self, arguments, context, properties=None):
         """
         Parse given arguments in given context.
 
@@ -204,8 +207,6 @@ class Module(Atoms):
             results.append(self.run(*fargs))
 
         return results
-
-
 
     def run(self, **arguments):
         """

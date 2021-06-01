@@ -23,20 +23,21 @@ eel_configuration = {}
 def ping():
     return 'pong'
 
+
 def int2rgb(value):
     rng = numpy.random.RandomState(value)
 
     blue = rng.randint(0, 256)
     green = rng.randint(0, 256)
     red = rng.randint(0, 256)
-    
+
     return "#%02x%02x%02x" % (red, green, blue)
 
 
-@eel.expose 
+@eel.expose
 def evaluate_manipulate(expr_pointer, variables):
     global output
-    
+
     expr, context = evaluation.get_expr_pointer(int(expr_pointer))
     for varname, varvalue in variables.items():
         evaluation.set_global_user_variable(varname, varvalue)
@@ -44,7 +45,7 @@ def evaluate_manipulate(expr_pointer, variables):
 
     for varname, varvalue in variables.items():
         evaluation.unset_global_user_variable(varname)
-    
+
     return prepropcess_output(eval_result, [parse_output(eval_result)])
 
 
@@ -113,13 +114,14 @@ def parse_output(obj):
     if isinstance(to_print, RuleSet):
         to_print = str(to_print)
     elif not isinstance(to_print, str) and not (
-            isinstance(to_print, Plot) or
-            isinstance(to_print, PlotArray) or
-            isinstance(to_print, Manipulate)
-        ):
+        isinstance(to_print, Plot) or
+        isinstance(to_print, PlotArray) or
+        isinstance(to_print, Manipulate)
+    ):
         to_print = mcode(to_print)
 
     return to_print
+
 
 @eel.expose
 def evaluate(code):

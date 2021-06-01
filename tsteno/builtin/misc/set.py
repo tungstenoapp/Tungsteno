@@ -63,5 +63,5 @@ class Set(Module):
         test.assertEqual(evaluation.evaluate_code(
             '{a, b, c} = {1, 2, 3}; b'), 2)
 
-        
-        test.assertEqual(evaluation.evaluate_code('t = {x, x^2, x^3, x^4} /. x -> 2; t'), [2, 4, 8, 16])
+        test.assertEqual(evaluation.evaluate_code(
+            't = {x, x^2, x^3, x^4} /. x -> 2; t'), [2, 4, 8, 16])
