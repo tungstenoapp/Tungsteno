@@ -19,6 +19,8 @@ ARG_FLAG_SPECIAL_CONTEXT = 1 << 4
 ARG_FLAG_RETURN_VAR_NAME = 1 << 5
 """ Special argument that return var name """
 
+ARG_FLAG_ALLOW_APPLY = 1 << 6
+""" If variable is a list, apply to all elements individually """
 
 class ModuleArg:
     """
@@ -43,6 +45,18 @@ class ModuleArg:
     def __repr__(self):
         return 'ModuleArg: {}'.format(self.__flag)
 
+class UserArgMultiValue:
+    __slots__ = ['__multival']
+
+    def __init__(self, multival=[]):
+        """
+        Parameters:
+            - **multival** - 
+        """
+        self.__multival = multival
+
+    def get_multival(self):
+        return self.__multival
 
 class Module(Atoms):
     """
@@ -60,10 +74,17 @@ class Module(Atoms):
         Return:
             - Function execution result.
         """
-        fargs = self.parse_arguments(arguments, context)
+        properties = {}
+        fargs = self.parse_arguments(arguments, context, properties)
+        
+        if 'MultiValueFun' in properties:
+            k = 0 
+            for arg in fargs:
+                if isinstance(arg, UserArgMultiValue):
+                    return self.run_multivalue(k, fargs)
         return self.run(*fargs)
 
-    def parse_arguments(self, arguments, context):
+    def parse_arguments(self, arguments, context, properties = None):
         """
         Parse given arguments in given context.
 
@@ -104,6 +125,8 @@ class Module(Atoms):
             users_args_counter = users_args_counter + 1
 
             farg = self.parse_argument(module_arg, user_arg, context)
+            if isinstance(farg, UserArgMultiValue) and properties is not None:
+                properties['MultiValueFun'] = True
             if farg is not None:
                 fargs.append(farg)
 
@@ -151,6 +174,9 @@ class Module(Atoms):
         if module_arg.get_flag() & ARG_FLAG_RETURN_VAR_NAME != 0:
             context.set_no_var_mode(0)
 
+        if module_arg.get_flag() & ARG_FLAG_ALLOW_APPLY != 0 and isinstance(result, list):
+            return UserArgMultiValue(result)
+
         return result
 
     def configuration_list2dict(self, list_of_properties):
@@ -168,6 +194,18 @@ class Module(Atoms):
             prop_dict[prop_key] = prop[prop_key]
 
         return prop_dict
+
+    def run_multivalue(self, idxmultivalue, fargs):
+        results = []
+        multivalue_array = fargs[idxmultivalue].get_multival()
+
+        for val in multivalue_array:
+            fargs[idxmultivalue] = val
+            results.append(self.run(*fargs))
+
+        return results
+
+
 
     def run(self, **arguments):
         """

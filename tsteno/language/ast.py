@@ -1,3 +1,6 @@
+from sympy import Symbol
+
+
 class Node:
     __slots__ = ('head', 'childrens')
 
@@ -25,3 +28,6 @@ class IdentifierToken:
 
     def __repr__(self):
         return "`{}`".format(self.val)
+
+    def get_sympy(self):
+        return Symbol(self.val)

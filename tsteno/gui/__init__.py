@@ -3,13 +3,17 @@ import eel
 import sympy
 import traceback
 import difflib
+import math
+import numpy
 import tsteno.notebook.export
 
 from sympy import mathematica_code as mcode
 from tsteno.notebook import Notebook
-from tsteno.atoms.plot import Plot
+from tsteno.atoms.plot import Plot, PlotArray
+from tsteno.atoms.manipulate import Manipulate
 from tsteno.atoms.rule import RuleSet
 
+from tsteno.kernel.kexts.evaluation import Context
 evaluation = None
 output = None
 eel_configuration = {}
@@ -19,6 +23,103 @@ eel_configuration = {}
 def ping():
     return 'pong'
 
+def int2rgb(value):
+    rng = numpy.random.RandomState(value)
+
+    blue = rng.randint(0, 256)
+    green = rng.randint(0, 256)
+    red = rng.randint(0, 256)
+    
+    return "#%02x%02x%02x" % (red, green, blue)
+
+
+@eel.expose 
+def evaluate_manipulate(expr_pointer, variables):
+    global output
+    
+    expr, context = evaluation.get_expr_pointer(int(expr_pointer))
+    for varname, varvalue in variables.items():
+        evaluation.set_global_user_variable(varname, varvalue)
+    eval_result = expr(context)
+
+    for varname, varvalue in variables.items():
+        evaluation.unset_global_user_variable(varname)
+    
+    return prepropcess_output(eval_result, [parse_output(eval_result)])
+
+
+def prepropcess_output(eval_result, output_result):
+
+    if isinstance(eval_result, sympy.Expr):
+        return {
+            'processor': 'default',
+            'result': "\n".join(output_result)
+        }
+    elif isinstance(eval_result, Manipulate):
+        return {
+            'processor': 'manipulate',
+            'ranges': eval_result.variables,
+            'expr': eval_result.expr_pointer
+        }
+    elif isinstance(eval_result, Plot) or isinstance(eval_result, PlotArray):
+        plot_data = []
+        k = 0
+
+        if isinstance(eval_result, PlotArray):
+            for plot in eval_result.plots:
+                new_plot = {}
+
+                new_plot['x'] = plot.x
+                new_plot['y'] = plot.y
+
+                if plot.z is not None:
+                    new_plot['z'] = plot.z
+
+                new_plot['type'] = 'scatter'
+                new_plot['modes'] = 'lines'
+                new_plot['marker'] = {
+                    'color': int2rgb(k)
+                }
+
+                plot_data.append(new_plot)
+                k = k + 1
+        else:
+            plot_data = [{
+                'x': eval_result.x,
+                'y': eval_result.y,
+                'type': 'scatter',
+                'mode': 'lines',
+                'marker': {
+                        'color': int2rgb(k)
+                }
+            }]
+
+            if eval_result.z is not None:
+                plot_data[0]['z'] = eval_result.z
+                plot_data[0]['type'] = 'surface'
+                plot_data[0]['showscale'] = False
+
+        return {
+            'processor': 'plot',
+            'plot_data': plot_data
+        }
+
+    return {'processor': 'default', 'result': "\n".join(output_result)}
+
+
+def parse_output(obj):
+    to_print = obj
+
+    if isinstance(to_print, RuleSet):
+        to_print = str(to_print)
+    elif not isinstance(to_print, str) and not (
+            isinstance(to_print, Plot) or
+            isinstance(to_print, PlotArray) or
+            isinstance(to_print, Manipulate)
+        ):
+        to_print = mcode(to_print)
+
+    return to_print
 
 @eel.expose
 def evaluate(code):
@@ -30,14 +131,7 @@ def evaluate(code):
         if obj is None or isinstance(obj, Notebook):
             return
 
-        to_print = obj
-
-        if isinstance(to_print, RuleSet):
-            to_print = str(to_print)
-        elif not isinstance(to_print, str) and not isinstance(to_print, Plot):
-            to_print = mcode(to_print)
-
-        output_result.append(to_print)
+        output_result.append(parse_output(obj))
 
     output.deregister_output_handlers()
     output.register_output_handler(gui_printer)
@@ -49,33 +143,7 @@ def evaluate(code):
         print(err)
         return {'processor': 'error', 'error': str(err)}
 
-    if isinstance(eval_result, sympy.Expr):
-        return {
-            'processor': 'default',
-            'result': "\n".join(output_result)
-        }
-    elif isinstance(eval_result, Plot):
-        plot_data = [{
-            'x': eval_result.x,
-            'y': eval_result.y,
-            'type': 'scatter',
-            'mode': 'lines',
-            'marker': {
-                    'color': 'red'
-            }
-        }]
-
-        if eval_result.z is not None:
-            plot_data[0]['z'] = eval_result.z
-            plot_data[0]['type'] = 'surface'
-            plot_data[0]['showscale'] = False
-
-        return {
-            'processor': 'plot',
-            'plot_data': plot_data
-        }
-
-    return {'processor': 'default', 'result': "\n".join(output_result)}
+    return prepropcess_output(eval_result, output_result)
 
 
 @eel.expose

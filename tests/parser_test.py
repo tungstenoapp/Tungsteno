@@ -60,6 +60,32 @@ class TestTokenizer(unittest.TestCase):
         self.assertEqual(product.childrens[0], 2)
         self.assertEqual(product.childrens[1], 3)
 
+    def test_parsePow(self):
+        global tokenizer, parser
+        tokens = tokenizer.get_tokens("1^2")
+        nodes = list(parser.get_nodes(list(tokens)))
+        one_node = nodes[0]
+        self.assertEqual(one_node.head, 'Pow')
+        self.assertEqual(one_node.childrens[0], 1)
+        self.assertEqual(one_node.childrens[1], 2)
+
+    def test_parseDeriv(self):
+        global tokenizer, parser
+        tokens = tokenizer.get_tokens("a'")
+        nodes = list(parser.get_nodes(list(tokens)))
+        one_node = nodes[0]
+        self.assertEqual(one_node.head, 'D')
+
+    def test_parseDoubleDeriv(self):
+        global tokenizer, parser
+        tokens = tokenizer.get_tokens("a''")
+        nodes = list(parser.get_nodes(list(tokens)))
+
+        one_node = nodes[0]
+
+        self.assertEqual(one_node.head, 'D')
+        self.assertEqual(one_node.childrens[0].head, 'D')
+
     def test_listDefinition(self):
         global tokenizer, parser
 
@@ -71,6 +97,15 @@ class TestTokenizer(unittest.TestCase):
         self.assertEqual(node_list.childrens[0], 1)
         self.assertEqual(node_list.childrens[1], 2)
         self.assertEqual(node_list.childrens[2], 3)
+
+    def test_replaceAllPriorities(self):
+        global tokenizer, parser
+
+        tokens = list(tokenizer.get_tokens("t = {x, x^2, y, z} /. x -> 1"))
+        nodes = list(parser.get_nodes(tokens))
+        
+        node_list = nodes[0]
+        self.assertEqual(node_list.head, 'Set')
 
     def test_doubleFn(self):
         global tokenizer, parser

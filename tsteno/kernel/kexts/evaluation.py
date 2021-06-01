@@ -1,7 +1,8 @@
 import os
 import sys
+from numpy import delete
 
-from sympy import Symbol
+from sympy import Symbol, Function
 from .log import LogLevel
 from .kext_base import KextBase
 from tsteno.language.ast import Node
@@ -86,7 +87,8 @@ class Evaluation(KextBase):
     __slots__ = [
         'builtin_variables', 'builtin_modules',
         'user_modules', 'user_variables', 'user_modules',
-        'tokenizer', 'parser', 'auto_symbols'
+        'tokenizer', 'parser', 'auto_symbols',
+        'expr_pointer', 'expr_pointer_context'
     ]
 
     def __init__(self, kernel):
@@ -111,11 +113,23 @@ class Evaluation(KextBase):
         self.parser = Parser()
         self.tokenizer = Tokenizer()
 
+        self.expr_pointer = []
+        self.expr_pointer_context = []
+
         if self.get_kernel().parent is None:
             self.__bootstrap(log_kext)
 
         log_kext.write(
             'Definitions for eval kext loaded succesfully!', LogLevel.DEBUG)
+
+    def generate_expr_pointer(self, expr, context):
+        self.expr_pointer.append(expr)
+        self.expr_pointer_context.append(context)
+        return len(self.expr_pointer) - 1
+
+    def get_expr_pointer(self, pointer):
+        return self.expr_pointer[pointer], self.expr_pointer_context[pointer]
+
 
     def __search_builtin(self, path=os.path.join(
         os.path.dirname(__file__), '..', '..', 'builtin')
@@ -260,6 +274,9 @@ class Evaluation(KextBase):
             return self.builtin_modules['Unknown'].proxy(module, arguments)
 
         return self.builtin_modules[module]
+
+    def unset_global_user_variable(self, variable):
+        del self.user_variables[variable]
 
     def set_global_user_variable(self, variable, value):
         self.user_variables[variable] = value

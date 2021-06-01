@@ -31,7 +31,7 @@ class RuleSet(Atoms):
         output = []
 
         for key, val in self.rules_dict.items():
-            output.append(str(key))
+            output.append(str(mcode(key)))
             output.append('->')
             output.append(str(mcode(val)))
             output.append(',')

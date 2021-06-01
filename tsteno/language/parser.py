@@ -36,7 +36,7 @@ class UnaryOpParser(BaseParser):
 
 class IdentifierTokenParser(BaseParser):
 
-    def parse_function(self, itok, tokens, toklen, pos, parser):
+    def parse_function(self, itok, tokens, toklen, pos, parser, deriv_times):
         arg = []
         arguments = []
         while pos < toklen:
@@ -55,7 +55,12 @@ class IdentifierTokenParser(BaseParser):
             expr, pos = parser.compute_expr(tokens, toklen, pos)
             arg.append(expr)
 
-        return Node(itok.get_value(), *arguments), pos
+        deriv_0 = Node(itok.get_value(), *arguments)
+
+        for i in range(0, deriv_times):
+            deriv_0 = Node('D', deriv_0)
+
+        return deriv_0, pos
 
     def parse_access_list(self, itok, tokens, toklen, pos, parser):
         arg = []
@@ -83,15 +88,24 @@ class IdentifierTokenParser(BaseParser):
     def read(self, tokens, toklen, pos, parser):
         itok = tokens[pos]
 
+        deriv_times = 0
         if pos + 1 < toklen:
             ntok = tokens[pos + 1]
-            if ntok.get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
+            while ntok.get_value() == "'":
+                deriv_times += 1
+                pos = pos + 1
+                if len(tokens) > pos + 1:
+                    ntok = tokens[pos + 1]
+                    continue
+                break
+
+            if deriv_times > 0 or ntok.get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
                 pos = pos + 2
-                if tokens[pos].get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
+                if toklen > pos and tokens[pos].get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
                     pos = pos + 1
                     return self.parse_access_list(itok, tokens, toklen, pos, parser)
 
-                return self.parse_function(itok, tokens, toklen, pos, parser)
+                return self.parse_function(itok, tokens, toklen, pos, parser, deriv_times)
 
         return IdentifierToken(itok.get_value()), pos + 1
 
@@ -136,9 +150,6 @@ class ParensParser(BaseParser):
 OpInfo = namedtuple('OpInfo', 'prec assoc function')
 
 BIN_OPINFO_MAP = {
-    '/.': OpInfo(-1, 'LEFT', 'ReplaceAll'),
-
-    '->': OpInfo(0, 'LEFT', 'Rule'),
     '=': OpInfo(0, 'LEFT', 'Set'),
     ':=': OpInfo(0, 'LEFT', 'Set'),
     '<': OpInfo(0, 'LEFT', 'LessThan'),
@@ -149,19 +160,23 @@ BIN_OPINFO_MAP = {
     '!=': OpInfo(0, 'LEFT', 'NotEqual'),
     '*^': OpInfo(0, 'LEFT', 'ScientificForm'),
 
+
+    '/.': OpInfo(1, 'LEFT', 'ReplaceAll'),
     '+': OpInfo(1, 'LEFT', 'Plus'),
     '-': OpInfo(1, 'LEFT', 'Minus'),
 
+    '->': OpInfo(2, 'LEFT', 'Rule'),
     '*': OpInfo(2, 'LEFT', 'Product'),
     '/': OpInfo(2, 'LEFT', 'Div'),
 
     '^': OpInfo(3, 'RIGHT', 'Pow'),
+
 }
 
 UNARY_OPINFO_MAP = {
     '++': OpInfo(None, None, 'Increment'),
-    '--': OpInfo(None, None, 'Decrement')
-
+    '--': OpInfo(None, None, 'Decrement'),
+    "'": OpInfo(None, None, 'D'),
 }
 
 CLOSURE_TOKENS = [
@@ -235,7 +250,7 @@ class Parser:
                 next_token = tokens[pos + 1]
 
             if token.get_type() == token_list.TOKEN_OP and \
-                    next_token.get_type() == token.get_type():
+                    next_token is not None and next_token.get_type() == token.get_type():
                 double_op = token.get_value() + next_token.get_value()
                 if double_op in UNARY_OPINFO_MAP:
                     prec, assoc, node = UNARY_OPINFO_MAP[double_op]
@@ -245,12 +260,18 @@ class Parser:
                     continue
 
             if token.get_type() == token_list.TOKEN_OP:
-                atom_lhs, atom_rhs, pos = self.compute_op(
-                    token, pos, toklen, tokens, minprec, atom_lhs
-                )
+                if token.get_value() in UNARY_OPINFO_MAP:
+                    prec, assoc, node = UNARY_OPINFO_MAP[token.get_value()]
+                    pos = pos + 1
 
-                if not atom_rhs:
-                    break
+                    atom_lhs = self.compute_unary(node, atom_lhs)
+                else:
+                    atom_lhs, atom_rhs, pos = self.compute_op(
+                        token, pos, toklen, tokens, minprec, atom_lhs
+                    )
+
+                    if not atom_rhs:
+                        break
             elif isinstance(atom_lhs, numbers.Number):
                 atom_lhs, atom_rhs, pos = self.compute_number(
                     tokens, toklen, pos, atom_lhs)
