@@ -1,5 +1,4 @@
 from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_ALLOW_APPLY
-from tsteno.atoms.rule import RuleSet
 
 
 class ReplaceAll(Module):

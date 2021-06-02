@@ -53,7 +53,7 @@ class UserArgMultiValue:
     def __init__(self, multival=[]):
         """
         Parameters:
-            - **multival** - 
+            - **multival**
         """
         self.__multival = multival
 

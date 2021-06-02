@@ -3,7 +3,6 @@ from tsteno.atoms.module import Module, ModuleArg
 from tsteno.atoms.module import ARG_FLAG_NO_AUTO_EVAL
 from tsteno.atoms.module import ARG_FLAG_SPECIAL_CONTEXT
 from tsteno.atoms.plot import Plot as Plt
-import math
 
 
 class Plot3D(Module):

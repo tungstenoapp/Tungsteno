@@ -1,9 +1,8 @@
 import os
 import sys
-from numpy import delete
 import time
 
-from sympy import Symbol, Function
+from sympy import Symbol
 from .log import LogLevel
 from .kext_base import KextBase
 from tsteno.language.ast import Node

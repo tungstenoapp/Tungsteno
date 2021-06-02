@@ -24,4 +24,4 @@ class Show(Module):
         ]
 
     def run_test(self, test):
-        evaluation = self.get_kernel().get_kext('eval')
+        pass

@@ -1,5 +1,4 @@
 from sympy.core.function import Derivative, Function
-from sympy.ntheory.primetest import _test
 from tsteno.atoms.module import Module, ModuleArg, ARG_FLAG_ALL_NEXT
 
 

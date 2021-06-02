@@ -3,7 +3,6 @@ import eel
 import sympy
 import traceback
 import difflib
-import math
 import numpy
 import tsteno.notebook.export
 
@@ -13,7 +12,6 @@ from tsteno.atoms.plot import Plot, PlotArray
 from tsteno.atoms.manipulate import Manipulate
 from tsteno.atoms.rule import RuleSet
 
-from tsteno.kernel.kexts.evaluation import Context
 evaluation = None
 output = None
 eel_configuration = {}
