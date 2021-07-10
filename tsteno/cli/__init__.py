@@ -54,17 +54,26 @@ def main(debug, cli, launcher, input_, http_port):
 k = 0
 
 
+def parse_to_print(to_print):
+    if isinstance(to_print, RuleSet):
+        return str(to_print)
+    elif isinstance(to_print, list):
+        out = '{'
+        for item in to_print:
+            out += parse_to_print(item)
+            out += ','
+        out = out[:-1]
+        return out + '}'
+    elif not isinstance(to_print, str):
+        return mcode(to_print)
+    return to_print
+
+
 def cli_printer(obj):
     if obj is None or isinstance(obj, Notebook):
         return
 
-    to_print = obj
-
-    if isinstance(to_print, RuleSet):
-        to_print = str(to_print)
-    elif not isinstance(to_print, str):
-        to_print = mcode(to_print)
-
+    to_print = parse_to_print(obj)
     click.echo("Out[{}]= {}".format(k, to_print))
     # click.echo()
 

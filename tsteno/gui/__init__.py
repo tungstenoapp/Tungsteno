@@ -1,3 +1,4 @@
+from ast import parse
 import os
 import eel
 import sympy
@@ -106,17 +107,23 @@ def prepropcess_output(eval_result, output_result):
     return {'processor': 'default', 'result': "\n".join(output_result)}
 
 
-def parse_output(obj):
-    to_print = obj
+def parse_output(to_print):
 
     if isinstance(to_print, RuleSet):
-        to_print = str(to_print)
+        return str(to_print)
+    elif isinstance(to_print, list):
+        out = '{'
+        for item in to_print:
+            out += parse_output(item)
+            out += ','
+        out = out[:-1]
+        return out + '}'
     elif not isinstance(to_print, str) and not (
         isinstance(to_print, Plot) or
         isinstance(to_print, PlotArray) or
         isinstance(to_print, Manipulate)
     ):
-        to_print = mcode(to_print)
+        return mcode(to_print)
 
     return to_print
 
