@@ -1,4 +1,3 @@
-from ast import parse
 import os
 import eel
 import sympy
