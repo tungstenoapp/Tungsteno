@@ -171,12 +171,9 @@ class Evaluation(KextBase):
                 return context.get_last_result()
 
         if tokens[-1].get_type() != token_list.TOKEN_CLOSE_EXPR:
-            if len(tokens) == 1:
-                self.run_function(
-                    'Print', [[context.get_last_result()]], context)
-            else:
-                self.run_function(
-                    'Print', [context.get_last_result()], context)
+            output = self.get_kernel().get_kext('output')
+            output.write(context.get_last_result())
+
         return context.get_last_result()
 
     def evaluate_node(self, node, context):
