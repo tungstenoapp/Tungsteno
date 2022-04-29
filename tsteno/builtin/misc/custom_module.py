@@ -49,5 +49,13 @@ class CustomModule(Module):
         evaluation.evaluate_code(
             'Set[TFD2[x_], Module[{x0=x, c}, c=10; x0 + c]]')
 
+        evaluation.evaluate_code("""
+        h[x0_] = Module[{x = x0},
+            x+2
+        ]""")
+
         test.assertEqual(evaluation.evaluate_code(
             'TFD2[2]'), 12)
+
+        test.assertEqual(evaluation.evaluate_code(
+            'h[2]'), 4)

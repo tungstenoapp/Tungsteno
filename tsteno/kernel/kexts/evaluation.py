@@ -42,6 +42,8 @@ class Context:
         self.__control_flow__ = control_flow
 
     def set_last_result(self, last_result):
+        if last_result is None:
+            return
         self.__last_result__ = last_result
 
     def set_no_var_mode(self, var_mode):
