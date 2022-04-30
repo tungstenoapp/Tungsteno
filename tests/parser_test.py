@@ -32,7 +32,7 @@ class TestTokenizer(unittest.TestCase):
 
     def test_parseMultiplier(self):
         global tokenizer, parser
-        tokens = tokenizer.get_tokens("2 3")
+        tokens = tokenizer.get_tokens("2*3")
         nodes = list(parser.get_nodes(list(tokens)))
         product = nodes[0]
 

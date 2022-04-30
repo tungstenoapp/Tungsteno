@@ -53,7 +53,9 @@ class IdentifierTokenParser(BaseParser):
                 break
 
             expr, pos = parser.compute_expr(tokens, toklen, pos)
-            arg.append(expr)
+
+            if expr is not None:
+                arg.append(expr)
 
         deriv_0 = Node(itok.get_value(), *arguments)
 
@@ -112,25 +114,27 @@ class IdentifierTokenParser(BaseParser):
 
 class ListTokenParser(BaseParser):
     def read(self, tokens, toklen, pos, parser):
-        if pos < toklen:
-            pos = pos + 1
-            arguments = []
+        arg = []
+        arguments = []
 
-            while pos < toklen:
-                ntok = tokens[pos]
+        pos = pos + 1
+        while pos < toklen:
+            ntok = tokens[pos]
 
-                if ntok.get_type() == token_list.TOKEN_COMMA_SEPARATOR:
-                    pos = pos + 1
-                    continue
-                elif ntok.get_type() == token_list.TOKEN_RIGHTLIST:
-                    pos = pos + 1
-                    break
-                expr, pos = parser.compute_expr(tokens, toklen, pos)
-                arguments.append(expr)
+            if ntok.get_type() == token_list.TOKEN_COMMA_SEPARATOR:
+                arguments.append(arg[0] if len(arg) == 1 else arg)
+                arg = []
+                pos = pos + 1
+                continue
+            elif ntok.get_type() == token_list.TOKEN_RIGHTLIST:
+                arguments.append(arg[0] if len(arg) == 1 else arg)
+                pos = pos + 1
+                break
 
-            return Node('List', *arguments), pos
+            expr, pos = parser.compute_expr(tokens, toklen, pos)
+            arg.append(expr)
 
-        raise Exception()
+        return Node('List', *arguments), pos
 
 
 class ParensParser(BaseParser):
@@ -181,8 +185,6 @@ UNARY_OPINFO_MAP = {
 
 CLOSURE_TOKENS = [
     token_list.TOKEN_CLOSE_EXPR, token_list.TOKEN_NEWLINE,
-    token_list.TOKEN_COMMA_SEPARATOR, token_list.TOKEN_RIGHTSQUARE_BRACKETS,
-    token_list.TOKEN_RIGHTLIST, token_list.TOKEN_RIGHTPAREN
 ]
 
 
@@ -272,9 +274,6 @@ class Parser:
 
                     if not atom_rhs:
                         break
-            elif isinstance(atom_lhs, numbers.Number):
-                atom_lhs, atom_rhs, pos = self.compute_number(
-                    tokens, toklen, pos, atom_lhs)
             elif token.get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS and\
                     pos + 1 < toklen and \
                     tokens[pos + 1].get_type() == token_list.TOKEN_LEFTSQUARE_BRACKETS:
@@ -318,12 +317,10 @@ class Parser:
         return Node(node, lhs)
 
     def compute_atom(self, tokens, toklen, pos):
-        while tokens[pos].get_type() in CLOSURE_TOKENS:
-            pos = pos + 1
-            if pos >= toklen:
-                return None, pos
-
         token = tokens[pos]
+
+        if tokens[pos].get_type() in CLOSURE_TOKENS:
+            return None, pos + 1
 
         if token.get_type() not in self.parser_processors:
             raise Exception(

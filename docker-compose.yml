@@ -1,0 +1,25 @@
+version: '3.0'
+
+services:
+  tungsteno:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    volumes:
+      - .:/app
+    entrypoint: pymon ./app.py
+    environment:
+      - ALL_INTERFACES=true
+    ports:
+      - "8000:8000"
+    expose:
+      - 8000
+  tungsteno-compiler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: compiler
+    volumes:
+      - .:/app
+    tty: true

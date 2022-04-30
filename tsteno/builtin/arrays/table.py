@@ -121,7 +121,7 @@ class Table(Module):
             'Table[ii^2, {ii, 10}];'), [1, 4, 9, 16, 25, 36, 49, 64, 81, 100])
 
         test.assertEqual(evaluation.evaluate_code(
-            'Table[10 ii + jj, {ii, 4}, {jj, 3}];'),
+            'Table[10*ii + jj, {ii, 4}, {jj, 3}];'),
             [[11, 12, 13],
              [21, 22, 23],
              [31, 32, 33],
